@@ -82,11 +82,10 @@ export default function AnchoredVerse() {
       const blob = await res.blob();
       const fileName = `anchored-verse-${(shareCard.ref || "verse").replace(/[^a-z0-9]+/gi, "-").toLowerCase()}.png`;
       const file = new File([blob], fileName, { type: "image/png" });
-      const caption = `"${shareCard.text}"\n— ${shareCard.ref} (${shareCard.translation})\n\nAnchored Verse · ${shareCard.emotionName}\n${APP_URL}`;
 
       if (navigator.canShare && navigator.canShare({ files: [file] })) {
         try {
-          await navigator.share({ files: [file], title: "Anchored Verse", text: caption });
+          await navigator.share({ files: [file], title: "Anchored Verse" });
           setShareCardBusy(false);
           return;
         } catch (e) {
