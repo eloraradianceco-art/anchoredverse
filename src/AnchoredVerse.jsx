@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useRef } from "react";
 import { BRAND, TRANSLATIONS, BANDS, EMOTIONS } from "./verses";
 
 // ============================================================
@@ -16,6 +16,12 @@ export default function AnchoredVerse() {
   const [verseIndex, setVerseIndex] = useState(0);
   const [favorites, setFavorites] = useState([]); // {emotionId, ref}
   const [shareToast, setShareToast] = useState("");
+
+  // ShareCard modal state
+  const [shareCard, setShareCard] = useState(null); // { text, ref, translation, emotionName, reflection }
+  const [shareCardLight, setShareCardLight] = useState(true);
+  const [shareCardBusy, setShareCardBusy] = useState(false);
+  const shareCardRef = useRef(null);
 
   const emotion = useMemo(
     () => EMOTIONS.find((e) => e.id === activeEmotion) || null,
@@ -38,16 +44,78 @@ export default function AnchoredVerse() {
     setFavorites((prev) =>
       prev.some((f) => f.key === key)
         ? prev.filter((f) => f.key !== key)
-        : [...prev, { key, emotionId: emotion.id, emotionName: emotion.name, ref: verse.ref, text: verse[translation], translation }]
+        : [...prev, { key, emotionId: emotion.id, emotionName: emotion.name, ref: verse.ref, text: verse[translation], translation, reflection: emotion.reflection }]
     );
   };
 
-  // ============================================================
-  // SHARE
-  // Builds a clean share payload and uses Web Share API on mobile,
-  // falls back to clipboard with a brief toast.
-  // ============================================================
-  const handleShare = async ({ text, ref, translation: tr, emotionName }) => {
+  // Open the ShareCard modal for a given verse
+  const openShareCard = ({ text, ref, translation: tr, emotionName, reflection }) => {
+    setShareCard({ text, ref, translation: tr, emotionName, reflection });
+  };
+
+  const closeShareCard = () => {
+    setShareCard(null);
+    setShareCardBusy(false);
+  };
+
+  // Generate PNG from the rendered card and trigger native share / download
+  const handleShareImage = async () => {
+    if (!shareCardRef.current || !shareCard) return;
+    setShareCardBusy(true);
+    try {
+      // Wait for fonts to be ready so html-to-image captures rendered text
+      if (document.fonts && document.fonts.ready) {
+        await document.fonts.ready;
+      }
+      // Double rAF gives the layout one more frame to settle
+      await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+
+      const { toPng } = await import("html-to-image");
+      const bg = shareCardLight ? BRAND.cream : BRAND.navy;
+      const dataUrl = await toPng(shareCardRef.current, {
+        cacheBust: true,
+        pixelRatio: 2,
+        backgroundColor: bg,
+      });
+
+      const res = await fetch(dataUrl);
+      const blob = await res.blob();
+      const fileName = `anchored-verse-${(shareCard.ref || "verse").replace(/[^a-z0-9]+/gi, "-").toLowerCase()}.png`;
+      const file = new File([blob], fileName, { type: "image/png" });
+      const caption = `"${shareCard.text}"\n— ${shareCard.ref} (${shareCard.translation})\n\nAnchored Verse · ${shareCard.emotionName}\n${APP_URL}`;
+
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        try {
+          await navigator.share({ files: [file], title: "Anchored Verse", text: caption });
+          setShareCardBusy(false);
+          return;
+        } catch (e) {
+          if (e && e.name === "AbortError") {
+            setShareCardBusy(false);
+            return;
+          }
+        }
+      }
+
+      // Fallback: download the PNG
+      const a = document.createElement("a");
+      a.href = dataUrl;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setShareToast("✓ Image saved");
+      setTimeout(() => setShareToast(""), 2200);
+    } catch (e) {
+      console.error("Share image failed:", e);
+      setShareToast("Couldn\u2019t generate image");
+      setTimeout(() => setShareToast(""), 2200);
+    }
+    setShareCardBusy(false);
+  };
+
+  // Plain-text share (used by Saved Anchors list)
+  const handleShareText = async ({ text, ref, translation: tr, emotionName }) => {
     const body =
       `"${text}"\n` +
       `— ${ref} (${tr})\n\n` +
@@ -56,27 +124,21 @@ export default function AnchoredVerse() {
 
     if (typeof navigator !== "undefined" && navigator.share) {
       try {
-        await navigator.share({
-          title: "Anchored Verse",
-          text: body,
-        });
+        await navigator.share({ title: "Anchored Verse", text: body });
         return;
       } catch (e) {
-        // user cancelled — fall through to clipboard
         if (e && e.name === "AbortError") return;
       }
     }
-
     try {
       await navigator.clipboard.writeText(body);
       setShareToast("✓ Copied to clipboard");
     } catch {
-      setShareToast("Couldn\u2019t copy — please try again");
+      setShareToast("Couldn\u2019t copy");
     }
     setTimeout(() => setShareToast(""), 2200);
   };
 
-  // Compact share icon button used inside the verse card + each saved anchor
   const ShareIconBtn = ({ onClick, label = "Share verse", size = "md" }) => {
     const sz = size === "sm" ? { box: 28, icon: 13, pad: 4 } : { box: 36, icon: 16, pad: 6 };
     return (
@@ -85,26 +147,207 @@ export default function AnchoredVerse() {
         aria-label={label}
         className="av-btn"
         style={{
-          width: sz.box,
-          height: sz.box,
-          padding: sz.pad,
+          width: sz.box, height: sz.box, padding: sz.pad,
           background: `${BRAND.teal}14`,
           border: `1px solid ${BRAND.teal}55`,
-          borderRadius: 10,
-          cursor: "pointer",
-          display: "inline-flex",
-          alignItems: "center",
-          justifyContent: "center",
-          transition: "all .2s",
-          color: BRAND.teal,
+          borderRadius: 10, cursor: "pointer",
+          display: "inline-flex", alignItems: "center", justifyContent: "center",
+          transition: "all .2s", color: BRAND.teal,
         }}
       >
-        {/* paper-plane / share glyph (SVG, scales cleanly) */}
         <svg width={sz.icon} height={sz.icon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
           <path d="M22 2L11 13" />
           <path d="M22 2L15 22L11 13L2 9L22 2Z" />
         </svg>
       </button>
+    );
+  };
+
+  // ============================================================
+  // SHARE CARD — rendered to HTML then converted to PNG by html-to-image
+  // Light/dark toggle, brand-matched typography (Oswald + Sora)
+  // ============================================================
+  const renderShareCard = () => {
+    if (!shareCard) return null;
+
+    const cBg = shareCardLight
+      ? `linear-gradient(160deg, ${BRAND.cream}, #FFFFFF)`
+      : `linear-gradient(160deg, ${BRAND.navy}, #243646)`;
+    const cText  = shareCardLight ? BRAND.navy : BRAND.cream;
+    const cTeal  = shareCardLight ? BRAND.teal : "#3FB5B5";
+    const cAmber = BRAND.amber;
+    const cDivider = shareCardLight ? `${BRAND.navy}22` : `${BRAND.cream}33`;
+    const cFootMuted = shareCardLight ? `${BRAND.navy}66` : `${BRAND.cream}66`;
+
+    return (
+      <div
+        onClick={closeShareCard}
+        style={{
+          position: "fixed", inset: 0, zIndex: 500,
+          background: "rgba(0,0,0,0.88)",
+          display: "flex", flexDirection: "column", alignItems: "center",
+          padding: "24px 16px 32px", overflowY: "auto",
+        }}
+      >
+        <div onClick={(e) => e.stopPropagation()} style={{ width: "100%", maxWidth: 400 }}>
+          {/* Modal header */}
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14, color: BRAND.cream }}>
+            <div style={{ fontFamily: "Oswald", letterSpacing: "2px", fontSize: 12, color: BRAND.amber, textTransform: "uppercase" }}>
+              Share Card
+            </div>
+            <button
+              onClick={closeShareCard}
+              aria-label="Close"
+              style={{
+                background: "transparent", border: "none", color: BRAND.cream,
+                fontSize: 26, lineHeight: 1, cursor: "pointer", padding: 4,
+              }}
+            >×</button>
+          </div>
+
+          {/* The card that will be captured as PNG */}
+          <div
+            ref={shareCardRef}
+            style={{
+              background: cBg,
+              borderRadius: 22,
+              padding: "36px 30px 28px",
+              fontFamily: "'Sora', system-ui, sans-serif",
+              color: cText,
+              boxShadow: "0 24px 60px rgba(0,0,0,.5)",
+              border: shareCardLight ? `1px solid ${BRAND.navy}11` : `1px solid ${BRAND.cream}11`,
+            }}
+          >
+            {/* Brand line */}
+            <div style={{ textAlign: "center", marginBottom: 22 }}>
+              <div style={{
+                fontFamily: "Oswald", letterSpacing: "4px", fontSize: 10,
+                color: cAmber, textTransform: "uppercase", fontWeight: 600,
+              }}>
+                Elora Radiance Co.
+              </div>
+              <div style={{
+                fontFamily: "Oswald", letterSpacing: "1.5px", fontSize: 15,
+                color: cText, marginTop: 4, fontWeight: 700, opacity: 0.85,
+              }}>
+                ANCHORED VERSE
+              </div>
+            </div>
+
+            {/* Emotion label */}
+            <div style={{
+              textAlign: "center", marginBottom: 18,
+              fontFamily: "Oswald", fontSize: 12, letterSpacing: "3px",
+              color: cTeal, textTransform: "uppercase", fontWeight: 600,
+            }}>
+              {shareCard.emotionName}
+            </div>
+
+            {/* Verse text — the focal point */}
+            <p style={{
+              fontFamily: "Sora", fontSize: 19, lineHeight: 1.55,
+              margin: "0 0 22px", fontStyle: "italic",
+              textAlign: "center", fontWeight: 400, color: cText,
+            }}>
+              “{shareCard.text}”
+            </p>
+
+            {/* Reference + translation */}
+            <div style={{
+              display: "flex", justifyContent: "space-between", alignItems: "center",
+              borderTop: `1px solid ${cDivider}`, paddingTop: 14, marginBottom: 16,
+            }}>
+              <span style={{ fontFamily: "Oswald", fontWeight: 600, letterSpacing: "1px", color: cText, fontSize: 14 }}>
+                {shareCard.ref}
+              </span>
+              <span style={{ fontFamily: "Oswald", fontSize: 11, letterSpacing: "1.5px", color: cAmber, fontWeight: 500 }}>
+                {shareCard.translation}
+              </span>
+            </div>
+
+            {/* Optional reflection (if present and short enough) */}
+            {shareCard.reflection && shareCard.reflection.length < 220 && (
+              <div style={{
+                background: shareCardLight ? `${BRAND.teal}10` : `${BRAND.teal}22`,
+                borderLeft: `3px solid ${cTeal}`,
+                padding: "10px 14px", borderRadius: 8, marginBottom: 18,
+              }}>
+                <div style={{ fontFamily: "Oswald", fontSize: 9, letterSpacing: "2px", color: cTeal, marginBottom: 4, fontWeight: 600 }}>
+                  REFLECTION
+                </div>
+                <p style={{ margin: 0, fontSize: 12, lineHeight: 1.5, color: cText, opacity: 0.85 }}>
+                  {shareCard.reflection}
+                </p>
+              </div>
+            )}
+
+            {/* Footer URL */}
+            <div style={{
+              textAlign: "center", fontFamily: "Oswald",
+              fontSize: 10, letterSpacing: "2px", color: cFootMuted,
+              textTransform: "uppercase", paddingTop: 6,
+            }}>
+              anchoredverse.vercel.app
+            </div>
+          </div>
+
+          {/* Theme toggle */}
+          <div style={{ display: "flex", justifyContent: "center", gap: 6, marginTop: 16 }}>
+            <button
+              onClick={() => setShareCardLight(true)}
+              className="av-btn"
+              style={{
+                fontFamily: "Oswald", fontSize: 11, letterSpacing: "1.5px",
+                padding: "8px 16px", borderRadius: 20, cursor: "pointer",
+                border: `1px solid ${BRAND.cream}33`,
+                background: shareCardLight ? BRAND.amber : "transparent",
+                color: shareCardLight ? BRAND.navy : BRAND.cream,
+                transition: "all .2s",
+              }}
+            >☀ LIGHT</button>
+            <button
+              onClick={() => setShareCardLight(false)}
+              className="av-btn"
+              style={{
+                fontFamily: "Oswald", fontSize: 11, letterSpacing: "1.5px",
+                padding: "8px 16px", borderRadius: 20, cursor: "pointer",
+                border: `1px solid ${BRAND.cream}33`,
+                background: !shareCardLight ? BRAND.amber : "transparent",
+                color: !shareCardLight ? BRAND.navy : BRAND.cream,
+                transition: "all .2s",
+              }}
+            >☾ DARK</button>
+          </div>
+
+          {/* Share + copy text actions */}
+          <div style={{ display: "flex", gap: 10, marginTop: 16 }}>
+            <button
+              onClick={() => handleShareText({ text: shareCard.text, ref: shareCard.ref, translation: shareCard.translation, emotionName: shareCard.emotionName })}
+              className="av-btn"
+              style={{
+                flex: 1, cursor: "pointer", borderRadius: 12, padding: "14px",
+                border: `1px solid ${BRAND.cream}33`,
+                background: "transparent", color: BRAND.cream,
+                fontFamily: "Oswald", letterSpacing: "1px", fontSize: 13,
+                transition: "all .2s",
+              }}
+            >TEXT</button>
+            <button
+              onClick={handleShareImage}
+              disabled={shareCardBusy}
+              className="av-btn"
+              style={{
+                flex: 2, cursor: shareCardBusy ? "default" : "pointer",
+                borderRadius: 12, padding: "14px", border: "none",
+                background: BRAND.amber, color: BRAND.navy,
+                fontFamily: "Oswald", letterSpacing: "1.5px", fontSize: 13,
+                opacity: shareCardBusy ? 0.6 : 1,
+                transition: "all .2s",
+              }}
+            >{shareCardBusy ? "GENERATING..." : "↗ SHARE IMAGE"}</button>
+          </div>
+        </div>
+      </div>
     );
   };
 
@@ -142,7 +385,6 @@ export default function AnchoredVerse() {
           A word for every weight your heart carries.
         </p>
 
-        {/* Translation toggle */}
         <div style={{ marginTop: 22, display: "inline-flex", gap: 6, background: "#ffffff10", padding: 5, borderRadius: 40, border: `1px solid ${BRAND.teal}55` }}>
           {TRANSLATIONS.map((t) => (
             <button
@@ -150,14 +392,8 @@ export default function AnchoredVerse() {
               onClick={() => setTranslation(t)}
               className="av-chip av-btn"
               style={{
-                cursor: "pointer",
-                border: "none",
-                borderRadius: 30,
-                padding: "8px 18px",
-                fontFamily: "Oswald",
-                letterSpacing: "1px",
-                fontSize: 13,
-                transition: "all .2s",
+                cursor: "pointer", border: "none", borderRadius: 30, padding: "8px 18px",
+                fontFamily: "Oswald", letterSpacing: "1px", fontSize: 13, transition: "all .2s",
                 background: translation === t ? BRAND.amber : "transparent",
                 color: translation === t ? BRAND.navy : BRAND.cream,
               }}
@@ -189,17 +425,11 @@ export default function AnchoredVerse() {
                     onClick={() => openEmotion(e.id)}
                     className="av-emo av-btn"
                     style={{
-                      cursor: "pointer",
-                      border: `1px solid ${BRAND.teal}44`,
-                      background: "#ffffff0c",
-                      color: BRAND.cream,
-                      borderRadius: 14,
-                      padding: "16px 12px",
-                      fontFamily: "Sora",
-                      fontSize: 15,
-                      fontWeight: 500,
-                      transition: "all .2s",
-                      borderTop: `3px solid ${band.color}`,
+                      cursor: "pointer", border: `1px solid ${BRAND.teal}44`,
+                      background: "#ffffff0c", color: BRAND.cream,
+                      borderRadius: 14, padding: "16px 12px",
+                      fontFamily: "Sora", fontSize: 15, fontWeight: 500,
+                      transition: "all .2s", borderTop: `3px solid ${band.color}`,
                     }}
                   >
                     {e.name}
@@ -221,7 +451,7 @@ export default function AnchoredVerse() {
                   <ShareIconBtn
                     size="sm"
                     label={`Share ${f.ref}`}
-                    onClick={() => handleShare({ text: f.text, ref: f.ref, translation: f.translation || translation, emotionName: f.emotionName })}
+                    onClick={() => openShareCard({ text: f.text, ref: f.ref, translation: f.translation || translation, emotionName: f.emotionName, reflection: f.reflection })}
                   />
                 </div>
               ))}
@@ -244,18 +474,14 @@ export default function AnchoredVerse() {
           <div
             style={{
               background: `linear-gradient(160deg, ${BRAND.cream}, #fff)`,
-              color: BRAND.navy,
-              borderRadius: 22,
-              padding: "34px 30px",
-              boxShadow: "0 20px 50px rgba(0,0,0,.4)",
-              position: "relative",
+              color: BRAND.navy, borderRadius: 22, padding: "34px 30px",
+              boxShadow: "0 20px 50px rgba(0,0,0,.4)", position: "relative",
             }}
           >
-            {/* Share button (top-right of card) */}
             <div style={{ position: "absolute", top: 16, right: 16 }}>
               <ShareIconBtn
                 label={`Share ${verse.ref}`}
-                onClick={() => handleShare({ text: verse[translation], ref: verse.ref, translation, emotionName: emotion.name })}
+                onClick={() => openShareCard({ text: verse[translation], ref: verse.ref, translation, emotionName: emotion.name, reflection: emotion.reflection })}
               />
             </div>
 
@@ -282,7 +508,6 @@ export default function AnchoredVerse() {
             </div>
           </div>
 
-          {/* Actions */}
           <div style={{ display: "flex", gap: 10, marginTop: 18 }}>
             <button
               onClick={toggleFav}
@@ -290,7 +515,8 @@ export default function AnchoredVerse() {
               style={{
                 flex: 1, cursor: "pointer", borderRadius: 12, padding: "14px",
                 border: `1px solid ${BRAND.amber}`, fontFamily: "Oswald", letterSpacing: "1px", fontSize: 14,
-                background: isFav ? BRAND.amber : "transparent", color: isFav ? BRAND.navy : BRAND.amber, transition: "all .2s",
+                background: isFav ? BRAND.amber : "transparent",
+                color: isFav ? BRAND.navy : BRAND.amber, transition: "all .2s",
               }}
             >
               {isFav ? "★ ANCHORED" : "☆ SAVE ANCHOR"}
@@ -315,25 +541,19 @@ export default function AnchoredVerse() {
         </main>
       )}
 
-      {/* Share toast */}
+      {/* Share card modal */}
+      {renderShareCard()}
+
+      {/* Toast */}
       {shareToast && (
         <div
           className="av-toast"
           style={{
-            position: "fixed",
-            bottom: 28,
-            left: "50%",
-            transform: "translateX(-50%)",
-            background: BRAND.navy,
-            color: BRAND.cream,
-            border: `1px solid ${BRAND.teal}66`,
-            padding: "12px 22px",
-            borderRadius: 30,
-            fontFamily: "Oswald",
-            letterSpacing: "1px",
-            fontSize: 13,
-            boxShadow: "0 12px 30px rgba(0,0,0,.4)",
-            zIndex: 200,
+            position: "fixed", bottom: 28, left: "50%", transform: "translateX(-50%)",
+            background: BRAND.navy, color: BRAND.cream,
+            border: `1px solid ${BRAND.teal}66`, padding: "12px 22px",
+            borderRadius: 30, fontFamily: "Oswald", letterSpacing: "1px", fontSize: 13,
+            boxShadow: "0 12px 30px rgba(0,0,0,.4)", zIndex: 600,
           }}
         >
           {shareToast}
