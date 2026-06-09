@@ -8,11 +8,14 @@ import { BRAND, TRANSLATIONS, BANDS, EMOTIONS } from "./verses";
 // To add/edit content, edit verses.js — no UI changes needed.
 // ============================================================
 
+const APP_URL = "https://anchoredverse.vercel.app";
+
 export default function AnchoredVerse() {
   const [translation, setTranslation] = useState("ESV");
   const [activeEmotion, setActiveEmotion] = useState(null);
   const [verseIndex, setVerseIndex] = useState(0);
   const [favorites, setFavorites] = useState([]); // {emotionId, ref}
+  const [shareToast, setShareToast] = useState("");
 
   const emotion = useMemo(
     () => EMOTIONS.find((e) => e.id === activeEmotion) || null,
@@ -35,7 +38,73 @@ export default function AnchoredVerse() {
     setFavorites((prev) =>
       prev.some((f) => f.key === key)
         ? prev.filter((f) => f.key !== key)
-        : [...prev, { key, emotionId: emotion.id, emotionName: emotion.name, ref: verse.ref, text: verse[translation] }]
+        : [...prev, { key, emotionId: emotion.id, emotionName: emotion.name, ref: verse.ref, text: verse[translation], translation }]
+    );
+  };
+
+  // ============================================================
+  // SHARE
+  // Builds a clean share payload and uses Web Share API on mobile,
+  // falls back to clipboard with a brief toast.
+  // ============================================================
+  const handleShare = async ({ text, ref, translation: tr, emotionName }) => {
+    const body =
+      `"${text}"\n` +
+      `— ${ref} (${tr})\n\n` +
+      `Anchored Verse · ${emotionName}\n` +
+      `${APP_URL}`;
+
+    if (typeof navigator !== "undefined" && navigator.share) {
+      try {
+        await navigator.share({
+          title: "Anchored Verse",
+          text: body,
+        });
+        return;
+      } catch (e) {
+        // user cancelled — fall through to clipboard
+        if (e && e.name === "AbortError") return;
+      }
+    }
+
+    try {
+      await navigator.clipboard.writeText(body);
+      setShareToast("✓ Copied to clipboard");
+    } catch {
+      setShareToast("Couldn\u2019t copy — please try again");
+    }
+    setTimeout(() => setShareToast(""), 2200);
+  };
+
+  // Compact share icon button used inside the verse card + each saved anchor
+  const ShareIconBtn = ({ onClick, label = "Share verse", size = "md" }) => {
+    const sz = size === "sm" ? { box: 28, icon: 13, pad: 4 } : { box: 36, icon: 16, pad: 6 };
+    return (
+      <button
+        onClick={(e) => { e.stopPropagation(); onClick(); }}
+        aria-label={label}
+        className="av-btn"
+        style={{
+          width: sz.box,
+          height: sz.box,
+          padding: sz.pad,
+          background: `${BRAND.teal}14`,
+          border: `1px solid ${BRAND.teal}55`,
+          borderRadius: 10,
+          cursor: "pointer",
+          display: "inline-flex",
+          alignItems: "center",
+          justifyContent: "center",
+          transition: "all .2s",
+          color: BRAND.teal,
+        }}
+      >
+        {/* paper-plane / share glyph (SVG, scales cleanly) */}
+        <svg width={sz.icon} height={sz.icon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <path d="M22 2L11 13" />
+          <path d="M22 2L15 22L11 13L2 9L22 2Z" />
+        </svg>
+      </button>
     );
   };
 
@@ -57,6 +126,8 @@ export default function AnchoredVerse() {
         .av-chip:hover { transform: translateY(-2px); }
         .av-emo:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(0,0,0,.35); }
         .av-btn:active { transform: scale(.97); }
+        .av-toast { animation: avToast .25s ease both; }
+        @keyframes avToast { from { opacity: 0; transform: translate(-50%, 10px);} to {opacity:1; transform: translate(-50%, 0);} }
       `}</style>
 
       {/* Header */}
@@ -142,9 +213,16 @@ export default function AnchoredVerse() {
             <section style={{ marginTop: 10, paddingTop: 24, borderTop: `1px solid ${BRAND.teal}33` }}>
               <h2 style={{ fontFamily: "Oswald", fontSize: 16, letterSpacing: "2px", color: BRAND.amber }}>SAVED ANCHORS</h2>
               {favorites.map((f) => (
-                <div key={f.key} style={{ background: "#ffffff0c", borderRadius: 12, padding: "12px 16px", marginBottom: 8, fontSize: 13 }}>
-                  <span style={{ color: BRAND.amber, fontFamily: "Oswald", letterSpacing: "1px" }}>{f.ref}</span>
-                  <span style={{ opacity: 0.5 }}> · {f.emotionName}</span>
+                <div key={f.key} style={{ display: "flex", alignItems: "center", gap: 10, background: "#ffffff0c", borderRadius: 12, padding: "12px 16px", marginBottom: 8, fontSize: 13 }}>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <span style={{ color: BRAND.amber, fontFamily: "Oswald", letterSpacing: "1px" }}>{f.ref}</span>
+                    <span style={{ opacity: 0.5 }}> · {f.emotionName}</span>
+                  </div>
+                  <ShareIconBtn
+                    size="sm"
+                    label={`Share ${f.ref}`}
+                    onClick={() => handleShare({ text: f.text, ref: f.ref, translation: f.translation || translation, emotionName: f.emotionName })}
+                  />
                 </div>
               ))}
             </section>
@@ -173,7 +251,15 @@ export default function AnchoredVerse() {
               position: "relative",
             }}
           >
-            <div style={{ fontFamily: "Oswald", letterSpacing: "3px", fontSize: 13, color: BRAND.teal, textTransform: "uppercase" }}>
+            {/* Share button (top-right of card) */}
+            <div style={{ position: "absolute", top: 16, right: 16 }}>
+              <ShareIconBtn
+                label={`Share ${verse.ref}`}
+                onClick={() => handleShare({ text: verse[translation], ref: verse.ref, translation, emotionName: emotion.name })}
+              />
+            </div>
+
+            <div style={{ fontFamily: "Oswald", letterSpacing: "3px", fontSize: 13, color: BRAND.teal, textTransform: "uppercase", paddingRight: 44 }}>
               {emotion.name}
             </div>
 
@@ -227,6 +313,31 @@ export default function AnchoredVerse() {
             Verse {(verseIndex % emotion.verses.length) + 1} of {emotion.verses.length}
           </p>
         </main>
+      )}
+
+      {/* Share toast */}
+      {shareToast && (
+        <div
+          className="av-toast"
+          style={{
+            position: "fixed",
+            bottom: 28,
+            left: "50%",
+            transform: "translateX(-50%)",
+            background: BRAND.navy,
+            color: BRAND.cream,
+            border: `1px solid ${BRAND.teal}66`,
+            padding: "12px 22px",
+            borderRadius: 30,
+            fontFamily: "Oswald",
+            letterSpacing: "1px",
+            fontSize: 13,
+            boxShadow: "0 12px 30px rgba(0,0,0,.4)",
+            zIndex: 200,
+          }}
+        >
+          {shareToast}
+        </div>
       )}
     </div>
   );
