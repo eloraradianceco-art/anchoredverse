@@ -23,6 +23,19 @@ export default function AnchoredVerse() {
   const [shareCardBusy, setShareCardBusy] = useState(false);
   const shareCardRef = useRef(null);
 
+  // Add-to-Home-Screen state
+  const [a2hsOpen, setA2hsOpen] = useState(false);
+  React.useEffect(() => {
+    try {
+      const standalone = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+      if (!standalone && !localStorage.getItem("av_a2hs_seen")) {
+        const t = setTimeout(() => setA2hsOpen(true), 1200);
+        return () => clearTimeout(t);
+      }
+    } catch {}
+  }, []);
+  const closeA2hs = () => { try { localStorage.setItem("av_a2hs_seen", "1"); } catch {} setA2hsOpen(false); };
+
   const emotion = useMemo(
     () => EMOTIONS.find((e) => e.id === activeEmotion) || null,
     [activeEmotion]
@@ -456,6 +469,20 @@ export default function AnchoredVerse() {
               ))}
             </section>
           )}
+          {/* Add to Home Screen — permanent access */}
+          <div style={{ textAlign: "center", marginTop: 30 }}>
+            <button
+              className="av-btn"
+              onClick={() => setA2hsOpen(true)}
+              style={{
+                cursor: "pointer", border: `1px solid ${BRAND.teal}55`, background: "transparent",
+                color: BRAND.cream, borderRadius: 30, padding: "10px 20px",
+                fontFamily: "Oswald", letterSpacing: "1px", fontSize: 12, opacity: 0.85,
+              }}
+            >
+              📱 Add to Home Screen
+            </button>
+          </div>
         </main>
       )}
 
@@ -542,6 +569,64 @@ export default function AnchoredVerse() {
 
       {/* Share card modal */}
       {renderShareCard()}
+
+      {/* Add to Home Screen modal */}
+      {a2hsOpen && (
+        <div
+          onClick={closeA2hs}
+          style={{
+            position: "fixed", inset: 0, zIndex: 700, padding: 24,
+            background: "rgba(10,18,28,.92)", backdropFilter: "blur(8px)",
+            display: "flex", alignItems: "center", justifyContent: "center",
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              background: `linear-gradient(160deg, ${BRAND.navy}, #243646)`,
+              border: `1px solid ${BRAND.teal}55`, borderRadius: 22,
+              padding: "30px 26px", maxWidth: 400, width: "100%",
+              maxHeight: "88vh", overflowY: "auto", color: BRAND.cream,
+              boxShadow: "0 24px 60px rgba(0,0,0,.5)",
+            }}
+          >
+            <div style={{ textAlign: "center", marginBottom: 18 }}>
+              <div style={{ fontSize: 40, marginBottom: 6 }}>📱</div>
+              <div style={{ fontFamily: "Oswald", letterSpacing: "2px", fontSize: 18, color: BRAND.amber, textTransform: "uppercase" }}>
+                Add to Home Screen
+              </div>
+            </div>
+            <p style={{ textAlign: "center", fontSize: 14, opacity: 0.8, lineHeight: 1.6, marginTop: 0, marginBottom: 18 }}>
+              Anchored Verse works like a native app — add it to your Home Screen for instant, full-screen access.
+            </p>
+            {[
+              { os: "🍎 iPhone / iPad (Safari)", steps: ["Tap the Share button ⎙ at the bottom of Safari", 'Scroll down and tap "Add to Home Screen"', 'Tap "Add" — done ✓'] },
+              { os: "🤖 Android (Chrome)", steps: ["Tap the three-dot menu ⋮ at the top right", 'Tap "Add to Home Screen" or "Install App"', 'Tap "Add" — done ✓'] },
+            ].map((p) => (
+              <div key={p.os} style={{ marginBottom: 16 }}>
+                <div style={{ fontFamily: "Oswald", letterSpacing: "1px", fontSize: 13, color: BRAND.teal, marginBottom: 8 }}>{p.os}</div>
+                {p.steps.map((step, i) => (
+                  <div key={i} style={{ display: "flex", gap: 10, marginBottom: 6, alignItems: "flex-start" }}>
+                    <span style={{ flexShrink: 0, width: 20, height: 20, borderRadius: 999, background: BRAND.amber, color: BRAND.navy, fontFamily: "Oswald", fontSize: 11, display: "flex", alignItems: "center", justifyContent: "center", marginTop: 1 }}>{i + 1}</span>
+                    <span style={{ fontSize: 13.5, opacity: 0.85, lineHeight: 1.5 }}>{step}</span>
+                  </div>
+                ))}
+              </div>
+            ))}
+            <button
+              className="av-btn"
+              onClick={closeA2hs}
+              style={{
+                width: "100%", marginTop: 8, cursor: "pointer", border: "none",
+                borderRadius: 12, padding: "13px", background: BRAND.amber, color: BRAND.navy,
+                fontFamily: "Oswald", letterSpacing: "1px", fontSize: 15,
+              }}
+            >
+              Got it
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Toast */}
       {shareToast && (
