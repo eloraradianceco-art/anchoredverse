@@ -10,10 +10,34 @@ import { BRAND, TRANSLATIONS, BANDS, EMOTIONS } from "./verses";
 
 const APP_URL = "https://anchoredverse.vercel.app";
 
+// ── Shuffle-bag verse rotation (persisted) ───────────────────────
+// Each emotion gets a shuffled order of verse indices with no repeats until
+// every verse has been seen, then it reshuffles (avoiding an immediate repeat).
+const AV_BAGS_KEY = "av_verse_bags";
+function avLoadBags() {
+  try { return JSON.parse(localStorage.getItem(AV_BAGS_KEY)) || {}; } catch { return {}; }
+}
+function avSaveBags(bags) {
+  try { localStorage.setItem(AV_BAGS_KEY, JSON.stringify(bags)); } catch {}
+}
+function avShuffle(n, avoidFirst = -1) {
+  const a = Array.from({ length: n }, (_, i) => i);
+  for (let i = n - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  if (n > 1 && a[0] === avoidFirst) { const t = a[0]; a[0] = a[1]; a[1] = t; }
+  return a;
+}
+
 export default function AnchoredVerse() {
   const [translation, setTranslation] = useState("ESV");
   const [activeEmotion, setActiveEmotion] = useState(null);
   const [verseIndex, setVerseIndex] = useState(0);
+  const [bagPos, setBagPos] = useState(0);
+  const [bagLen, setBagLen] = useState(0);
+  const [browseOpen, setBrowseOpen] = useState(false);
+  const bagsRef = useRef(avLoadBags());
   const [favorites, setFavorites] = useState([]); // {emotionId, ref}
   const [shareToast, setShareToast] = useState("");
 
@@ -42,12 +66,52 @@ export default function AnchoredVerse() {
   );
   const verse = emotion ? emotion.verses[verseIndex % emotion.verses.length] : null;
 
-  const openEmotion = (id) => {
-    setActiveEmotion(id);
-    setVerseIndex(0);
+  // Pick a verse for an emotion via its persisted shuffle bag.
+  // mode: "open"/"next" advance the bag; a number jumps to that verse index.
+  const pickVerse = (emotionId, versesLen, mode) => {
+    const bags = bagsRef.current;
+    let b = bags[emotionId];
+    if (!b || !Array.isArray(b.order) || b.order.length !== versesLen) {
+      b = { order: avShuffle(versesLen), pos: 0 };
+    } else if (mode === "open" || mode === "next") {
+      let pos = b.pos + 1;
+      if (pos >= b.order.length) {
+        b.order = avShuffle(versesLen, b.order[b.order.length - 1]);
+        pos = 0;
+      }
+      b.pos = pos;
+    } else if (typeof mode === "number") {
+      const p = b.order.indexOf(mode);
+      if (p >= 0) b.pos = p;
+    }
+    bags[emotionId] = b;
+    avSaveBags(bags);
+    return { idx: b.order[b.pos], pos: b.pos, len: b.order.length };
   };
 
-  const nextVerse = () => setVerseIndex((i) => i + 1);
+  const applyPick = (emotionId, versesLen, mode) => {
+    const { idx, pos, len } = pickVerse(emotionId, versesLen, mode);
+    setVerseIndex(idx);
+    setBagPos(pos);
+    setBagLen(len);
+  };
+
+  const openEmotion = (id) => {
+    const e = EMOTIONS.find((x) => x.id === id);
+    setActiveEmotion(id);
+    applyPick(id, e ? e.verses.length : 0, "open");
+  };
+
+  const nextVerse = () => {
+    if (!emotion) return;
+    applyPick(emotion.id, emotion.verses.length, "next");
+  };
+
+  const jumpToVerse = (i) => {
+    if (!emotion) return;
+    applyPick(emotion.id, emotion.verses.length, i);
+    setBrowseOpen(false);
+  };
 
   const favKey = (emId, ref) => `${emId}::${ref}`;
   const isFav = verse && favorites.some((f) => f.key === favKey(emotion.id, verse.ref));
@@ -561,9 +625,24 @@ export default function AnchoredVerse() {
               </button>
             )}
           </div>
-          <p style={{ textAlign: "center", fontSize: 12, opacity: 0.4, marginTop: 12 }}>
-            Verse {(verseIndex % emotion.verses.length) + 1} of {emotion.verses.length}
-          </p>
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 10, marginTop: 14 }}>
+            <p style={{ textAlign: "center", fontSize: 12, opacity: 0.45, margin: 0, color: BRAND.cream, fontFamily: "Oswald", letterSpacing: "1px" }}>
+              {(bagPos + 1)} of {bagLen || emotion.verses.length}
+            </p>
+            {emotion.verses.length > 1 && (
+              <button
+                onClick={() => setBrowseOpen(true)}
+                className="av-btn"
+                style={{
+                  cursor: "pointer", background: "transparent", border: `1px solid ${BRAND.teal}55`,
+                  color: BRAND.cream, borderRadius: 30, padding: "8px 18px",
+                  fontFamily: "Oswald", letterSpacing: "1px", fontSize: 11, opacity: 0.9,
+                }}
+              >
+                ≡ Browse all {emotion.verses.length}
+              </button>
+            )}
+          </div>
         </main>
       )}
 
@@ -624,6 +703,73 @@ export default function AnchoredVerse() {
             >
               Got it
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Browse all verses sheet */}
+      {browseOpen && emotion && (
+        <div
+          onClick={() => setBrowseOpen(false)}
+          style={{
+            position: "fixed", inset: 0, zIndex: 700, padding: 24,
+            background: "rgba(10,18,28,.92)", backdropFilter: "blur(8px)",
+            display: "flex", alignItems: "center", justifyContent: "center",
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              background: `linear-gradient(160deg, ${BRAND.navy}, #243646)`,
+              border: `1px solid ${BRAND.teal}55`, borderRadius: 22,
+              padding: "24px 20px", maxWidth: 440, width: "100%",
+              maxHeight: "82vh", display: "flex", flexDirection: "column", color: BRAND.cream,
+              boxShadow: "0 24px 60px rgba(0,0,0,.5)",
+            }}
+          >
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <div style={{ fontFamily: "Oswald", letterSpacing: "2px", fontSize: 16, color: BRAND.amber, textTransform: "uppercase" }}>
+                {emotion.name}
+              </div>
+              <button
+                onClick={() => setBrowseOpen(false)}
+                aria-label="Close"
+                style={{ background: "none", border: "none", color: BRAND.cream, fontSize: 24, lineHeight: 1, cursor: "pointer", opacity: 0.6 }}
+              >×</button>
+            </div>
+            <div style={{ fontFamily: "Oswald", letterSpacing: "1px", fontSize: 11, color: BRAND.teal, margin: "4px 0 14px", opacity: 0.8 }}>
+              {emotion.verses.length} VERSES · TAP TO READ
+            </div>
+            <div style={{ overflowY: "auto", display: "flex", flexDirection: "column", gap: 8 }}>
+              {emotion.verses.map((v, i) => {
+                const active = i === verseIndex;
+                const fav = favorites.some((f) => f.key === favKey(emotion.id, v.ref));
+                const preview = (v[translation] || "").replace(/\s+/g, " ").trim();
+                return (
+                  <button
+                    key={v.ref}
+                    onClick={() => jumpToVerse(i)}
+                    className="av-btn"
+                    style={{
+                      textAlign: "left", cursor: "pointer", borderRadius: 12, padding: "12px 14px",
+                      background: active ? `${BRAND.teal}26` : "#ffffff0c",
+                      border: active ? `1px solid ${BRAND.teal}` : "1px solid transparent",
+                      color: BRAND.cream,
+                    }}
+                  >
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
+                      <span style={{ fontFamily: "Oswald", fontWeight: 600, letterSpacing: "1px", fontSize: 13, color: active ? BRAND.amber : BRAND.cream }}>
+                        {v.ref}{fav ? "  ★" : ""}
+                      </span>
+                      {active && <span style={{ fontFamily: "Oswald", fontSize: 10, letterSpacing: "1px", color: BRAND.teal }}>READING</span>}
+                    </div>
+                    <div style={{ fontSize: 13, lineHeight: 1.45, opacity: 0.7 }}>
+                      {preview.length > 90 ? preview.slice(0, 90) + "…" : preview}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
       )}
