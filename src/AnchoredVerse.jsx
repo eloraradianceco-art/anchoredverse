@@ -10,6 +10,20 @@ import { BRAND, TRANSLATIONS, BANDS, EMOTIONS } from "./verses";
 
 const APP_URL = "https://anchoredverse.vercel.app";
 
+// Rotate each emotion's reflections by day-of-year (with a per-emotion phase offset)
+// so returning users see a fresh anchor instead of the same line every visit.
+function pickReflection(emotion) {
+  const arr = Array.isArray(emotion.reflections)
+    ? emotion.reflections
+    : (emotion.reflection ? [emotion.reflection] : []);
+  if (!arr.length) return "";
+  const now = new Date();
+  const dayOfYear = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 86400000);
+  let off = 0; const id = emotion.id || "";
+  for (let i = 0; i < id.length; i++) off = (off + id.charCodeAt(i)) % arr.length;
+  return arr[(dayOfYear + off) % arr.length];
+}
+
 // ── Shuffle-bag verse rotation (persisted) ───────────────────────
 // Each emotion gets a shuffled order of verse indices with no repeats until
 // every verse has been seen, then it reshuffles (avoiding an immediate repeat).
@@ -121,7 +135,7 @@ export default function AnchoredVerse() {
     setFavorites((prev) =>
       prev.some((f) => f.key === key)
         ? prev.filter((f) => f.key !== key)
-        : [...prev, { key, emotionId: emotion.id, emotionName: emotion.name, ref: verse.ref, text: verse[translation], translation, reflection: emotion.reflection }]
+        : [...prev, { key, emotionId: emotion.id, emotionName: emotion.name, ref: verse.ref, text: verse[translation], translation, reflection: pickReflection(emotion) }]
     );
   };
 
@@ -571,7 +585,7 @@ export default function AnchoredVerse() {
             <div style={{ position: "absolute", top: 16, right: 16 }}>
               <ShareIconBtn
                 label={`Share ${verse.ref}`}
-                onClick={() => openShareCard({ text: verse[translation], ref: verse.ref, translation, emotionName: emotion.name, reflection: emotion.reflection })}
+                onClick={() => openShareCard({ text: verse[translation], ref: verse.ref, translation, emotionName: emotion.name, reflection: pickReflection(emotion) })}
               />
             </div>
 
@@ -594,7 +608,7 @@ export default function AnchoredVerse() {
 
             <div style={{ marginTop: 18, background: `${BRAND.teal}14`, borderLeft: `3px solid ${BRAND.teal}`, padding: "12px 16px", borderRadius: 8 }}>
               <div style={{ fontFamily: "Oswald", fontSize: 11, letterSpacing: "2px", color: BRAND.teal, marginBottom: 4 }}>REFLECTION</div>
-              <p style={{ margin: 0, fontSize: 14.5, lineHeight: 1.55, color: BRAND.navy, opacity: 0.85 }}>{emotion.reflection}</p>
+              <p style={{ margin: 0, fontSize: 14.5, lineHeight: 1.55, color: BRAND.navy, opacity: 0.85 }}>{pickReflection(emotion)}</p>
             </div>
           </div>
 
