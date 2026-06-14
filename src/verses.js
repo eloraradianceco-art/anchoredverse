@@ -41,8 +41,11 @@ export const EMOTIONS = [
     id: "anxious",
     name: "Anxious",
     band: "heavy",
-    reflection:
+    reflections: [
       "Anxiety lives in tomorrow. Scripture keeps pulling you back to today, where God actually is. Trade the rehearsal of fear for the practice of prayer.",
+      "Anxiety is you trying to carry tomorrow on today's strength. God hands out grace by the day, never in advance — you'll have what you need exactly when you need it.",
+      "Most of what you rehearse never arrives, and what does, He's already standing in. Hand Him the worry by name. He invites the weight because He can actually carry it.",
+    ],
     verses: [
       {
         ref: "Philippians 4:6-7",
@@ -152,8 +155,11 @@ export const EMOTIONS = [
     id: "sad",
     name: "Sad",
     band: "heavy",
-    reflection:
+    reflections: [
       "God doesn't rush your sorrow. He sits in it with you and promises the morning is coming. Grief and faith can share the same room.",
+      "God keeps your tears in a bottle — none of this is wasted on Him. You're not too much for the One who counts every one. Let it out; the morning He promised is still coming.",
+      "Sadness isn't weak faith — half the Psalms are written in it. Bring the ache unedited; He can hold your whole heart. You don't have to dress it up to be welcome.",
+    ],
     verses: [
       {
         ref: "Psalm 34:18",
@@ -257,8 +263,11 @@ export const EMOTIONS = [
     id: "overwhelmed",
     name: "Overwhelmed",
     band: "heavy",
-    reflection:
+    reflections: [
       "Overwhelm is a capacity problem. The invitation isn't to do more — it's to be carried. Lay the load down before it lays you down.",
+      "Overwhelm often means you've picked up an assignment God never handed you. His yoke fits; the extra weight was never yours. Do the next right thing, not all the things.",
+      "You can't carry the whole week in one afternoon. Shrink it to the next single step and give Him the rest. He runs the universe — He can be trusted with your list.",
+    ],
     verses: [
       {
         ref: "Matthew 11:28-29",
@@ -362,8 +371,11 @@ export const EMOTIONS = [
     id: "fearful",
     name: "Fearful",
     band: "heavy",
-    reflection:
+    reflections: [
       "Fear shrinks the world to the threat in front of you. God's nearness widens it back out. Courage isn't the absence of fear — it's the presence of God.",
+      "Scripture says 'do not fear' more than any other command — not because it's easy, but because He keeps showing up. Fear pictures a future with God edited out. He's already there.",
+      "Fear and faith both ask you to bet on something unseen. The surer you are that He's for you, the less the threat gets the final word. Name it, then move anyway.",
+    ],
     verses: [
       {
         ref: "Isaiah 41:10",
@@ -467,8 +479,11 @@ export const EMOTIONS = [
     id: "lonely",
     name: "Lonely",
     band: "heavy",
-    reflection:
+    reflections: [
       "Loneliness lies about your worth and God's absence. He has staked His name on never leaving. You are seen even when you feel unseen.",
+      "Alone and forsaken are not the same thing. Jesus was forsaken so you would never have to be. The room may feel empty — the covenant holding you isn't.",
+      "Loneliness is real data, not a life sentence. You were made for connection, and the first thread runs upward. Reach for Him tonight, then reach for one person tomorrow.",
+    ],
     verses: [
       {
         ref: "Deuteronomy 31:8",
@@ -566,8 +581,11 @@ export const EMOTIONS = [
     id: "grieving",
     name: "Grieving",
     band: "heavy",
-    reflection:
+    reflections: [
       "Grief is love with nowhere to go. God promises a day when every tear gets accounted for. Mourn fully — you don't grieve as those without hope.",
+      "Grief doesn't move in a straight line or keep your schedule. God isn't timing your healing. The God of all comfort meets you on the worst days, not only the composed ones.",
+      "You aren't grieving into nothing. Death is real, but in Christ it's a door, not a wall. Hold the sorrow and the hope at once — they were never meant to be enemies.",
+    ],
     verses: [
       {
         ref: "Revelation 21:4",
@@ -665,8 +683,11 @@ export const EMOTIONS = [
     id: "insecure",
     name: "Insecure",
     band: "heavy",
-    reflection:
+    reflections: [
       "Your identity was assigned before you performed anything. Insecurity argues with God's craftsmanship. You are not a draft — you are His workmanship.",
+      "Insecurity keeps auditing a verdict God already handed down. You were chosen before you achieved anything. The One whose vote outranks the room calls you His — stop relitigating a settled case.",
+      "Comparison is the thief that feeds insecurity. He made no one else to be you, doing what you're here to do. Run your lane — the assignment is yours, not the room's.",
+    ],
     verses: [
       {
         ref: "Psalm 139:14",
@@ -764,8 +785,11 @@ export const EMOTIONS = [
     id: "angry",
     name: "Angry",
     band: "friction",
-    reflection:
+    reflections: [
       "Anger isn't the sin — what you do in the next ten seconds is. Slow is strength. A man who rules his spirit outranks one who takes a city.",
+      "Anger is a signal, not a strategy. It usually points at something you love or something that's wrong — listen to it, but don't hand it the wheel. Be angry, and do not sin.",
+      "God is slow to anger and abounding in love — the slowness is strength, not weakness. Cool the engine before you steer. Name the wrong without becoming it.",
+    ],
     verses: [
       {
         ref: "Proverbs 15:1",
@@ -863,8 +887,11 @@ export const EMOTIONS = [
     id: "frustrated",
     name: "Frustrated",
     band: "friction",
-    reflection:
+    reflections: [
       "Frustration is friction against your timeline. The harvest has its own season — don't quit before it. Faithfulness now, fruit in due time.",
+      "Frustration is the gap between what you want and what you control. Narrow it — pour everything into your part, release the part that was never yours. He isn't slow; He's thorough.",
+      "What feels like delay is often unseen preparation. God wastes nothing, the wait included. Keep showing up — the reps you resent are the ones building you.",
+    ],
     verses: [
       {
         ref: "Galatians 6:9",
@@ -962,8 +989,11 @@ export const EMOTIONS = [
     id: "tempted",
     name: "Tempted",
     band: "friction",
-    reflection:
+    reflections: [
       "Temptation always overstates its power and hides the exit. God guarantees there's a door. Resist at the doorway, not the destination.",
+      "Temptation grows on attention — what you feed gets stronger, what you starve gets weaker. Being tempted isn't failing; even Jesus was. Win it early, in the small yes and no.",
+      "Every temptation is common, and so is the exit — God always builds one. Say it out loud to someone; secrecy is where it grows teeth. Light kills what the dark keeps alive.",
+    ],
     verses: [
       {
         ref: "1 Corinthians 10:13",
@@ -1055,8 +1085,11 @@ export const EMOTIONS = [
     id: "repentant",
     name: "Repentant",
     band: "friction",
-    reflection:
+    reflections: [
       "Conviction is a doorway, not a verdict. Confession moves you through it into clean ground. God doesn't shame the returning — He runs to meet them.",
+      "Conviction names a specific thing so you can be free of it; condemnation just whispers you're hopeless. One is God's voice, the other isn't. Confess the specific, then let it go.",
+      "Repentance isn't groveling — it's turning around. The blood already covers it; you're not repaying a debt that's been canceled. Walk forward clean, not crawling.",
+    ],
     verses: [
       {
         ref: "1 John 1:9",
@@ -1154,8 +1187,11 @@ export const EMOTIONS = [
     id: "happy",
     name: "Happy",
     band: "light",
-    reflection:
+    reflections: [
       "Joy isn't denial of hardship — it's a deeper current under it. Anchor it in the Source, not the circumstance, and it won't drain when the day turns.",
+      "Happiness tracks your circumstances; joy is anchored deeper and holds when they shift. Enjoy the good thing fully — then thank the Giver, not just the gift. Shared joy only multiplies.",
+      "Don't rush past a good day waiting on the next thing. This is the day the Lord made — actually be in it. Gladness is one way of honoring the One who handed it to you.",
+    ],
     verses: [
       {
         ref: "Psalm 118:24",
@@ -1253,8 +1289,11 @@ export const EMOTIONS = [
     id: "grateful",
     name: "Grateful",
     band: "light",
-    reflection:
+    reflections: [
       "Gratitude is a discipline before it's a feeling. Name the gift and the giver, in any circumstance, and it reorders how you see everything else.",
+      "Gratitude and anxiety can't share the same breath. Thanksgiving is what turns a request into peace. Count what's already in your hands before you tally what's missing.",
+      "Every good gift came from upstream — none of it is self-made. Gratitude keeps you honest about that. Say it out loud; a named blessing lands deeper than an assumed one.",
+    ],
     verses: [
       {
         ref: "1 Thessalonians 5:18",
@@ -1352,8 +1391,11 @@ export const EMOTIONS = [
     id: "hopeful",
     name: "Hopeful",
     band: "light",
-    reflection:
+    reflections: [
       "Hope isn't optimism — it's confidence in a faithful God regardless of the odds in front of you. It's an anchor, not a wish.",
+      "Hope isn't wishful — it's evidence-based, resting on a God who hasn't broken a promise yet. Look back at what He's already carried you through; that's your reason to expect morning.",
+      "Hope lifts your eyes past this chapter to the One writing the whole book. The story isn't over and the Author is good. Hold the line — what's coming outweighs what's here.",
+    ],
     verses: [
       {
         ref: "Romans 15:13",
@@ -1451,8 +1493,11 @@ export const EMOTIONS = [
     id: "peaceful",
     name: "Peaceful",
     band: "light",
-    reflection:
+    reflections: [
       "Peace isn't the absence of storm — it's a settled mind staying fixed on God in the middle of one. Guard it; it's a gift, not a mood.",
+      "Peace isn't something you manufacture — it's something He gives, the kind the world can't hand out or take back. Fix your mind on Him and it stands guard over your heart like a sentry.",
+      "The mind stayed on God is kept in peace — attention is the lever. You can't still the storm, but you can choose what you fix on inside it. Trade the scroll for the quiet.",
+    ],
     verses: [
       {
         ref: "Isaiah 26:3",
@@ -1550,8 +1595,11 @@ export const EMOTIONS = [
     id: "faith",
     name: "Faith-Filled",
     band: "light",
-    reflection:
+    reflections: [
       "Faith acts before it sees. It's not certainty about outcomes — it's conviction about who God is. Build it by hearing, then move on it.",
+      "Faith the size of a seed moves mountains — it's never the size that works, it's the One it's attached to. Small faith in a great God beats great confidence in yourself.",
+      "Faith gets proven in the dark, not the daylight. The test isn't punishment — it's what turns belief into muscle. Keep walking when you can't see the step; the ground holds.",
+    ],
     verses: [
       {
         ref: "Hebrews 11:1",
@@ -1649,8 +1697,11 @@ export const EMOTIONS = [
     id: "forgiving",
     name: "Forgiving",
     band: "light",
-    reflection:
+    reflections: [
       "Forgiveness isn't excusing the wrong — it's releasing your right to collect the debt, because you've been released too. Free them; free yourself.",
+      "Forgiveness is a decision, not a feeling, and it can come long before the other person earns it — they may never. It isn't the same as trust; you can cancel the debt and still rebuild slowly.",
+      "Bitterness drinks poison and waits for the other person to feel it. You forgive from a full cup — you were pardoned a debt you could never repay. Pass on what you've been given.",
+    ],
     verses: [
       {
         ref: "Ephesians 4:32",
