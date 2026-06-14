@@ -12,16 +12,23 @@ const APP_URL = "https://anchoredverse.vercel.app";
 
 // Rotate each emotion's reflections by day-of-year (with a per-emotion phase offset)
 // so returning users see a fresh anchor instead of the same line every visit.
-function pickReflection(emotion) {
-  const arr = Array.isArray(emotion.reflections)
+function reflectionList(emotion) {
+  if (!emotion) return [];
+  return Array.isArray(emotion.reflections)
     ? emotion.reflections
     : (emotion.reflection ? [emotion.reflection] : []);
-  if (!arr.length) return "";
+}
+
+// Day-of-year base index (with a per-emotion phase offset) so returning users
+// see a fresh anchor each day; tap-to-cycle advances from this starting point.
+function reflectionBaseIndex(emotion) {
+  const arr = reflectionList(emotion);
+  if (!arr.length) return 0;
   const now = new Date();
   const dayOfYear = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 86400000);
-  let off = 0; const id = emotion.id || "";
+  let off = 0; const id = (emotion && emotion.id) || "";
   for (let i = 0; i < id.length; i++) off = (off + id.charCodeAt(i)) % arr.length;
-  return arr[(dayOfYear + off) % arr.length];
+  return (dayOfYear + off) % arr.length;
 }
 
 // ── Shuffle-bag verse rotation (persisted) ───────────────────────
@@ -80,6 +87,14 @@ export default function AnchoredVerse() {
   );
   const verse = emotion ? emotion.verses[verseIndex % emotion.verses.length] : null;
 
+  // Reflection rotation: day-seeded base index + user tap-to-cycle. Resets on emotion change.
+  const [reflBump, setReflBump] = useState(0);
+  React.useEffect(() => { setReflBump(0); }, [emotion ? emotion.id : null]);
+  const reflList = reflectionList(emotion);
+  const reflIndex = reflList.length ? (reflectionBaseIndex(emotion) + reflBump) % reflList.length : 0;
+  const currentReflection = reflList[reflIndex] || "";
+  const cycleReflection = (e) => { if (e) e.stopPropagation(); if (reflList.length > 1) setReflBump((b) => b + 1); };
+
   // Pick a verse for an emotion via its persisted shuffle bag.
   // mode: "open"/"next" advance the bag; a number jumps to that verse index.
   const pickVerse = (emotionId, versesLen, mode) => {
@@ -135,7 +150,7 @@ export default function AnchoredVerse() {
     setFavorites((prev) =>
       prev.some((f) => f.key === key)
         ? prev.filter((f) => f.key !== key)
-        : [...prev, { key, emotionId: emotion.id, emotionName: emotion.name, ref: verse.ref, text: verse[translation], translation, reflection: pickReflection(emotion) }]
+        : [...prev, { key, emotionId: emotion.id, emotionName: emotion.name, ref: verse.ref, text: verse[translation], translation, reflection: currentReflection }]
     );
   };
 
@@ -585,7 +600,7 @@ export default function AnchoredVerse() {
             <div style={{ position: "absolute", top: 16, right: 16 }}>
               <ShareIconBtn
                 label={`Share ${verse.ref}`}
-                onClick={() => openShareCard({ text: verse[translation], ref: verse.ref, translation, emotionName: emotion.name, reflection: pickReflection(emotion) })}
+                onClick={() => openShareCard({ text: verse[translation], ref: verse.ref, translation, emotionName: emotion.name, reflection: currentReflection })}
               />
             </div>
 
@@ -606,9 +621,23 @@ export default function AnchoredVerse() {
               </span>
             </div>
 
-            <div style={{ marginTop: 18, background: `${BRAND.teal}14`, borderLeft: `3px solid ${BRAND.teal}`, padding: "12px 16px", borderRadius: 8 }}>
-              <div style={{ fontFamily: "Oswald", fontSize: 11, letterSpacing: "2px", color: BRAND.teal, marginBottom: 4 }}>REFLECTION</div>
-              <p style={{ margin: 0, fontSize: 14.5, lineHeight: 1.55, color: BRAND.navy, opacity: 0.85 }}>{pickReflection(emotion)}</p>
+            <div
+              onClick={cycleReflection}
+              title={reflList.length > 1 ? "Tap for another reflection" : undefined}
+              style={{ marginTop: 18, background: `${BRAND.teal}14`, borderLeft: `3px solid ${BRAND.teal}`, padding: "12px 16px", borderRadius: 8, cursor: reflList.length > 1 ? "pointer" : "default", userSelect: "none" }}
+            >
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 4 }}>
+                <span style={{ fontFamily: "Oswald", fontSize: 11, letterSpacing: "2px", color: BRAND.teal }}>REFLECTION</span>
+                {reflList.length > 1 && (
+                  <span style={{ display: "flex", gap: 5, alignItems: "center" }}>
+                    {reflList.map((_, i) => (
+                      <span key={i} style={{ width: 6, height: 6, borderRadius: "50%", background: i === reflIndex ? BRAND.teal : `${BRAND.teal}40` }} />
+                    ))}
+                    <span style={{ marginLeft: 4, color: BRAND.teal, fontSize: 13, lineHeight: 1, opacity: 0.75 }}>↻</span>
+                  </span>
+                )}
+              </div>
+              <p style={{ margin: 0, fontSize: 14.5, lineHeight: 1.55, color: BRAND.navy, opacity: 0.85 }}>{currentReflection}</p>
             </div>
           </div>
 
