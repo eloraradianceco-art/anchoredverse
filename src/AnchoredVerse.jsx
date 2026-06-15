@@ -637,7 +637,7 @@ export default function AnchoredVerse() {
                   </span>
                 )}
               </div>
-              <p style={{ margin: 0, fontSize: 14.5, lineHeight: 1.55, color: BRAND.navy, opacity: 0.85 }}>{currentReflection}</p>
+              <p style={{ margin: 0, fontSize: 16.5, lineHeight: 1.55, color: BRAND.navy, opacity: 0.85 }}>{currentReflection}</p>
             </div>
           </div>
 
