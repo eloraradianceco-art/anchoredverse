@@ -180,7 +180,7 @@ export default function AnchoredVerse() {
       const bg = shareCardLight ? BRAND.cream : BRAND.navy;
       const dataUrl = await toPng(shareCardRef.current, {
         cacheBust: true,
-        pixelRatio: 2,
+        pixelRatio: 3,
         backgroundColor: bg,
       });
 
@@ -342,7 +342,7 @@ export default function AnchoredVerse() {
             {/* Emotion label */}
             <div style={{
               textAlign: "center", marginBottom: 18,
-              fontFamily: "Oswald", fontSize: 12, letterSpacing: "3px",
+              fontFamily: "Oswald", fontSize: 13, letterSpacing: "3px",
               color: cTeal, textTransform: "uppercase", fontWeight: 600,
             }}>
               {shareCard.emotionName}
@@ -350,7 +350,7 @@ export default function AnchoredVerse() {
 
             {/* Verse text — the focal point */}
             <p style={{
-              fontFamily: "Sora", fontSize: 19, lineHeight: 1.55,
+              fontFamily: "Sora", fontSize: 22, lineHeight: 1.55,
               margin: "0 0 22px", fontStyle: "italic",
               textAlign: "center", fontWeight: 400, color: cText,
             }}>
@@ -362,10 +362,10 @@ export default function AnchoredVerse() {
               display: "flex", justifyContent: "space-between", alignItems: "center",
               borderTop: `1px solid ${cDivider}`, paddingTop: 14, marginBottom: 16,
             }}>
-              <span style={{ fontFamily: "Oswald", fontWeight: 600, letterSpacing: "1px", color: cText, fontSize: 14 }}>
+              <span style={{ fontFamily: "Oswald", fontWeight: 600, letterSpacing: "1px", color: cText, fontSize: 15 }}>
                 {shareCard.ref}
               </span>
-              <span style={{ fontFamily: "Oswald", fontSize: 11, letterSpacing: "1.5px", color: cAmber, fontWeight: 500 }}>
+              <span style={{ fontFamily: "Oswald", fontSize: 12, letterSpacing: "1.5px", color: cAmber, fontWeight: 500 }}>
                 {shareCard.translation}
               </span>
             </div>
@@ -380,7 +380,7 @@ export default function AnchoredVerse() {
                 <div style={{ fontFamily: "Oswald", fontSize: 9, letterSpacing: "2px", color: cTeal, marginBottom: 4, fontWeight: 600 }}>
                   REFLECTION
                 </div>
-                <p style={{ margin: 0, fontSize: 12, lineHeight: 1.5, color: cText, opacity: 0.85 }}>
+                <p style={{ margin: 0, fontSize: 14, lineHeight: 1.5, color: cText, opacity: 0.85 }}>
                   {shareCard.reflection}
                 </p>
               </div>
