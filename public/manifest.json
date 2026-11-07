@@ -4,8 +4,8 @@
   "description": "A word for every weight your heart carries.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#1C2B39",
-  "theme_color": "#1C2B39",
+  "background_color": "#0D1B29",
+  "theme_color": "#0D1B29",
   "icons": [
     { "src": "/app-icon.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
   ]

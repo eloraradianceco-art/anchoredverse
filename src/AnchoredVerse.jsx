@@ -1,12 +1,61 @@
-import React, { useState, useMemo, useRef } from "react";
-import { BRAND, TRANSLATIONS, BANDS, EMOTIONS } from "./verses";
+import React, { useState, useMemo, useRef, useEffect } from "react";
+import { TRANSLATIONS, BANDS, EMOTIONS } from "./verses";
+import "./fonts.css";
+import "./anchored.css";
 
 // ============================================================
 // ANCHORED VERSE — Elora Radiance Co.
 // Emotion-indexed scripture companion
-// All verse data lives in verses.js (259 verses, 17 emotions).
+// All verse data lives in verses.js (339 verses, 25 emotions).
 // To add/edit content, edit verses.js — no UI changes needed.
+// Visual layer lives in anchored.css; fonts are self-hosted (fonts.css).
 // ============================================================
+
+// Palette (mirrors the CSS custom properties; used for inline tones and the share image)
+const C = {
+  harbor: "#0D1B29", deep: "#16293C", gold: "#D6A55A", goldInk: "#8F6522",
+  sea: "#6BB3AE", tide: "#7FA4C8", parch: "#EAE4D3", mist: "#8FA0AE", paper: "#F3EEDF",
+};
+// Band tones (verses.js ships a navy for "heavy" which vanishes on a dark field)
+const TONE = { heavy: C.tide, friction: C.gold, light: C.sea };
+const toneVars = (hex) => ({ "--tone": hex, "--tone-soft": `${hex}73` });
+
+// Verse type scales with length: short verses get presence, long ones stay calm.
+const verseSize = (text = "") => (text.length <= 90 ? "lg" : text.length <= 170 ? "md" : "sm");
+
+// ── Icons ────────────────────────────────────────────────────────
+function AnchorMark({ size = 26, filled = false }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <circle cx="12" cy="4.9" r="2.2" fill={filled ? "currentColor" : "none"} />
+      <path d="M12 7.1v13.1M8.4 10.2h7.2" />
+      <path d="M4.8 13.7c.5 4.1 3.5 6.5 7.2 6.5s6.7-2.4 7.2-6.5" />
+      <path d="M2.8 15.3l2-1.8 2.1 1.7M17.1 15.2l2.1-1.7 2 1.8" />
+    </svg>
+  );
+}
+const ShareGlyph = ({ size = 19 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="M12 15V3.5M7.6 7.6L12 3.2l4.4 4.4M5 12v6.5A2.5 2.5 0 007.5 21h9a2.5 2.5 0 002.5-2.5V12" />
+  </svg>
+);
+const ChevronLeft = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg>
+);
+const CloseGlyph = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+);
+const CycleGlyph = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 11-3-6.7L21 8M21 3v5h-5" /></svg>
+);
+
+function ShareIconBtn({ onClick, label = "Share verse" }) {
+  return (
+    <button onClick={(e) => { e.stopPropagation(); onClick(); }} aria-label={label} className="av-icon-btn">
+      <ShareGlyph />
+    </button>
+  );
+}
 
 const APP_URL = "https://anchoredverse.vercel.app";
 
@@ -177,7 +226,7 @@ export default function AnchoredVerse() {
       await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
 
       const { toPng } = await import("html-to-image");
-      const bg = shareCardLight ? BRAND.cream : BRAND.navy;
+      const bg = shareCardLight ? C.paper : C.harbor;
       const dataUrl = await toPng(shareCardRef.current, {
         cacheBust: true,
         pixelRatio: 3,
@@ -209,7 +258,7 @@ export default function AnchoredVerse() {
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
-      setShareToast("✓ Image saved");
+      setShareToast("Image saved");
       setTimeout(() => setShareToast(""), 2200);
     } catch (e) {
       console.error("Share image failed:", e);
@@ -224,7 +273,7 @@ export default function AnchoredVerse() {
     const body =
       `"${text}"\n` +
       `— ${ref} (${tr})\n\n` +
-      `Anchored Verse · ${emotionName}\n` +
+      `Anchored Verse: ${emotionName}\n` +
       `${APP_URL}`;
 
     if (typeof navigator !== "undefined" && navigator.share) {
@@ -237,578 +286,284 @@ export default function AnchoredVerse() {
     }
     try {
       await navigator.clipboard.writeText(body);
-      setShareToast("✓ Copied to clipboard");
+      setShareToast("Copied to clipboard");
     } catch {
       setShareToast("Couldn\u2019t copy");
     }
     setTimeout(() => setShareToast(""), 2200);
   };
 
-  const ShareIconBtn = ({ onClick, label = "Share verse", size = "md" }) => {
-    const sz = size === "sm" ? { box: 28, icon: 13, pad: 4 } : { box: 36, icon: 16, pad: 6 };
-    return (
-      <button
-        onClick={(e) => { e.stopPropagation(); onClick(); }}
-        aria-label={label}
-        className="av-btn"
-        style={{
-          width: sz.box, height: sz.box, padding: sz.pad,
-          background: `${BRAND.teal}14`,
-          border: `1px solid ${BRAND.teal}55`,
-          borderRadius: 10, cursor: "pointer",
-          display: "inline-flex", alignItems: "center", justifyContent: "center",
-          transition: "all .2s", color: BRAND.teal,
-        }}
-      >
-        <svg width={sz.icon} height={sz.icon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-          <path d="M22 2L11 13" />
-          <path d="M22 2L15 22L11 13L2 9L22 2Z" />
-        </svg>
-      </button>
-    );
-  };
+  // ── Escape closes the top-most layer; page doesn't scroll behind a layer ──
+  const layerOpen = !!shareCard || browseOpen || a2hsOpen;
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key !== "Escape") return;
+      if (shareCard) closeShareCard();
+      else if (browseOpen) setBrowseOpen(false);
+      else if (a2hsOpen) closeA2hs();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  });
+  useEffect(() => {
+    if (!browseOpen) return;
+    const t = setTimeout(() => {
+      const el = document.querySelector(".av-row.on");
+      if (el && el.scrollIntoView) el.scrollIntoView({ block: "center" });
+    }, 60);
+    return () => clearTimeout(t);
+  }, [browseOpen]);
+  useEffect(() => {
+    document.body.style.overflow = layerOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [layerOpen]);
+
+  const tone = emotion ? TONE[emotion.band] || C.tide : C.tide;
+  const glow = emotion
+    ? `radial-gradient(110% 62% at 12% 0%, ${tone}33, transparent 72%), radial-gradient(70% 40% at 100% 22%, ${C.sea}12, transparent 70%)`
+    : `radial-gradient(110% 55% at 10% 0%, ${C.tide}26, transparent 72%), radial-gradient(70% 38% at 100% 18%, ${C.gold}10, transparent 70%)`;
 
   // ============================================================
   // SHARE CARD — rendered to HTML then converted to PNG by html-to-image
-  // Light/dark toggle, brand-matched typography (Oswald + Sora)
   // ============================================================
   const renderShareCard = () => {
     if (!shareCard) return null;
-
-    const cBg = shareCardLight
-      ? `linear-gradient(160deg, ${BRAND.cream}, #FFFFFF)`
-      : `linear-gradient(160deg, ${BRAND.navy}, #243646)`;
-    const cText  = shareCardLight ? BRAND.navy : BRAND.cream;
-    const cTeal  = shareCardLight ? BRAND.teal : "#3FB5B5";
-    const cAmber = BRAND.amber;
-    const cDivider = shareCardLight ? `${BRAND.navy}22` : `${BRAND.cream}33`;
-    const cFootMuted = shareCardLight ? `${BRAND.navy}66` : `${BRAND.cream}66`;
+    const light = shareCardLight;
+    const cardTone = TONE[(EMOTIONS.find((e) => e.name === shareCard.emotionName) || {}).band] || C.tide;
+    const accent = light ? C.goldInk : C.gold;
+    const feel = light ? C.harbor : cardTone;
+    const bg = light
+      ? `radial-gradient(120% 55% at 10% 0%, ${cardTone}2E, transparent 72%), ${C.paper}`
+      : `radial-gradient(120% 55% at 10% 0%, ${cardTone}3D, transparent 72%), linear-gradient(172deg, ${C.deep}, ${C.harbor} 72%)`;
 
     return (
-      <div
-        onClick={closeShareCard}
-        style={{
-          position: "fixed", inset: 0, zIndex: 500,
-          background: "rgba(0,0,0,0.88)",
-          display: "flex", flexDirection: "column", alignItems: "center",
-          padding: "24px 16px 32px", overflowY: "auto",
-        }}
-      >
-        <div onClick={(e) => e.stopPropagation()} style={{ width: "100%", maxWidth: 400 }}>
-          {/* Modal header */}
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14, color: BRAND.cream }}>
-            <div style={{ fontFamily: "Oswald", letterSpacing: "2px", fontSize: 12, color: BRAND.amber, textTransform: "uppercase" }}>
-              Share Card
-            </div>
-            <button
-              onClick={closeShareCard}
-              aria-label="Close"
-              style={{
-                background: "transparent", border: "none", color: BRAND.cream,
-                fontSize: 26, lineHeight: 1, cursor: "pointer", padding: 4,
-              }}
-            >×</button>
+      <div className="av-share" onClick={closeShareCard} role="dialog" aria-modal="true" aria-label="Share this verse">
+        <div className="av-share-inner" onClick={(e) => e.stopPropagation()}>
+          <div className="av-share-head">
+            <h2>Share this verse</h2>
+            <button onClick={closeShareCard} aria-label="Close" className="av-icon-btn bare"><CloseGlyph /></button>
           </div>
 
           {/* The card that will be captured as PNG */}
-          <div
-            ref={shareCardRef}
-            style={{
-              background: cBg,
-              borderRadius: 22,
-              padding: "36px 30px 28px",
-              fontFamily: "'Sora', system-ui, sans-serif",
-              color: cText,
-              boxShadow: "0 24px 60px rgba(0,0,0,.5)",
-              border: shareCardLight ? `1px solid ${BRAND.navy}11` : `1px solid ${BRAND.cream}11`,
-            }}
-          >
-            {/* Brand line */}
-            <div style={{ textAlign: "center", marginBottom: 22 }}>
-              <div style={{
-                fontFamily: "Oswald", letterSpacing: "4px", fontSize: 10,
-                color: cAmber, textTransform: "uppercase", fontWeight: 600,
-              }}>
-                Elora Radiance Co.
-              </div>
-              <div style={{
-                fontFamily: "Oswald", letterSpacing: "1.5px", fontSize: 15,
-                color: cText, marginTop: 4, fontWeight: 700, opacity: 0.85,
-              }}>
-                ANCHORED VERSE
-              </div>
+          <div ref={shareCardRef} className={`sc ${light ? "light" : "dark"}`} style={{ background: bg }}>
+            <div className="sc-top">
+              <span className="sc-brand"><span style={{ color: accent, display: "inline-flex" }}><AnchorMark size={22} /></span>Anchored Verse</span>
+              <span className="sc-feel" style={{ color: feel, opacity: light ? 0.7 : 1 }}>{shareCard.emotionName}</span>
             </div>
-
-            {/* Emotion label */}
-            <div style={{
-              textAlign: "center", marginBottom: 18,
-              fontFamily: "Oswald", fontSize: 13, letterSpacing: "3px",
-              color: cTeal, textTransform: "uppercase", fontWeight: 600,
-            }}>
-              {shareCard.emotionName}
+            <div className={`sc-verse ${verseSize(shareCard.text)}`}>
+              <p>{"“"}{shareCard.text}{"”"}</p>
             </div>
-
-            {/* Verse text — the focal point */}
-            <p style={{
-              fontFamily: "Sora", fontSize: 22, lineHeight: 1.55,
-              margin: "0 0 22px", fontStyle: "italic",
-              textAlign: "center", fontWeight: 400, color: cText,
-            }}>
-              “{shareCard.text}”
-            </p>
-
-            {/* Reference + translation */}
-            <div style={{
-              display: "flex", justifyContent: "space-between", alignItems: "center",
-              borderTop: `1px solid ${cDivider}`, paddingTop: 14, marginBottom: 16,
-            }}>
-              <span style={{ fontFamily: "Oswald", fontWeight: 600, letterSpacing: "1px", color: cText, fontSize: 15 }}>
-                {shareCard.ref}
-              </span>
-              <span style={{ fontFamily: "Oswald", fontSize: 12, letterSpacing: "1.5px", color: cAmber, fontWeight: 500 }}>
-                {shareCard.translation}
-              </span>
+            <div className="sc-ref" style={{ color: accent }}>
+              {shareCard.ref}<span style={{ color: light ? C.harbor : C.parch }}>{shareCard.translation}</span>
             </div>
-
-            {/* Optional reflection (if present and short enough) */}
             {shareCard.reflection && shareCard.reflection.length < 220 && (
-              <div style={{
-                background: shareCardLight ? `${BRAND.teal}10` : `${BRAND.teal}22`,
-                borderLeft: `3px solid ${cTeal}`,
-                padding: "10px 14px", borderRadius: 8, marginBottom: 18,
-              }}>
-                <div style={{ fontFamily: "Oswald", fontSize: 9, letterSpacing: "2px", color: cTeal, marginBottom: 4, fontWeight: 600 }}>
-                  REFLECTION
-                </div>
-                <p style={{ margin: 0, fontSize: 14, lineHeight: 1.5, color: cText, opacity: 0.85 }}>
-                  {shareCard.reflection}
-                </p>
-              </div>
+              <p className="sc-reflect" style={{ borderLeftColor: light ? `${C.harbor}33` : `${cardTone}88` }}>{shareCard.reflection}</p>
             )}
-
-            {/* Footer URL */}
-            <div style={{
-              textAlign: "center", fontFamily: "Oswald",
-              fontSize: 10, letterSpacing: "2px", color: cFootMuted,
-              textTransform: "uppercase", paddingTop: 6,
-            }}>
-              anchoredverse.vercel.app
+            <div className="sc-foot">
+              <span>anchoredverse.vercel.app</span>
+              <span>Elora Radiance Co.</span>
             </div>
           </div>
 
-          {/* Theme toggle */}
-          <div style={{ display: "flex", justifyContent: "center", gap: 6, marginTop: 16 }}>
-            <button
-              onClick={() => setShareCardLight(true)}
-              className="av-btn"
-              style={{
-                fontFamily: "Oswald", fontSize: 11, letterSpacing: "1.5px",
-                padding: "8px 16px", borderRadius: 20, cursor: "pointer",
-                border: `1px solid ${BRAND.cream}33`,
-                background: shareCardLight ? BRAND.amber : "transparent",
-                color: shareCardLight ? BRAND.navy : BRAND.cream,
-                transition: "all .2s",
-              }}
-            >☀ LIGHT</button>
-            <button
-              onClick={() => setShareCardLight(false)}
-              className="av-btn"
-              style={{
-                fontFamily: "Oswald", fontSize: 11, letterSpacing: "1.5px",
-                padding: "8px 16px", borderRadius: 20, cursor: "pointer",
-                border: `1px solid ${BRAND.cream}33`,
-                background: !shareCardLight ? BRAND.amber : "transparent",
-                color: !shareCardLight ? BRAND.navy : BRAND.cream,
-                transition: "all .2s",
-              }}
-            >☾ DARK</button>
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <div className="av-seg" role="group" aria-label="Card style">
+              <button onClick={() => setShareCardLight(true)} aria-pressed={shareCardLight}>Light</button>
+              <button onClick={() => setShareCardLight(false)} aria-pressed={!shareCardLight}>Dark</button>
+            </div>
           </div>
 
-          {/* Share + copy text actions */}
-          <div style={{ display: "flex", gap: 10, marginTop: 16 }}>
+          <div className="av-share-actions">
             <button
               onClick={() => handleShareText({ text: shareCard.text, ref: shareCard.ref, translation: shareCard.translation, emotionName: shareCard.emotionName })}
-              className="av-btn"
-              style={{
-                flex: 1, cursor: "pointer", borderRadius: 12, padding: "14px",
-                border: `1px solid ${BRAND.cream}33`,
-                background: "transparent", color: BRAND.cream,
-                fontFamily: "Oswald", letterSpacing: "1px", fontSize: 13,
-                transition: "all .2s",
-              }}
-            >TEXT</button>
-            <button
-              onClick={handleShareImage}
-              disabled={shareCardBusy}
-              className="av-btn"
-              style={{
-                flex: 2, cursor: shareCardBusy ? "default" : "pointer",
-                borderRadius: 12, padding: "14px", border: "none",
-                background: BRAND.amber, color: BRAND.navy,
-                fontFamily: "Oswald", letterSpacing: "1.5px", fontSize: 13,
-                opacity: shareCardBusy ? 0.6 : 1,
-                transition: "all .2s",
-              }}
-            >{shareCardBusy ? "GENERATING..." : "↗ SHARE IMAGE"}</button>
+              className="av-pill ghost"
+            >Share text</button>
+            <button onClick={handleShareImage} disabled={shareCardBusy} className="av-pill main" style={{ opacity: shareCardBusy ? 0.6 : 1 }}>
+              {shareCardBusy ? "Preparing image…" : "Share image"}
+            </button>
           </div>
         </div>
       </div>
     );
   };
 
+  const multi = emotion && emotion.verses.length > 1;
+  const canCycle = reflList.length > 1;
+
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: `radial-gradient(circle at 20% 0%, ${BRAND.teal}22, transparent 60%), radial-gradient(circle at 90% 100%, ${BRAND.amber}22, transparent 55%), ${BRAND.navy}`,
-        color: BRAND.cream,
-        fontFamily: "'Sora', system-ui, sans-serif",
-        padding: "0 0 60px",
-      }}
-    >
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Sora:wght@300;400;500;600&display=swap');
-        * { box-sizing: border-box; }
-        .av-fade { animation: avFade .5s ease both; }
-        @keyframes avFade { from { opacity: 0; transform: translateY(10px);} to {opacity:1; transform:none;} }
-        .av-chip:hover { transform: translateY(-2px); }
-        .av-emo:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(0,0,0,.35); }
-        .av-btn:active { transform: scale(.97); }
-        .av-toast { animation: avToast .25s ease both; }
-        @keyframes avToast { from { opacity: 0; transform: translate(-50%, 10px);} to {opacity:1; transform: translate(-50%, 0);} }
-      `}</style>
+    <div className="av" style={toneVars(tone)}>
+      <div className="av-glow" key={emotion ? emotion.band : "home"} style={{ background: glow }} aria-hidden="true" />
 
-      {/* Header */}
-      <header style={{ textAlign: "center", padding: "44px 20px 20px" }}>
-        <div style={{ fontFamily: "Oswald", letterSpacing: "5px", fontSize: 13, color: BRAND.amber, textTransform: "uppercase" }}>
-          Elora Radiance Co.
-        </div>
-        <h1 style={{ fontFamily: "Oswald", fontWeight: 700, fontSize: 44, margin: "8px 0 4px", letterSpacing: "1px" }}>
-          ANCHORED VERSE
-        </h1>
-        <p style={{ margin: 0, fontWeight: 300, opacity: 0.8, fontSize: 15 }}>
-          A word for every weight your heart carries.
-        </p>
-
-        <div style={{ marginTop: 22, display: "inline-flex", gap: 6, background: "#ffffff10", padding: 5, borderRadius: 40, border: `1px solid ${BRAND.teal}55` }}>
-          {TRANSLATIONS.map((t) => (
-            <button
-              key={t}
-              onClick={() => setTranslation(t)}
-              className="av-chip av-btn"
-              style={{
-                cursor: "pointer", border: "none", borderRadius: 30, padding: "8px 18px",
-                fontFamily: "Oswald", letterSpacing: "1px", fontSize: 13, transition: "all .2s",
-                background: translation === t ? BRAND.amber : "transparent",
-                color: translation === t ? BRAND.navy : BRAND.cream,
-              }}
-            >
-              {t}
+      <div className="av-wrap">
+        {/* Top bar: brand (or back) + translation */}
+        <header className="av-bar">
+          {emotion ? (
+            <button className="av-back" onClick={() => setActiveEmotion(null)}>
+              <ChevronLeft />All feelings
             </button>
-          ))}
-        </div>
-      </header>
-
-      {/* Emotion picker */}
-      {!emotion && (
-        <main className="av-fade" style={{ maxWidth: 760, margin: "0 auto", padding: "10px 20px" }}>
-          <p style={{ textAlign: "center", opacity: 0.65, fontSize: 14, marginBottom: 28 }}>
-            How is your heart right now?
-          </p>
-          {BANDS.map((band) => (
-            <section key={band.id} style={{ marginBottom: 30 }}>
-              <div style={{ display: "flex", alignItems: "baseline", gap: 10, marginBottom: 12 }}>
-                <h2 style={{ fontFamily: "Oswald", fontSize: 18, letterSpacing: "2px", margin: 0, color: band.color === BRAND.navy ? BRAND.cream : band.color }}>
-                  {band.label.toUpperCase()}
-                </h2>
-                <span style={{ fontSize: 12, opacity: 0.5 }}>{band.hint}</span>
-              </div>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(120px, 1fr))", gap: 10 }}>
-                {EMOTIONS.filter((e) => e.band === band.id).map((e) => (
-                  <button
-                    key={e.id}
-                    onClick={() => openEmotion(e.id)}
-                    className="av-emo av-btn"
-                    style={{
-                      cursor: "pointer", border: `1px solid ${BRAND.teal}44`,
-                      background: "#ffffff0c", color: BRAND.cream,
-                      borderRadius: 14, padding: "16px 12px",
-                      fontFamily: "Sora", fontSize: 15, fontWeight: 500,
-                      transition: "all .2s", borderTop: `3px solid ${band.color}`,
-                    }}
-                  >
-                    {e.name}
-                  </button>
-                ))}
-              </div>
-            </section>
-          ))}
-
-          {favorites.length > 0 && (
-            <section style={{ marginTop: 10, paddingTop: 24, borderTop: `1px solid ${BRAND.teal}33` }}>
-              <h2 style={{ fontFamily: "Oswald", fontSize: 16, letterSpacing: "2px", color: BRAND.amber }}>SAVED ANCHORS</h2>
-              {favorites.map((f) => (
-                <div key={f.key} style={{ display: "flex", alignItems: "center", gap: 10, background: "#ffffff0c", borderRadius: 12, padding: "12px 16px", marginBottom: 8, fontSize: 13 }}>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <span style={{ color: BRAND.amber, fontFamily: "Oswald", letterSpacing: "1px" }}>{f.ref}</span>
-                    <span style={{ opacity: 0.5 }}> · {f.emotionName}</span>
-                  </div>
-                  <ShareIconBtn
-                    size="sm"
-                    label={`Share ${f.ref}`}
-                    onClick={() => openShareCard({ text: f.text, ref: f.ref, translation: f.translation || translation, emotionName: f.emotionName, reflection: f.reflection })}
-                  />
-                </div>
-              ))}
-            </section>
+          ) : (
+            <div className="av-brand"><AnchorMark size={26} />Anchored Verse</div>
           )}
-          {/* Add to Home Screen — permanent access */}
-          <div style={{ textAlign: "center", marginTop: 30 }}>
-            <button
-              className="av-btn"
-              onClick={() => setA2hsOpen(true)}
-              style={{
-                cursor: "pointer", border: `1px solid ${BRAND.teal}55`, background: "transparent",
-                color: BRAND.cream, borderRadius: 30, padding: "10px 20px",
-                fontFamily: "Oswald", letterSpacing: "1px", fontSize: 12, opacity: 0.85,
-              }}
-            >
-              📱 Add to Home Screen
-            </button>
+          <div className="av-tabs" role="group" aria-label="Bible translation">
+            {TRANSLATIONS.map((t) => (
+              <button key={t} className="av-tab" onClick={() => setTranslation(t)} aria-pressed={translation === t}>{t}</button>
+            ))}
           </div>
-        </main>
-      )}
+        </header>
 
-      {/* Verse card */}
-      {emotion && verse && (
-        <main className="av-fade" key={emotion.id + verseIndex} style={{ maxWidth: 620, margin: "0 auto", padding: "10px 20px" }}>
-          <button
-            onClick={() => setActiveEmotion(null)}
-            className="av-btn"
-            style={{ cursor: "pointer", background: "none", border: "none", color: BRAND.teal, fontFamily: "Oswald", letterSpacing: "1px", fontSize: 13, marginBottom: 16 }}
-          >
-            ← ALL EMOTIONS
-          </button>
-
-          <div
-            style={{
-              background: `linear-gradient(160deg, ${BRAND.cream}, #fff)`,
-              color: BRAND.navy, borderRadius: 22, padding: "34px 30px",
-              boxShadow: "0 20px 50px rgba(0,0,0,.4)", position: "relative",
-            }}
-          >
-            <div style={{ position: "absolute", top: 16, right: 16 }}>
-              <ShareIconBtn
-                label={`Share ${verse.ref}`}
-                onClick={() => openShareCard({ text: verse[translation], ref: verse.ref, translation, emotionName: emotion.name, reflection: currentReflection })}
-              />
+        {/* Emotion picker */}
+        {!emotion && (
+          <main>
+            <div className="av-hero">
+              <h1>How is your heart right now?</h1>
+              <p>A word for every weight your heart carries.</p>
             </div>
 
-            <div style={{ fontFamily: "Oswald", letterSpacing: "3px", fontSize: 13, color: BRAND.teal, textTransform: "uppercase", paddingRight: 44 }}>
-              {emotion.name}
-            </div>
+            {BANDS.map((band) => (
+              <section key={band.id} className="av-band" style={toneVars(TONE[band.id])} aria-labelledby={`band-${band.id}`}>
+                <h2 id={`band-${band.id}`}>{band.label}</h2>
+                <p className="av-hint">{band.hint}</p>
+                <div className="av-names">
+                  {EMOTIONS.filter((e) => e.band === band.id).map((e) => (
+                    <button key={e.id} className="av-name" onClick={() => openEmotion(e.id)}>{e.name}</button>
+                  ))}
+                </div>
+              </section>
+            ))}
 
-            <p style={{ fontFamily: "Sora", fontWeight: 400, fontSize: 21, lineHeight: 1.5, margin: "18px 0 16px" }}>
-              "{verse[translation]}"
-            </p>
+            {favorites.length > 0 && (
+              <section className="av-saved">
+                <h2>Saved anchors</h2>
+                {favorites.map((f) => (
+                  <div key={f.key} className="av-saved-row">
+                    <div className="av-saved-main">
+                      <span className="av-saved-ref">{f.ref}</span>
+                      <span className="av-saved-feel">{f.emotionName}</span>
+                    </div>
+                    <ShareIconBtn
+                      label={`Share ${f.ref}`}
+                      onClick={() => openShareCard({ text: f.text, ref: f.ref, translation: f.translation || translation, emotionName: f.emotionName, reflection: f.reflection })}
+                    />
+                  </div>
+                ))}
+              </section>
+            )}
 
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: `1px solid ${BRAND.navy}22`, paddingTop: 14 }}>
-              <span style={{ fontFamily: "Oswald", fontWeight: 600, letterSpacing: "1px", color: BRAND.navy }}>
-                {verse.ref}
-              </span>
-              <span style={{ fontFamily: "Oswald", fontSize: 12, letterSpacing: "1px", color: BRAND.amber }}>
-                {translation}
-              </span>
-            </div>
+            <footer className="av-colophon">
+              <button className="av-link" onClick={() => setA2hsOpen(true)}>Add to Home Screen</button>
+              <small>Elora Radiance Co.</small>
+            </footer>
+          </main>
+        )}
 
-            <div
-              onClick={cycleReflection}
-              title={reflList.length > 1 ? "Tap for another reflection" : undefined}
-              style={{ marginTop: 18, background: `${BRAND.teal}14`, borderLeft: `3px solid ${BRAND.teal}`, padding: "12px 16px", borderRadius: 8, cursor: reflList.length > 1 ? "pointer" : "default", userSelect: "none" }}
-            >
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 4 }}>
-                <span style={{ fontFamily: "Oswald", fontSize: 11, letterSpacing: "2px", color: BRAND.teal }}>REFLECTION</span>
-                {reflList.length > 1 && (
-                  <span style={{ display: "flex", gap: 5, alignItems: "center" }}>
-                    {reflList.map((_, i) => (
-                      <span key={i} style={{ width: 6, height: 6, borderRadius: "50%", background: i === reflIndex ? BRAND.teal : `${BRAND.teal}40` }} />
-                    ))}
-                    <span style={{ marginLeft: 4, color: BRAND.teal, fontSize: 13, lineHeight: 1, opacity: 0.75 }}>↻</span>
-                  </span>
-                )}
+        {/* Verse view */}
+        {emotion && verse && (
+          <main key={emotion.id}>
+            <p className="av-kicker">{emotion.name}</p>
+
+            <div key={`${verseIndex}-${translation}`}>
+              <blockquote className={`av-verse ${verseSize(verse[translation])}`} style={{ marginInline: 0 }}>
+                <p>{"“"}{verse[translation]}{"”"}</p>
+              </blockquote>
+
+              <div className="av-refrow">
+                <cite className="av-ref">{verse.ref}<span>{translation}</span></cite>
+                <ShareIconBtn
+                  label={`Share ${verse.ref}`}
+                  onClick={() => openShareCard({ text: verse[translation], ref: verse.ref, translation, emotionName: emotion.name, reflection: currentReflection })}
+                />
               </div>
-              <p style={{ margin: 0, fontSize: 16.5, lineHeight: 1.55, color: BRAND.navy, opacity: 0.85 }}>{currentReflection}</p>
-            </div>
-          </div>
 
-          <div style={{ display: "flex", gap: 10, marginTop: 18 }}>
-            <button
-              onClick={toggleFav}
-              className="av-btn"
-              style={{
-                flex: 1, cursor: "pointer", borderRadius: 12, padding: "14px",
-                border: `1px solid ${BRAND.amber}`, fontFamily: "Oswald", letterSpacing: "1px", fontSize: 14,
-                background: isFav ? BRAND.amber : "transparent",
-                color: isFav ? BRAND.navy : BRAND.amber, transition: "all .2s",
-              }}
-            >
-              {isFav ? "★ ANCHORED" : "☆ SAVE ANCHOR"}
-            </button>
-            {emotion.verses.length > 1 && (
-              <button
-                onClick={nextVerse}
-                className="av-btn"
-                style={{
-                  flex: 1, cursor: "pointer", borderRadius: 12, padding: "14px",
-                  border: "none", fontFamily: "Oswald", letterSpacing: "1px", fontSize: 14,
-                  background: BRAND.teal, color: "#fff", transition: "all .2s",
-                }}
+              <div
+                className="av-reflect"
+                onClick={canCycle ? cycleReflection : undefined}
+                onKeyDown={canCycle ? (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); cycleReflection(); } } : undefined}
+                role={canCycle ? "button" : undefined}
+                tabIndex={canCycle ? 0 : undefined}
+                aria-label={canCycle ? "Reflection. Press for another reflection." : undefined}
               >
-                ANOTHER VERSE →
+                <div className="av-reflect-head">
+                  <span>Reflection</span>
+                  {canCycle && (
+                    <span className="av-cycle" aria-hidden="true">
+                      {reflList.map((_, i) => <i key={i} className={i === reflIndex ? "on" : ""} />)}
+                      <CycleGlyph />
+                    </span>
+                  )}
+                </div>
+                <p>{currentReflection}</p>
+              </div>
+            </div>
+
+            <div className="av-actions">
+              <button onClick={toggleFav} className="av-pill ghost" aria-pressed={!!isFav}>
+                <AnchorMark size={20} filled={!!isFav} />{isFav ? "Anchored" : "Save anchor"}
               </button>
-            )}
-          </div>
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 10, marginTop: 14 }}>
-            <p style={{ textAlign: "center", fontSize: 12, opacity: 0.45, margin: 0, color: BRAND.cream, fontFamily: "Oswald", letterSpacing: "1px" }}>
-              {(bagPos + 1)} of {bagLen || emotion.verses.length}
-            </p>
-            {emotion.verses.length > 1 && (
-              <button
-                onClick={() => setBrowseOpen(true)}
-                className="av-btn"
-                style={{
-                  cursor: "pointer", background: "transparent", border: `1px solid ${BRAND.teal}55`,
-                  color: BRAND.cream, borderRadius: 30, padding: "8px 18px",
-                  fontFamily: "Oswald", letterSpacing: "1px", fontSize: 11, opacity: 0.9,
-                }}
-              >
-                ≡ Browse all {emotion.verses.length}
-              </button>
-            )}
-          </div>
-        </main>
-      )}
+              {multi && <button onClick={nextVerse} className="av-pill main">Another verse</button>}
+            </div>
+            <div className="av-foot">
+              <span>{bagPos + 1} of {bagLen || emotion.verses.length}</span>
+              {multi && <button onClick={() => setBrowseOpen(true)} className="av-link">Browse all {emotion.verses.length}</button>}
+            </div>
+          </main>
+        )}
+      </div>
 
       {/* Share card modal */}
       {renderShareCard()}
 
-      {/* Add to Home Screen modal */}
+      {/* Add to Home Screen */}
       {a2hsOpen && (
-        <div
-          onClick={closeA2hs}
-          style={{
-            position: "fixed", inset: 0, zIndex: 700, padding: 24,
-            background: "rgba(10,18,28,.92)", backdropFilter: "blur(8px)",
-            display: "flex", alignItems: "center", justifyContent: "center",
-          }}
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            style={{
-              background: `linear-gradient(160deg, ${BRAND.navy}, #243646)`,
-              border: `1px solid ${BRAND.teal}55`, borderRadius: 22,
-              padding: "30px 26px", maxWidth: 400, width: "100%",
-              maxHeight: "88vh", overflowY: "auto", color: BRAND.cream,
-              boxShadow: "0 24px 60px rgba(0,0,0,.5)",
-            }}
-          >
-            <div style={{ textAlign: "center", marginBottom: 18 }}>
-              <div style={{ fontSize: 40, marginBottom: 6 }}>📱</div>
-              <div style={{ fontFamily: "Oswald", letterSpacing: "2px", fontSize: 18, color: BRAND.amber, textTransform: "uppercase" }}>
-                Add to Home Screen
-              </div>
+        <div className="av-scrim" onClick={closeA2hs}>
+          <div className="av-sheet" onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true" aria-labelledby="a2hs-title">
+            <div className="av-sheet-head">
+              <h2 id="a2hs-title">Keep it one tap away</h2>
+              <button onClick={closeA2hs} aria-label="Close" className="av-icon-btn bare"><CloseGlyph /></button>
             </div>
-            <p style={{ textAlign: "center", fontSize: 14, opacity: 0.8, lineHeight: 1.6, marginTop: 0, marginBottom: 18 }}>
-              Anchored Verse works like a native app — add it to your Home Screen for instant, full-screen access.
-            </p>
-            {[
-              { os: "🍎 iPhone / iPad (Safari)", steps: ["Tap the Share button ⎙ at the bottom of Safari", 'Scroll down and tap "Add to Home Screen"', 'Tap "Add" — done ✓'] },
-              { os: "🤖 Android (Chrome)", steps: ["Tap the three-dot menu ⋮ at the top right", 'Tap "Add to Home Screen" or "Install App"', 'Tap "Add" — done ✓'] },
-            ].map((p) => (
-              <div key={p.os} style={{ marginBottom: 16 }}>
-                <div style={{ fontFamily: "Oswald", letterSpacing: "1px", fontSize: 13, color: BRAND.teal, marginBottom: 8 }}>{p.os}</div>
-                {p.steps.map((step, i) => (
-                  <div key={i} style={{ display: "flex", gap: 10, marginBottom: 6, alignItems: "flex-start" }}>
-                    <span style={{ flexShrink: 0, width: 20, height: 20, borderRadius: 999, background: BRAND.amber, color: BRAND.navy, fontFamily: "Oswald", fontSize: 11, display: "flex", alignItems: "center", justifyContent: "center", marginTop: 1 }}>{i + 1}</span>
-                    <span style={{ fontSize: 13.5, opacity: 0.85, lineHeight: 1.5 }}>{step}</span>
-                  </div>
-                ))}
+            <div style={{ overflowY: "auto" }}>
+              <p className="av-lead">Add Anchored Verse to your Home Screen and it opens full screen, like any app.</p>
+              <div className="av-steps">
+                <h3>iPhone and iPad (Safari)</h3>
+                <ol>
+                  <li>Tap the Share button at the bottom of Safari.</li>
+                  <li>Scroll down and tap Add to Home Screen.</li>
+                  <li>Tap Add.</li>
+                </ol>
+                <h3>Android (Chrome)</h3>
+                <ol>
+                  <li>Tap the three-dot menu at the top right.</li>
+                  <li>Tap Add to Home Screen or Install app.</li>
+                  <li>Tap Add.</li>
+                </ol>
               </div>
-            ))}
-            <button
-              className="av-btn"
-              onClick={closeA2hs}
-              style={{
-                width: "100%", marginTop: 8, cursor: "pointer", border: "none",
-                borderRadius: 12, padding: "13px", background: BRAND.amber, color: BRAND.navy,
-                fontFamily: "Oswald", letterSpacing: "1px", fontSize: 15,
-              }}
-            >
-              Got it
-            </button>
+              <button className="av-pill main" onClick={closeA2hs} style={{ width: "100%", marginTop: 22 }}>Got it</button>
+            </div>
           </div>
         </div>
       )}
 
-      {/* Browse all verses sheet */}
+      {/* Browse all verses */}
       {browseOpen && emotion && (
-        <div
-          onClick={() => setBrowseOpen(false)}
-          style={{
-            position: "fixed", inset: 0, zIndex: 700, padding: 24,
-            background: "rgba(10,18,28,.92)", backdropFilter: "blur(8px)",
-            display: "flex", alignItems: "center", justifyContent: "center",
-          }}
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            style={{
-              background: `linear-gradient(160deg, ${BRAND.navy}, #243646)`,
-              border: `1px solid ${BRAND.teal}55`, borderRadius: 22,
-              padding: "24px 20px", maxWidth: 440, width: "100%",
-              maxHeight: "82vh", display: "flex", flexDirection: "column", color: BRAND.cream,
-              boxShadow: "0 24px 60px rgba(0,0,0,.5)",
-            }}
-          >
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <div style={{ fontFamily: "Oswald", letterSpacing: "2px", fontSize: 16, color: BRAND.amber, textTransform: "uppercase" }}>
-                {emotion.name}
+        <div className="av-scrim" onClick={() => setBrowseOpen(false)}>
+          <div className="av-sheet" onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true" aria-labelledby="browse-title" style={toneVars(tone)}>
+            <div className="av-sheet-head">
+              <div>
+                <h2 id="browse-title" style={{ color: tone }}>{emotion.name}</h2>
+                <p className="av-sheet-sub">{emotion.verses.length} verses. Tap one to read it.</p>
               </div>
-              <button
-                onClick={() => setBrowseOpen(false)}
-                aria-label="Close"
-                style={{ background: "none", border: "none", color: BRAND.cream, fontSize: 24, lineHeight: 1, cursor: "pointer", opacity: 0.6 }}
-              >×</button>
+              <button onClick={() => setBrowseOpen(false)} aria-label="Close" className="av-icon-btn bare"><CloseGlyph /></button>
             </div>
-            <div style={{ fontFamily: "Oswald", letterSpacing: "1px", fontSize: 11, color: BRAND.teal, margin: "4px 0 14px", opacity: 0.8 }}>
-              {emotion.verses.length} VERSES · TAP TO READ
-            </div>
-            <div style={{ overflowY: "auto", display: "flex", flexDirection: "column", gap: 8 }}>
+            <div className="av-list">
               {emotion.verses.map((v, i) => {
                 const active = i === verseIndex;
                 const fav = favorites.some((f) => f.key === favKey(emotion.id, v.ref));
                 const preview = (v[translation] || "").replace(/\s+/g, " ").trim();
                 return (
-                  <button
-                    key={v.ref}
-                    onClick={() => jumpToVerse(i)}
-                    className="av-btn"
-                    style={{
-                      textAlign: "left", cursor: "pointer", borderRadius: 12, padding: "12px 14px",
-                      background: active ? `${BRAND.teal}26` : "#ffffff0c",
-                      border: active ? `1px solid ${BRAND.teal}` : "1px solid transparent",
-                      color: BRAND.cream,
-                    }}
-                  >
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
-                      <span style={{ fontFamily: "Oswald", fontWeight: 600, letterSpacing: "1px", fontSize: 13, color: active ? BRAND.amber : BRAND.cream }}>
-                        {v.ref}{fav ? "  ★" : ""}
-                      </span>
-                      {active && <span style={{ fontFamily: "Oswald", fontSize: 10, letterSpacing: "1px", color: BRAND.teal }}>READING</span>}
-                    </div>
-                    <div style={{ fontSize: 13, lineHeight: 1.45, opacity: 0.7 }}>
-                      {preview.length > 90 ? preview.slice(0, 90) + "…" : preview}
-                    </div>
+                  <button key={v.ref} onClick={() => jumpToVerse(i)} className={`av-row${active ? " on" : ""}`}>
+                    <span className="av-row-top">
+                      <span className="av-row-ref">{v.ref}</span>
+                      {(active || fav) && <span className="av-row-note">{active ? "Reading" : "Anchored"}</span>}
+                    </span>
+                    <span className="av-row-text">{preview}</span>
                   </button>
                 );
               })}
@@ -818,20 +573,7 @@ export default function AnchoredVerse() {
       )}
 
       {/* Toast */}
-      {shareToast && (
-        <div
-          className="av-toast"
-          style={{
-            position: "fixed", bottom: 28, left: "50%", transform: "translateX(-50%)",
-            background: BRAND.navy, color: BRAND.cream,
-            border: `1px solid ${BRAND.teal}66`, padding: "12px 22px",
-            borderRadius: 30, fontFamily: "Oswald", letterSpacing: "1px", fontSize: 13,
-            boxShadow: "0 12px 30px rgba(0,0,0,.4)", zIndex: 600,
-          }}
-        >
-          {shareToast}
-        </div>
-      )}
+      {shareToast && <div className="av-toast" role="status">{shareToast}</div>}
     </div>
   );
 }
