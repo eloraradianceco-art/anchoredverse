@@ -86,35 +86,35 @@ html, body { margin: 0; background: var(--harbor); }
 }
 
 /* ── Picker ──────────────────────────────────────────────── */
-.av-hero { padding: 46px 0 4px; }
+.av-hero { padding: 46px 0 4px; text-align: center; }
 .av-hero h1 {
   margin: 0; font-family: var(--serif); font-weight: 350;
   font-size: clamp(38px, 10vw, 52px); line-height: 1.06; letter-spacing: -0.02em;
   text-wrap: balance;
 }
 .av-hero p {
-  margin: 16px 0 0; max-width: 30ch;
+  margin: 16px auto 0; max-width: 30ch;
   font-family: var(--serif); font-style: italic; font-size: 19px; line-height: 1.4; color: var(--mist);
 }
-.av-band { margin-top: 50px; --tone: var(--tide); }
+.av-band { margin-top: 50px; --tone: var(--tide); text-align: center; }
 .av-band h2 {
   margin: 0; font-family: var(--serif); font-weight: 500; font-size: 23px; letter-spacing: -0.005em;
   color: var(--tone);
 }
 .av-band .av-hint { margin: 5px 0 0; font-size: 14px; color: var(--mist); }
-.av-names { display: flex; flex-wrap: wrap; margin-top: 12px; }
+.av-names { display: flex; flex-wrap: wrap; justify-content: center; margin-top: 12px; }
 .av-name {
-  min-height: 52px; padding: 6px 22px 6px 0;
-  background: none; border: 0; text-align: left;
+  min-height: 52px; padding: 6px 11px;
+  background: none; border: 0; text-align: center;
   font-family: var(--serif); font-weight: 380; letter-spacing: -0.012em;
   font-size: clamp(27px, 7.2vw, 32px); color: var(--parch);
   transition: color 0.2s, transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
-.av-name:hover { color: var(--tone); transform: translateX(3px); }
-.av-name:active { transform: translateX(3px) scale(0.98); }
+.av-name:hover { color: var(--tone); transform: translateY(-2px); }
+.av-name:active { transform: scale(0.97); }
 
 .av-saved { margin-top: 58px; }
-.av-saved h2 { margin: 0 0 6px; font-family: var(--serif); font-weight: 500; font-size: 23px; color: var(--gold); }
+.av-saved h2 { text-align: center; margin: 0 0 6px; font-family: var(--serif); font-weight: 500; font-size: 23px; color: var(--gold); }
 .av-saved-row {
   display: flex; align-items: center; gap: 12px;
   padding: 10px 0; border-top: 1px solid var(--line);
@@ -124,7 +124,7 @@ html, body { margin: 0; background: var(--harbor); }
 .av-saved-ref { font-size: 15px; font-weight: 600; color: var(--parch); }
 .av-saved-feel { font-family: var(--serif); font-style: italic; font-size: 16px; color: var(--mist); margin-left: 10px; }
 
-.av-colophon { margin-top: 64px; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
+.av-colophon { margin-top: 64px; display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; }
 .av-colophon small { font-family: var(--serif); font-style: italic; font-size: 15px; color: var(--mist); }
 
 /* ── Text link buttons ───────────────────────────────────── */
