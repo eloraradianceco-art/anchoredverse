@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useRef, useEffect } from "react";
 import { TRANSLATIONS, BANDS, EMOTIONS } from "./verses";
+import { NOTICES } from "./ScriptureCredits";
 import "./fonts.css";
 import "./anchored.css";
 
@@ -119,6 +120,7 @@ export default function AnchoredVerse() {
 
   // Add-to-Home-Screen state
   const [a2hsOpen, setA2hsOpen] = useState(false);
+  const [creditsOpen, setCreditsOpen] = useState(false);
   React.useEffect(() => {
     try {
       const standalone = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
@@ -294,13 +296,14 @@ export default function AnchoredVerse() {
   };
 
   // ── Escape closes the top-most layer; page doesn't scroll behind a layer ──
-  const layerOpen = !!shareCard || browseOpen || a2hsOpen;
+  const layerOpen = !!shareCard || browseOpen || a2hsOpen || creditsOpen;
   useEffect(() => {
     const onKey = (e) => {
       if (e.key !== "Escape") return;
       if (shareCard) closeShareCard();
       else if (browseOpen) setBrowseOpen(false);
       else if (a2hsOpen) closeA2hs();
+      else if (creditsOpen) setCreditsOpen(false);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -450,6 +453,7 @@ export default function AnchoredVerse() {
 
             <footer className="av-colophon">
               <button className="av-link" onClick={() => setA2hsOpen(true)}>Add to Home Screen</button>
+              <button className="av-link" onClick={() => setCreditsOpen(true)}>Scripture credits</button>
               <small>Elora Radiance Co.</small>
             </footer>
           </main>
@@ -536,6 +540,25 @@ export default function AnchoredVerse() {
                 </ol>
               </div>
               <button className="av-pill main" onClick={closeA2hs} style={{ width: "100%", marginTop: 22 }}>Got it</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Scripture credits: the notice each Bible publisher requires */}
+      {creditsOpen && (
+        <div className="av-scrim" onClick={() => setCreditsOpen(false)}>
+          <div className="av-sheet" onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true" aria-labelledby="credits-title">
+            <div className="av-sheet-head">
+              <h2 id="credits-title">Scripture credits</h2>
+              <button onClick={() => setCreditsOpen(false)} aria-label="Close" className="av-icon-btn bare"><CloseGlyph /></button>
+            </div>
+            <div style={{ overflowY: "auto" }}>
+              <p className="av-sheet-sub">Each verse shows the translation it is quoted from.</p>
+              {["ESV", "NIV", "NKJV"].map((k) => (
+                <p key={k} style={{ fontSize: 14, lineHeight: 1.55, color: "rgba(234, 228, 211, 0.8)", margin: "0 0 14px" }}>{NOTICES[k]}</p>
+              ))}
+              <button className="av-pill main" onClick={() => setCreditsOpen(false)} style={{ width: "100%", marginTop: 8 }}>Close</button>
             </div>
           </div>
         </div>
