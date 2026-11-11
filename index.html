@@ -10,6 +10,10 @@
     <link rel="apple-touch-icon" href="/app-icon.png" />
     <link rel="manifest" href="/manifest.json" />
     <script type="module" src="/src/main.jsx"></script>
+      <!-- iPad Home Screen app: iPadOS 26 blurs a band below the status bar (solid with Reduce
+         Transparency). Headers keep their text below it; see --safe-top / --top-band. -->
+    <style>:root{--top-band:0px;--safe-top:env(safe-area-inset-top,0px)}.ipad-app{--top-band:32px;--safe-top:calc(env(safe-area-inset-top,0px) + 32px)}</style>
+    <script>(function(){try{var d=document.documentElement,n=navigator,ipad=/iPad/.test(n.userAgent)||(n.platform==='MacIntel'&&n.maxTouchPoints>1),app=(window.matchMedia&&matchMedia('(display-mode: standalone)').matches)||n.standalone===true;if(ipad&&app)d.classList.add('ipad-app')}catch(e){}})()</script>
   </head>
   <body>
     <div id="root"></div>
