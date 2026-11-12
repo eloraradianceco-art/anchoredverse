@@ -454,7 +454,13 @@ export default function AnchoredVerse() {
             <footer className="av-colophon">
               <button className="av-link" onClick={() => setA2hsOpen(true)}>Add to Home Screen</button>
               <button className="av-link" onClick={() => setCreditsOpen(true)}>Scripture credits</button>
-              <small>Elora Radiance Co.</small>
+              <nav className="av-legal" aria-label="Elora Radiance">
+                <a href="https://eloraradiance.com/support.html" target="_blank" rel="noopener noreferrer">Help &amp; Support</a>
+                <a href="https://eloraradiance.com/privacy.html" target="_blank" rel="noopener noreferrer">Privacy</a>
+                <a href="https://eloraradiance.com/terms.html" target="_blank" rel="noopener noreferrer">Terms</a>
+                <a href="https://eloraradiance.com/" target="_blank" rel="noopener noreferrer">More apps</a>
+              </nav>
+              <small>© 2026 Elora Radiance Co. LLC</small>
             </footer>
           </main>
         )}

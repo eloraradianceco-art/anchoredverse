@@ -4,7 +4,7 @@ import { useState } from 'react'
 // wherever its translation is quoted. Same file in every Elora Radiance app; each app lists the
 // translations it quotes in `notices` and passes its own colors through `theme`.
 //   notices: keys of NOTICES, in the order to show them
-//   theme:   { text, muted, card, border }
+//   theme:   { text, muted, card, border, body?, heading? }
 //   note:    optional extra line shown above the notices
 
 export const NOTICES = {
@@ -17,10 +17,9 @@ export const NOTICES = {
   KJV: 'Scripture quotations marked (KJV) are from the King James Version, which is in the public domain in the United States.',
 }
 
-const body = "'EB Garamond',Georgia,serif"
-const heading = "'Cinzel',Georgia,serif"
-
 export default function ScriptureCredits({ notices, theme: t, note, label = 'Scripture Credits' }) {
+  const body = t.body || "'EB Garamond',Georgia,serif"
+  const heading = t.heading || "'Cinzel',Georgia,serif"
   const [open, setOpen] = useState(false)
   const list = (notices || []).filter((k) => NOTICES[k])
   if (!list.length) return null

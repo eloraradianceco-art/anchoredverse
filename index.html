@@ -14,6 +14,15 @@
          Transparency). Headers keep their text below it; see --safe-top / --top-band. -->
     <style>:root{--top-band:0px;--safe-top:env(safe-area-inset-top,0px)}.ipad-app{--top-band:32px;--safe-top:calc(env(safe-area-inset-top,0px) + 32px)}</style>
     <script>(function(){try{var d=document.documentElement,n=navigator,ipad=/iPad/.test(n.userAgent)||(n.platform==='MacIntel'&&n.maxTouchPoints>1),app=(window.matchMedia&&matchMedia('(display-mode: standalone)').matches)||n.standalone===true;if(ipad&&app)d.classList.add('ipad-app')}catch(e){}})()</script>
+    <!-- Install + link previews -->
+    <meta name="apple-mobile-web-app-title" content="Anchored Verse" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Elora Radiance Co." />
+    <meta property="og:title" content="Anchored Verse" />
+    <meta property="og:description" content="A word for every weight your heart carries. Scripture for every emotion — free, by Elora Radiance Co." />
+    <meta property="og:url" content="https://anchoredverse.vercel.app/" />
+    <meta property="og:image" content="https://anchoredverse.vercel.app/icon-512.png" />
+    <meta name="twitter:card" content="summary" />
   </head>
   <body>
     <div id="root"></div>
