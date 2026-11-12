@@ -9,6 +9,45 @@
     <link rel="icon" type="image/png" href="/app-icon.png" />
     <link rel="apple-touch-icon" href="/app-icon.png" />
     <link rel="manifest" href="/manifest.json" />
+    <!-- New address (Nov 2026): the old vercel.app address forwards here and brings this device's
+         sign-in and saved settings along (in the #er-moved part of the link, which never reaches a server). -->
+    <script>
+    (function () {
+      var OLD = 'anchoredverse.vercel.app', NEW = 'https://verse.eloraradiance.com', KEY = 'er-moved';
+      try {
+        if (location.hostname === OLD) {
+          if (location.pathname.indexOf('/api/') === 0) return;
+          var keys = [], data = {}, size = 0;
+          for (var i = 0; i < localStorage.length; i++) keys.push(localStorage.key(i));
+          keys.sort(function (a, b) { return (localStorage.getItem(a) || '').length - (localStorage.getItem(b) || '').length; });
+          keys.forEach(function (k) { var v = localStorage.getItem(k); if (v != null && size + v.length < 60000) { data[k] = v; size += v.length; } });
+          var dest = NEW + location.pathname + location.search;
+          if (keys.length) { try { dest += '#' + KEY + '=' + encodeURIComponent(btoa(unescape(encodeURIComponent(JSON.stringify(data))))); } catch (e) {} }
+          var installed = (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true;
+          if (!installed) { location.replace(dest); return; }
+          // Home Screen app on the old address: explain the move instead of jumping out of the app.
+          document.addEventListener('DOMContentLoaded', function () {
+            var d = document.createElement('div');
+            d.setAttribute('role', 'dialog'); d.setAttribute('aria-modal', 'true'); d.setAttribute('aria-label', 'We have moved');
+            d.style.cssText = 'position:fixed;inset:0;z-index:2147483647;background:#0D1B29;color:#EAE4D3;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:32px 24px;font-family:Georgia,serif';
+            d.innerHTML = '<div style="font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:#E8A33D;margin-bottom:14px">Anchored Verse</div>'
+              + '<div style="font-size:26px;line-height:1.25;margin-bottom:14px">We have a new home</div>'
+              + '<p style="font-size:17px;line-height:1.6;max-width:340px;margin:0 0 8px">Anchored Verse now lives at <b>' + NEW.replace('https://', '') + '</b>. Your account and everything you saved are safe.</p>'
+              + '<p style="font-size:16px;line-height:1.6;max-width:340px;margin:0 0 24px;opacity:.85">Tap below, then in Safari tap <b>Share → Add to Home Screen</b>. After that you can delete this old icon.</p>'
+              + '<a target="_blank" rel="noopener" style="display:inline-block;background:#E8A33D;color:#0D1B29;text-decoration:none;font-weight:700;font-size:17px;padding:14px 26px;border-radius:999px;font-family:system-ui,sans-serif">Open the new Anchored Verse</a>'
+              + '<button type="button" style="margin-top:18px;background:none;border:0;color:inherit;opacity:.8;font-size:15px;text-decoration:underline;min-height:44px;font-family:inherit">Keep using this one for now</button>';
+            d.querySelector('a').href = dest;
+            d.querySelector('button').onclick = function () { d.remove(); };
+            document.body.appendChild(d);
+          });
+        } else if (location.hash.indexOf('#' + KEY + '=') === 0) {
+          var moved = JSON.parse(decodeURIComponent(escape(atob(decodeURIComponent(location.hash.slice(KEY.length + 2))))));
+          for (var k in moved) if (localStorage.getItem(k) === null) localStorage.setItem(k, moved[k]);
+          history.replaceState(null, '', location.pathname + location.search);
+        }
+      } catch (e) {}
+    })();
+    </script>
     <script type="module" src="/src/main.jsx"></script>
       <!-- iPad Home Screen app: iPadOS 26 blurs a band below the status bar (solid with Reduce
          Transparency). Headers keep their text below it; see --safe-top / --top-band. -->
@@ -20,8 +59,8 @@
     <meta property="og:site_name" content="Elora Radiance Co." />
     <meta property="og:title" content="Anchored Verse" />
     <meta property="og:description" content="A word for every weight your heart carries. Scripture for every emotion — free, by Elora Radiance Co." />
-    <meta property="og:url" content="https://anchoredverse.vercel.app/" />
-    <meta property="og:image" content="https://anchoredverse.vercel.app/icon-512.png" />
+    <meta property="og:url" content="https://verse.eloraradiance.com/" />
+    <meta property="og:image" content="https://verse.eloraradiance.com/icon-512.png" />
     <meta name="twitter:card" content="summary" />
   </head>
   <body>

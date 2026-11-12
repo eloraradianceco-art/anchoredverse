@@ -58,7 +58,7 @@ function ShareIconBtn({ onClick, label = "Share verse" }) {
   );
 }
 
-const APP_URL = "https://anchoredverse.vercel.app";
+const APP_URL = "https://verse.eloraradiance.com";
 
 // Rotate each emotion's reflections by day-of-year (with a per-emotion phase offset)
 // so returning users see a fresh anchor instead of the same line every visit.
@@ -363,7 +363,7 @@ export default function AnchoredVerse() {
               <p className="sc-reflect" style={{ borderLeftColor: light ? `${C.harbor}33` : `${cardTone}88` }}>{shareCard.reflection}</p>
             )}
             <div className="sc-foot">
-              <span>anchoredverse.vercel.app</span>
+              <span>verse.eloraradiance.com</span>
               <span>Elora Radiance Co.</span>
             </div>
           </div>
