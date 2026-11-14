@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useRef, useEffect } from "react";
-import { TRANSLATIONS, BANDS, EMOTIONS } from "./verses";
+import { TRANSLATIONS, CORES, EMOTIONS } from "./verses";
+import FeelingsWheel from "./FeelingsWheel";
 import { NOTICES } from "./ScriptureCredits";
 import "./fonts.css";
 import "./anchored.css";
@@ -7,7 +8,7 @@ import "./anchored.css";
 // ============================================================
 // ANCHORED VERSE — Elora Radiance Co.
 // Emotion-indexed scripture companion
-// All verse data lives in verses.js (339 verses, 25 emotions).
+// All verse data lives in verses.js (339 verses, 25 feelings around 6 core emotions).
 // To add/edit content, edit verses.js — no UI changes needed.
 // Visual layer lives in anchored.css; fonts are self-hosted (fonts.css).
 // ============================================================
@@ -17,8 +18,9 @@ const C = {
   harbor: "#0D1B29", deep: "#16293C", gold: "#D6A55A", goldInk: "#8F6522",
   sea: "#6BB3AE", tide: "#7FA4C8", parch: "#EAE4D3", mist: "#8FA0AE", paper: "#F3EEDF",
 };
-// Band tones (verses.js ships a navy for "heavy" which vanishes on a dark field)
-const TONE = { heavy: C.tide, friction: C.gold, light: C.sea };
+// Each feeling takes its core's color (the same color it has on the Feelings Wheel).
+const CORE_OF = Object.fromEntries(CORES.flatMap((c) => c.emotions.map((id) => [id, c])));
+const toneOf = (emotionId) => (CORE_OF[emotionId] || {}).color || C.tide;
 const toneVars = (hex) => ({ "--tone": hex, "--tone-soft": `${hex}73` });
 
 // Verse type scales with length: short verses get presence, long ones stay calm.
@@ -109,7 +111,15 @@ export default function AnchoredVerse() {
   const [bagLen, setBagLen] = useState(0);
   const [browseOpen, setBrowseOpen] = useState(false);
   const bagsRef = useRef(avLoadBags());
-  const [favorites, setFavorites] = useState([]); // {emotionId, ref}
+  // Saved anchors stay on this device between visits.
+  const [favorites, setFavorites] = useState(() => {
+    try { const v = JSON.parse(localStorage.getItem("av_favorites")); return Array.isArray(v) ? v : []; } catch { return []; }
+  });
+  useEffect(() => { try { localStorage.setItem("av_favorites", JSON.stringify(favorites)); } catch {} }, [favorites]);
+  // Home: Feelings Wheel (default) or a plain list; the focused core is kept while reading verses.
+  const [homeView, setHomeView] = useState(() => { try { return localStorage.getItem("av_view") === "list" ? "list" : "wheel"; } catch { return "wheel"; } });
+  const chooseView = (v) => { setHomeView(v); try { localStorage.setItem("av_view", v); } catch {} };
+  const [focusCore, setFocusCore] = useState(null);
   const [shareToast, setShareToast] = useState("");
 
   // ShareCard modal state
@@ -178,7 +188,9 @@ export default function AnchoredVerse() {
 
   const openEmotion = (id) => {
     const e = EMOTIONS.find((x) => x.id === id);
+    if (CORE_OF[id]) setFocusCore(CORE_OF[id].id);
     setActiveEmotion(id);
+    window.scrollTo(0, 0);
     applyPick(id, e ? e.verses.length : 0, "open");
   };
 
@@ -321,9 +333,12 @@ export default function AnchoredVerse() {
     return () => { document.body.style.overflow = ""; };
   }, [layerOpen]);
 
-  const tone = emotion ? TONE[emotion.band] || C.tide : C.tide;
+  const focused = CORES.find((c) => c.id === focusCore) || null;
+  const tone = emotion ? toneOf(emotion.id) : focused ? focused.color : C.tide;
   const glow = emotion
     ? `radial-gradient(110% 62% at 12% 0%, ${tone}33, transparent 72%), radial-gradient(70% 40% at 100% 22%, ${C.sea}12, transparent 70%)`
+    : focused
+    ? `radial-gradient(110% 55% at 50% 8%, ${tone}26, transparent 72%), radial-gradient(70% 38% at 100% 18%, ${C.gold}10, transparent 70%)`
     : `radial-gradient(110% 55% at 10% 0%, ${C.tide}26, transparent 72%), radial-gradient(70% 38% at 100% 18%, ${C.gold}10, transparent 70%)`;
 
   // ============================================================
@@ -332,7 +347,7 @@ export default function AnchoredVerse() {
   const renderShareCard = () => {
     if (!shareCard) return null;
     const light = shareCardLight;
-    const cardTone = TONE[(EMOTIONS.find((e) => e.name === shareCard.emotionName) || {}).band] || C.tide;
+    const cardTone = toneOf((EMOTIONS.find((e) => e.name === shareCard.emotionName) || {}).id);
     const accent = light ? C.goldInk : C.gold;
     const feel = light ? C.harbor : cardTone;
     const bg = light
@@ -394,7 +409,7 @@ export default function AnchoredVerse() {
 
   return (
     <div className="av" style={toneVars(tone)}>
-      <div className="av-glow" key={emotion ? emotion.band : "home"} style={{ background: glow }} aria-hidden="true" />
+      <div className="av-glow" key={emotion ? `e-${(CORE_OF[emotion.id] || {}).id}` : `h-${focusCore || ""}`} style={{ background: glow }} aria-hidden="true" />
 
       <div className="av-wrap">
         {/* Top bar: brand (or back) + translation */}
@@ -421,17 +436,54 @@ export default function AnchoredVerse() {
               <p>A word for every weight your heart carries.</p>
             </div>
 
-            {BANDS.map((band) => (
-              <section key={band.id} className="av-band" style={toneVars(TONE[band.id])} aria-labelledby={`band-${band.id}`}>
-                <h2 id={`band-${band.id}`}>{band.label}</h2>
-                <p className="av-hint">{band.hint}</p>
-                <div className="av-names">
-                  {EMOTIONS.filter((e) => e.band === band.id).map((e) => (
-                    <button key={e.id} className="av-name" onClick={() => openEmotion(e.id)}>{e.name}</button>
-                  ))}
+            {homeView === "wheel" ? (
+              <>
+                <div className="fw-wrap">
+                  <FeelingsWheel
+                    cores={CORES}
+                    emotions={EMOTIONS}
+                    selected={focusCore}
+                    onSelectCore={setFocusCore}
+                    onOpenFeeling={(id) => openEmotion(id)}
+                  />
                 </div>
-              </section>
-            ))}
+                {focused ? (
+                  <section className="av-band fw-panel" style={toneVars(focused.color)} aria-live="polite" aria-labelledby="fw-panel-title">
+                    <h2 id="fw-panel-title">{focused.name}</h2>
+                    <p className="av-hint">{focused.hint}</p>
+                    <div className="av-names">
+                      {focused.emotions.map((id) => EMOTIONS.find((e) => e.id === id)).filter(Boolean).map((e) => (
+                        <button key={e.id} className="av-name" onClick={() => openEmotion(e.id)}>
+                          {e.name}<small>{e.verses.length} verses</small>
+                        </button>
+                      ))}
+                    </div>
+                    <button className="av-link fw-all" onClick={() => setFocusCore(null)}>Show every feeling</button>
+                  </section>
+                ) : (
+                  <p className="fw-help">Tap a core feeling in the center to narrow it down, or a word on the outer ring to go straight to Scripture.</p>
+                )}
+              </>
+            ) : (
+              CORES.map((core) => (
+                <section key={core.id} className="av-band" style={toneVars(core.color)} aria-labelledby={`core-${core.id}`}>
+                  <h2 id={`core-${core.id}`}>{core.name}</h2>
+                  <p className="av-hint">{core.hint}</p>
+                  <div className="av-names">
+                    {core.emotions.map((id) => EMOTIONS.find((e) => e.id === id)).filter(Boolean).map((e) => (
+                      <button key={e.id} className="av-name" onClick={() => openEmotion(e.id)}>{e.name}</button>
+                    ))}
+                  </div>
+                </section>
+              ))
+            )}
+
+            <div className="av-view" role="group" aria-label="Show feelings as">
+              <div className="av-seg">
+                <button onClick={() => chooseView("wheel")} aria-pressed={homeView === "wheel"}>Wheel</button>
+                <button onClick={() => chooseView("list")} aria-pressed={homeView === "list"}>List</button>
+              </div>
+            </div>
 
             {favorites.length > 0 && (
               <section className="av-saved">

@@ -113,6 +113,50 @@ html, body { margin: 0; background: var(--harbor); }
 .av-name:hover { color: var(--tone); transform: translateY(-2px); }
 .av-name:active { transform: scale(0.97); }
 
+.av-name small {
+  display: block; margin-top: 2px;
+  font-family: var(--sans); font-size: 13px; font-weight: 500; letter-spacing: 0.02em; color: var(--mist);
+}
+
+/* ── Feelings Wheel ──────────────────────────────────────── */
+.av-view { display: flex; justify-content: center; margin-top: 30px; }
+.av-view .av-seg { margin: 0; }
+.fw-wrap { margin: 26px -16px 0; display: flex; justify-content: center; }
+.fw { width: 100%; max-width: 470px; height: auto; display: block; overflow: visible; animation: avSettle 0.6s ease both; }
+.fw-bg { fill: var(--harbor); }
+.fw-seg { cursor: pointer; outline: none; -webkit-tap-highlight-color: transparent; }
+.fw-seg path { stroke: var(--harbor); stroke-width: 2.2; stroke-linejoin: round; transition: fill-opacity 0.25s, stroke 0.2s; }
+.fw-core path { fill: var(--c); }
+.fw-core text {
+  fill: var(--harbor); font-family: var(--serif); font-weight: 560; font-size: 16px; letter-spacing: 0.01em;
+  text-anchor: middle; dominant-baseline: central; pointer-events: none;
+}
+.fw-feel path { fill: var(--c); fill-opacity: 0.24; }
+.fw-feel text {
+  fill: var(--parch); font-family: var(--serif); font-weight: 420; font-size: 16.5px; letter-spacing: -0.005em;
+  text-anchor: middle; dominant-baseline: central; pointer-events: none;
+}
+.fw-rim { fill: var(--c); pointer-events: none; }
+.fw-core-group { transition: opacity 0.3s ease; }
+.fw.has-focus .fw-core-group:not(.on) { opacity: 0.42; }
+.fw.has-focus .fw-core-group.on .fw-feel path { fill-opacity: 0.42; }
+@media (hover: hover) {
+  .fw-feel:hover path { fill-opacity: 0.5; }
+  .fw-core:hover path { filter: brightness(1.08); }
+}
+.fw-feel:active path { fill-opacity: 0.6; }
+.fw-seg:focus-visible path { stroke: var(--gold); stroke-width: 3.5; }
+.fw-hub circle { fill: var(--deep); stroke: rgba(234, 228, 211, 0.16); stroke-width: 1.5; }
+.fw-hub-mark { color: var(--gold); }
+.fw-hub.live { cursor: pointer; outline: none; }
+.fw-hub.live:focus-visible circle { stroke: var(--gold); stroke-width: 3; }
+.fw-help {
+  margin: 14px auto 0; max-width: 34ch; text-align: center;
+  font-family: var(--serif); font-style: italic; font-size: 17px; line-height: 1.45; color: var(--mist);
+}
+.fw-panel { margin-top: 14px; animation: avSettle 0.35s ease both; }
+.fw-all { display: block; margin: 12px auto 0; }
+
 .av-saved { margin-top: 58px; }
 .av-saved h2 { text-align: center; margin: 0 0 6px; font-family: var(--serif); font-weight: 500; font-size: 23px; color: var(--gold); }
 .av-saved-row {

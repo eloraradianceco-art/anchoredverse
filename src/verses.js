@@ -33,6 +33,17 @@ export const BANDS = [
   { id: "light", label: "Light", hint: "When you want to stay anchored", color: BRAND.teal },
 ];
 
+// The Feelings Wheel: six core emotions at the center, each feeling (EMOTIONS below) around its core.
+// Order is clockwise from the top-left; every feeling id appears exactly once.
+export const CORES = [
+  { id: "sorrow",   name: "Sorrow",   band: "heavy",    color: "#7FA4C8", hint: "When your heart is heavy",          emotions: ["sad", "grieving", "lonely", "discouraged", "weary"] },
+  { id: "fear",     name: "Fear",     band: "heavy",    color: "#A99AD6", hint: "When worry won't let go",           emotions: ["anxious", "fearful", "overwhelmed", "insecure"] },
+  { id: "anger",    name: "Anger",    band: "friction", color: "#E0875A", hint: "When something needs to give",      emotions: ["angry", "frustrated", "irritated", "impatient", "jealous"] },
+  { id: "struggle", name: "Struggle", band: "friction", color: "#D98C9A", hint: "When you're fighting sin or shame", emotions: ["tempted", "ashamed", "repentant"] },
+  { id: "joy",      name: "Joy",      band: "light",    color: "#D6A55A", hint: "When your cup is full",             emotions: ["happy", "grateful", "loved", "hopeful"] },
+  { id: "peace",    name: "Peace",    band: "light",    color: "#6BB3AE", hint: "When you want to stay anchored",    emotions: ["peaceful", "content", "faith", "forgiving"] },
+];
+
 export const EMOTIONS = [
   // ==========================================================
   // HEAVY BAND
