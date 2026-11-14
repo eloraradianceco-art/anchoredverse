@@ -8,7 +8,7 @@ import "./anchored.css";
 // ============================================================
 // ANCHORED VERSE — Elora Radiance Co.
 // Emotion-indexed scripture companion
-// All verse data lives in verses.js (339 verses, 25 feelings around 6 core emotions).
+// All verse data lives in verses.js (394 passages, 30 feelings around 6 core emotions).
 // To add/edit content, edit verses.js — no UI changes needed.
 // Visual layer lives in anchored.css; fonts are self-hosted (fonts.css).
 // ============================================================

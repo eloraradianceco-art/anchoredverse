@@ -7,7 +7,6 @@ import React, { useLayoutEffect, useRef } from "react";
 // ============================================================
 
 const R_HUB = 36, R_CORE = 92, R_FEEL = 196, R_RIM = 203;
-const SPAN = 60; // each core gets an equal slice so every label fits
 
 const pt = (r, deg) => {
   const a = (deg * Math.PI) / 180;
@@ -38,7 +37,18 @@ function AnchorMark({ size = 26 }) {
 export default function FeelingsWheel({ cores, emotions, selected, onSelectCore, onOpenFeeling }) {
   const svgRef = useRef(null);
   const byId = (id) => emotions.find((e) => e.id === id);
-  const start = -SPAN; // Sorrow sits at the top-left, like a classic feelings wheel
+  // Each core's slice in degrees, scaled so the whole wheel is 360 (Sorrow ends at the top, like a classic feelings wheel).
+  const counts = cores.map((c) => c.emotions.filter((id) => byId(id)).length);
+  const total = counts.reduce((a, b) => a + b, 0) || 1;
+  // …but no core narrower than MIN_CORE, so its name stays readable in the center.
+  const MIN_CORE = 56;
+  const raw = counts.map((n) => (360 * n) / total);
+  const small = raw.map((d) => d < MIN_CORE);
+  const rest = 360 - MIN_CORE * small.filter(Boolean).length;
+  const restCount = counts.reduce((a, n, i) => a + (small[i] ? 0 : n), 0) || 1;
+  const spans = raw.map((d, i) => (small[i] ? MIN_CORE : (rest * counts[i]) / restCount));
+  const start = -spans[0];
+  const startOf = (ci) => start + spans.slice(0, ci).reduce((a, b) => a + b, 0);
 
   // Shrink any feeling label that would run past its ring (longer words, wider fallback fonts).
   useLayoutEffect(() => {
@@ -71,10 +81,10 @@ export default function FeelingsWheel({ cores, emotions, selected, onSelectCore,
     <svg ref={svgRef} className={`fw${selected ? " has-focus" : ""}`} viewBox="-208 -208 416 416" role="group" aria-label="Feelings wheel">
       <circle r={R_RIM + 3} className="fw-bg" />
       {cores.map((core, ci) => {
-        const a0 = start + ci * SPAN, a1 = a0 + SPAN, mid = a0 + SPAN / 2;
+        const span = spans[ci], a0 = startOf(ci), a1 = a0 + span, mid = a0 + span / 2;
         const on = selected === core.id;
         const feels = core.emotions.map(byId).filter(Boolean);
-        const each = SPAN / feels.length;
+        const each = span / feels.length;
         const [cx, cy] = pt((R_HUB + R_CORE) / 2 + 2, mid);
         return (
           <g key={core.id} className={`fw-core-group${on ? " on" : ""}`} style={{ "--c": core.color }}>
@@ -89,7 +99,7 @@ export default function FeelingsWheel({ cores, emotions, selected, onSelectCore,
               onKeyDown={keyed(() => onSelectCore(on ? null : core.id))}
             >
               <path d={sector(R_HUB, R_CORE, a0, a1)} />
-              <text x={f(cx)} y={f(cy)} transform={`rotate(${f(tangent(mid))} ${f(cx)} ${f(cy)})`} aria-hidden="true">{core.name}</text>
+              <text x={f(cx)} y={f(cy)} data-max={f(2 * ((R_HUB + R_CORE) / 2 + 2) * Math.tan(((span / 2 - 4) * Math.PI) / 180))} transform={`rotate(${f(tangent(mid))} ${f(cx)} ${f(cy)})`} aria-hidden="true">{core.name}</text>
             </g>
             {/* Its feelings */}
             {feels.map((e, i) => {

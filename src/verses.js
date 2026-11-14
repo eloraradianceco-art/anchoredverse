@@ -2,7 +2,7 @@
 // ANCHORED VERSE — Verse Database
 // Elora Radiance Co.
 // ------------------------------------------------------------
-// 10-17 verses per emotion, three translations each.
+// 10-17 verses per emotion, three translations each (30 emotions, 394 passages).
 //
 // ⚠️ ACCURACY + LICENSING NOTE:
 // NKJV (Thomas Nelson), ESV (Crossway), and NIV (Biblica) are
@@ -36,12 +36,12 @@ export const BANDS = [
 // The Feelings Wheel: six core emotions at the center, each feeling (EMOTIONS below) around its core.
 // Order is clockwise from the top-left; every feeling id appears exactly once.
 export const CORES = [
-  { id: "sorrow",   name: "Sorrow",   band: "heavy",    color: "#7FA4C8", hint: "When your heart is heavy",          emotions: ["sad", "grieving", "lonely", "discouraged", "weary"] },
-  { id: "fear",     name: "Fear",     band: "heavy",    color: "#A99AD6", hint: "When worry won't let go",           emotions: ["anxious", "fearful", "overwhelmed", "insecure"] },
+  { id: "sorrow",   name: "Sorrow",   band: "heavy",    color: "#7FA4C8", hint: "When your heart is heavy",          emotions: ["sad", "grieving", "lonely", "hurt", "rejected", "discouraged", "weary"] },
+  { id: "fear",     name: "Fear",     band: "heavy",    color: "#A99AD6", hint: "When worry won't let go",           emotions: ["anxious", "stressed", "fearful", "overwhelmed", "insecure"] },
   { id: "anger",    name: "Anger",    band: "friction", color: "#E0875A", hint: "When something needs to give",      emotions: ["angry", "frustrated", "irritated", "impatient", "jealous"] },
-  { id: "struggle", name: "Struggle", band: "friction", color: "#D98C9A", hint: "When you're fighting sin or shame", emotions: ["tempted", "ashamed", "repentant"] },
+  { id: "struggle", name: "Struggle", band: "friction", color: "#D98C9A", hint: "When you're wrestling within",       emotions: ["confused", "tempted", "ashamed", "repentant"] },
   { id: "joy",      name: "Joy",      band: "light",    color: "#D6A55A", hint: "When your cup is full",             emotions: ["happy", "grateful", "loved", "hopeful"] },
-  { id: "peace",    name: "Peace",    band: "light",    color: "#6BB3AE", hint: "When you want to stay anchored",    emotions: ["peaceful", "content", "faith", "forgiving"] },
+  { id: "peace",    name: "Peace",    band: "light",    color: "#6BB3AE", hint: "When you want to stay anchored",    emotions: ["peaceful", "content", "faith", "bold", "forgiving"] },
 ];
 
 export const EMOTIONS = [
@@ -2379,6 +2379,399 @@ export const EMOTIONS = [
         NKJV: "And we have known and believed the love that God has for us. God is love, and he who abides in love abides in God, and God in him.",
         ESV: "So we have come to know and to believe the love that God has for us. God is love, and whoever abides in love abides in God, and God abides in him.",
         NIV: "And so we know and rely on the love God has for us. God is love. Whoever lives in love lives in God, and God in them.",
+      },
+    ],
+  },
+  // ==========================================================
+  // ADDED 2026-11-14 — Hurt, Rejected, Stressed, Confused, Bold
+  // ==========================================================
+  {
+    id: "hurt",
+    name: "Hurt",
+    band: "heavy",
+    reflections: [
+      "Jesus knows what it is to be wounded by people He loved. You don't have to pretend it didn't hurt. Bring Him the wound by name; He binds it up before He asks anything of you.",
+      "Hurt wants to replay the moment until it becomes who you are. Let God keep the record instead. He saw all of it, and He is better at justice than you will ever need to be.",
+      "What they meant for harm doesn't get the last word. God has a long history of taking what was done to His people and weaving it into something that saves. Let Him heal you first.",
+    ],
+    verses: [
+      {
+        ref: "Psalm 147:3",
+        NKJV: "He heals the brokenhearted and binds up their wounds.",
+        ESV: "He heals the brokenhearted and binds up their wounds.",
+        NIV: "He heals the brokenhearted and binds up their wounds.",
+      },
+      {
+        ref: "Psalm 34:18",
+        NKJV: "The Lord is near to those who have a broken heart, and saves such as have a contrite spirit.",
+        ESV: "The Lord is near to the brokenhearted and saves the crushed in spirit.",
+        NIV: "The Lord is close to the brokenhearted and saves those who are crushed in spirit.",
+      },
+      {
+        ref: "Psalm 56:8",
+        NKJV: "You number my wanderings; put my tears into Your bottle; are they not in Your book?",
+        ESV: "You have kept count of my tossings; put my tears in your bottle. Are they not in your book?",
+        NIV: "Record my misery; list my tears on your scroll—are they not in your record?",
+      },
+      {
+        ref: "Psalm 31:7",
+        NKJV: "I will be glad and rejoice in Your mercy, for You have considered my trouble; You have known my soul in adversities.",
+        ESV: "I will rejoice and be glad in your steadfast love, because you have seen my affliction; you have known the distress of my soul.",
+        NIV: "I will be glad and rejoice in your love, for you saw my affliction and knew the anguish of my soul.",
+      },
+      {
+        ref: "Hebrews 4:15",
+        NKJV: "For we do not have a High Priest who cannot sympathize with our weaknesses, but was in all points tempted as we are, yet without sin.",
+        ESV: "For we do not have a high priest who is unable to sympathize with our weaknesses, but one who in every respect has been tempted as we are, yet without sin.",
+        NIV: "For we do not have a high priest who is unable to empathize with our weaknesses, but we have one who has been tempted in every way, just as we are—yet he did not sin.",
+      },
+      {
+        ref: "1 Peter 2:23",
+        NKJV: "who, when He was reviled, did not revile in return; when He suffered, He did not threaten, but committed Himself to Him who judges righteously.",
+        ESV: "When he was reviled, he did not revile in return; when he suffered, he did not threaten, but continued entrusting himself to him who judges justly.",
+        NIV: "When they hurled their insults at him, he did not retaliate; when he suffered, he made no threats. Instead, he entrusted himself to him who judges justly.",
+      },
+      {
+        ref: "Romans 12:19",
+        NKJV: "Beloved, do not avenge yourselves, but rather give place to wrath; for it is written, 'Vengeance is Mine, I will repay,' says the Lord.",
+        ESV: "Beloved, never avenge yourselves, but leave it to the wrath of God, for it is written, 'Vengeance is mine, I will repay, says the Lord.'",
+        NIV: "Do not take revenge, my dear friends, but leave room for God's wrath, for it is written: 'It is mine to avenge; I will repay,' says the Lord.",
+      },
+      {
+        ref: "Genesis 50:20",
+        NKJV: "But as for you, you meant evil against me; but God meant it for good, in order to bring it about as it is this day, to save many people alive.",
+        ESV: "As for you, you meant evil against me, but God meant it for good, to bring it about that many people should be kept alive, as they are today.",
+        NIV: "You intended to harm me, but God intended it for good, to accomplish what is now being done, the saving of many lives.",
+      },
+      {
+        ref: "2 Corinthians 1:3-4",
+        NKJV: "Blessed be the God and Father of our Lord Jesus Christ, the Father of mercies and God of all comfort, who comforts us in all our tribulation.",
+        ESV: "Blessed be the God and Father of our Lord Jesus Christ, the Father of mercies and God of all comfort, who comforts us in all our affliction.",
+        NIV: "Praise be to the God and Father of our Lord Jesus Christ, the Father of compassion and the God of all comfort, who comforts us in all our troubles.",
+      },
+      {
+        ref: "Colossians 3:13",
+        NKJV: "Bearing with one another, and forgiving one another, if anyone has a complaint against another; even as Christ forgave you, so you also must do.",
+        ESV: "Bearing with one another and, if one has a complaint against another, forgiving each other; as the Lord has forgiven you, so you also must forgive.",
+        NIV: "Bear with each other and forgive one another if any of you has a grievance against someone. Forgive as the Lord forgave you.",
+      },
+      {
+        ref: "Revelation 21:4",
+        NKJV: "And God will wipe away every tear from their eyes; there shall be no more death, nor sorrow, nor crying. There shall be no more pain, for the former things have passed away.",
+        ESV: "He will wipe away every tear from their eyes, and death shall be no more, neither shall there be mourning, nor crying, nor pain anymore, for the former things have passed away.",
+        NIV: "He will wipe every tear from their eyes. There will be no more death or mourning or crying or pain, for the old order of things has passed away.",
+      },
+    ],
+  },
+  {
+    id: "rejected",
+    name: "Rejected",
+    band: "heavy",
+    reflections: [
+      "Their no is not God's no. The One whose opinion actually decides your worth has already chosen you, and He has never once turned away anyone who came to Him.",
+      "Jesus was rejected by the very people He came to save. He isn't surprised by your rejection and He isn't distant from it. He stood in that place so you would never stand there alone.",
+      "Rejection tells you to shrink and hide. Scripture says you are chosen, called by name, and engraved on His hands. Let the true voice be the loudest one.",
+    ],
+    verses: [
+      {
+        ref: "Isaiah 53:3",
+        NKJV: "He is despised and rejected by men, a Man of sorrows and acquainted with grief.",
+        ESV: "He was despised and rejected by men, a man of sorrows and acquainted with grief.",
+        NIV: "He was despised and rejected by mankind, a man of suffering, and familiar with pain.",
+      },
+      {
+        ref: "Psalm 27:10",
+        NKJV: "When my father and my mother forsake me, then the Lord will take care of me.",
+        ESV: "For my father and my mother have forsaken me, but the Lord will take me in.",
+        NIV: "Though my father and mother forsake me, the Lord will receive me.",
+      },
+      {
+        ref: "John 6:37",
+        NKJV: "All that the Father gives Me will come to Me, and the one who comes to Me I will by no means cast out.",
+        ESV: "All that the Father gives me will come to me, and whoever comes to me I will never cast out.",
+        NIV: "All those the Father gives me will come to me, and whoever comes to me I will never drive away.",
+      },
+      {
+        ref: "Psalm 118:22",
+        NKJV: "The stone which the builders rejected has become the chief cornerstone.",
+        ESV: "The stone that the builders rejected has become the cornerstone.",
+        NIV: "The stone the builders rejected has become the cornerstone.",
+      },
+      {
+        ref: "Isaiah 41:9",
+        NKJV: "You whom I have taken from the ends of the earth, and called from its farthest regions, and said to you, 'You are My servant, I have chosen you and have not cast you away.'",
+        ESV: "You whom I took from the ends of the earth, and called from its farthest corners, saying to you, 'You are my servant, I have chosen you and not cast you off.'",
+        NIV: "I took you from the ends of the earth, from its farthest corners I called you. I said, 'You are my servant'; I have chosen you and have not rejected you.",
+      },
+      {
+        ref: "Isaiah 49:15-16",
+        NKJV: "Can a woman forget her nursing child, and not have compassion on the son of her womb? Surely they may forget, yet I will not forget you. See, I have inscribed you on the palms of My hands; your walls are continually before Me.",
+        ESV: "Can a woman forget her nursing child, that she should have no compassion on the son of her womb? Even these may forget, yet I will not forget you. Behold, I have engraved you on the palms of my hands; your walls are continually before me.",
+        NIV: "Can a mother forget the baby at her breast and have no compassion on the child she has borne? Though she may forget, I will not forget you! See, I have engraved you on the palms of my hands; your walls are ever before me.",
+      },
+      {
+        ref: "John 15:16",
+        NKJV: "You did not choose Me, but I chose you and appointed you that you should go and bear fruit, and that your fruit should remain, that whatever you ask the Father in My name He may give you.",
+        ESV: "You did not choose me, but I chose you and appointed you that you should go and bear fruit and that your fruit should abide, so that whatever you ask the Father in my name, he may give it to you.",
+        NIV: "You did not choose me, but I chose you and appointed you so that you might go and bear fruit—fruit that will last—and so that whatever you ask in my name the Father will give you.",
+      },
+      {
+        ref: "Psalm 94:14",
+        NKJV: "For the Lord will not cast off His people, nor will He forsake His inheritance.",
+        ESV: "For the Lord will not forsake his people; he will not abandon his heritage.",
+        NIV: "For the Lord will not reject his people; he will never forsake his inheritance.",
+      },
+      {
+        ref: "John 15:18",
+        NKJV: "If the world hates you, you know that it hated Me before it hated you.",
+        ESV: "If the world hates you, know that it has hated me before it hated you.",
+        NIV: "If the world hates you, keep in mind that it hated me first.",
+      },
+      {
+        ref: "Deuteronomy 31:8",
+        NKJV: "And the Lord, He is the one who goes before you. He will be with you, He will not leave you nor forsake you; do not fear nor be dismayed.",
+        ESV: "It is the Lord who goes before you. He will be with you; he will not leave you or forsake you. Do not fear or be dismayed.",
+        NIV: "The Lord himself goes before you and will be with you; he will never leave you nor forsake you. Do not be afraid; do not be discouraged.",
+      },
+      {
+        ref: "1 Peter 2:9",
+        NKJV: "But you are a chosen generation, a royal priesthood, a holy nation, His own special people, that you may proclaim the praises of Him who called you out of darkness into His marvelous light.",
+        ESV: "But you are a chosen race, a royal priesthood, a holy nation, a people for his own possession, that you may proclaim the excellencies of him who called you out of darkness into his marvelous light.",
+        NIV: "But you are a chosen people, a royal priesthood, a holy nation, God's special possession, that you may declare the praises of him who called you out of darkness into his wonderful light.",
+      },
+    ],
+  },
+  {
+    id: "stressed",
+    name: "Stressed",
+    band: "heavy",
+    reflections: [
+      "Stress is often a sign you're carrying what was never yours to carry. Name the one thing that matters today, like Mary did, and hand the rest of the list back to God.",
+      "Jesus told tired, busy people to come away and rest a while. Rest isn't falling behind. It's trusting that God keeps the world turning while you breathe.",
+      "Pressure narrows your vision until the problem is all you can see. Be still for a moment. He is still God, and none of what's pressing on you is pressing on Him.",
+    ],
+    verses: [
+      {
+        ref: "Luke 10:41-42",
+        NKJV: "And Jesus answered and said to her, 'Martha, Martha, you are worried and troubled about many things. But one thing is needed, and Mary has chosen that good part, which will not be taken away from her.'",
+        ESV: "But the Lord answered her, 'Martha, Martha, you are anxious and troubled about many things, but one thing is necessary. Mary has chosen the good portion, which will not be taken away from her.'",
+        NIV: "'Martha, Martha,' the Lord answered, 'you are worried and upset about many things, but few things are needed—or indeed only one. Mary has chosen what is better, and it will not be taken away from her.'",
+      },
+      {
+        ref: "Psalm 127:2",
+        NKJV: "It is vain for you to rise up early, to sit up late, to eat the bread of sorrows; for so He gives His beloved sleep.",
+        ESV: "It is in vain that you rise up early and go late to rest, eating the bread of anxious toil; for he gives to his beloved sleep.",
+        NIV: "In vain you rise early and stay up late, toiling for food to eat—for he grants sleep to those he loves.",
+      },
+      {
+        ref: "Matthew 11:28-30",
+        NKJV: "Come to Me, all you who labor and are heavy laden, and I will give you rest. Take My yoke upon you and learn from Me, for I am gentle and lowly in heart, and you will find rest for your souls. For My yoke is easy and My burden is light.",
+        ESV: "Come to me, all who labor and are heavy laden, and I will give you rest. Take my yoke upon you, and learn from me, for I am gentle and lowly in heart, and you will find rest for your souls. For my yoke is easy, and my burden is light.",
+        NIV: "Come to me, all you who are weary and burdened, and I will give you rest. Take my yoke upon you and learn from me, for I am gentle and humble in heart, and you will find rest for your souls. For my yoke is easy and my burden is light.",
+      },
+      {
+        ref: "Mark 6:31",
+        NKJV: "And He said to them, 'Come aside by yourselves to a deserted place and rest a while.' For there were many coming and going, and they did not even have time to eat.",
+        ESV: "And he said to them, 'Come away by yourselves to a desolate place and rest a while.' For many were coming and going, and they had no leisure even to eat.",
+        NIV: "Then, because so many people were coming and going that they did not even have a chance to eat, he said to them, 'Come with me by yourselves to a quiet place and get some rest.'",
+      },
+      {
+        ref: "Ecclesiastes 4:6",
+        NKJV: "Better a handful with quietness than both hands full, together with toil and grasping for the wind.",
+        ESV: "Better is a handful of quietness than two hands full of toil and a striving after wind.",
+        NIV: "Better one handful with tranquillity than two handfuls with toil and chasing after the wind.",
+      },
+      {
+        ref: "Psalm 118:5",
+        NKJV: "I called on the Lord in distress; the Lord answered me and set me in a broad place.",
+        ESV: "Out of my distress I called on the Lord; the Lord answered me and set me free.",
+        NIV: "When hard pressed, I cried to the Lord; he brought me into a spacious place.",
+      },
+      {
+        ref: "Psalm 46:10",
+        NKJV: "Be still, and know that I am God; I will be exalted among the nations, I will be exalted in the earth!",
+        ESV: "Be still, and know that I am God. I will be exalted among the nations, I will be exalted in the earth!",
+        NIV: "He says, 'Be still, and know that I am God; I will be exalted among the nations, I will be exalted in the earth.'",
+      },
+      {
+        ref: "Exodus 14:14",
+        NKJV: "The Lord will fight for you, and you shall hold your peace.",
+        ESV: "The Lord will fight for you, and you have only to be silent.",
+        NIV: "The Lord will fight for you; you need only to be still.",
+      },
+      {
+        ref: "2 Corinthians 4:8-9",
+        NKJV: "We are hard-pressed on every side, yet not crushed; we are perplexed, but not in despair; persecuted, but not forsaken; struck down, but not destroyed.",
+        ESV: "We are afflicted in every way, but not crushed; perplexed, but not driven to despair; persecuted, but not forsaken; struck down, but not destroyed.",
+        NIV: "We are hard pressed on every side, but not crushed; perplexed, but not in despair; persecuted, but not abandoned; struck down, but not destroyed.",
+      },
+      {
+        ref: "Psalm 94:19",
+        NKJV: "In the multitude of my anxieties within me, Your comforts delight my soul.",
+        ESV: "When the cares of my heart are many, your consolations cheer my soul.",
+        NIV: "When anxiety was great within me, your consolation brought me joy.",
+      },
+      {
+        ref: "Psalm 62:1-2",
+        NKJV: "Truly my soul silently waits for God; from Him comes my salvation. He only is my rock and my salvation; He is my defense; I shall not be greatly moved.",
+        ESV: "For God alone my soul waits in silence; from him comes my salvation. He alone is my rock and my salvation, my fortress; I shall not be greatly shaken.",
+        NIV: "Truly my soul finds rest in God; my salvation comes from him. Truly he is my rock and my salvation; he is my fortress, I will never be shaken.",
+      },
+    ],
+  },
+  {
+    id: "confused",
+    name: "Confused",
+    band: "friction",
+    reflections: [
+      "God isn't hiding the way from you. Ask Him for wisdom plainly. He gives it generously, and He never makes you feel foolish for asking.",
+      "You don't need the whole map, just the next step. His Word is a lamp for your feet, not a floodlight on the next ten years. Take the step that's lit.",
+      "Confusion isn't the opposite of faith. 'I believe; help my unbelief' is a prayer Jesus answered. Bring Him your questions honestly and let Him lead you through them.",
+    ],
+    verses: [
+      {
+        ref: "James 1:5",
+        NKJV: "If any of you lacks wisdom, let him ask of God, who gives to all liberally and without reproach, and it will be given to him.",
+        ESV: "If any of you lacks wisdom, let him ask God, who gives generously to all without reproach, and it will be given him.",
+        NIV: "If any of you lacks wisdom, you should ask God, who gives generously to all without finding fault, and it will be given to you.",
+      },
+      {
+        ref: "Proverbs 3:5-6",
+        NKJV: "Trust in the Lord with all your heart, and lean not on your own understanding; in all your ways acknowledge Him, and He shall direct your paths.",
+        ESV: "Trust in the Lord with all your heart, and do not lean on your own understanding. In all your ways acknowledge him, and he will make straight your paths.",
+        NIV: "Trust in the Lord with all your heart and lean not on your own understanding; in all your ways submit to him, and he will make your paths straight.",
+      },
+      {
+        ref: "1 Corinthians 14:33",
+        NKJV: "For God is not the author of confusion but of peace.",
+        ESV: "For God is not a God of confusion but of peace.",
+        NIV: "For God is not a God of disorder but of peace.",
+      },
+      {
+        ref: "Psalm 32:8",
+        NKJV: "I will instruct you and teach you in the way you should go; I will guide you with My eye.",
+        ESV: "I will instruct you and teach you in the way you should go; I will counsel you with my eye upon you.",
+        NIV: "I will instruct you and teach you in the way you should go; I will counsel you with my loving eye on you.",
+      },
+      {
+        ref: "Isaiah 30:21",
+        NKJV: "Your ears shall hear a word behind you, saying, 'This is the way, walk in it,' whenever you turn to the right hand or whenever you turn to the left.",
+        ESV: "And your ears shall hear a word behind you, saying, 'This is the way, walk in it,' when you turn to the right or when you turn to the left.",
+        NIV: "Whether you turn to the right or to the left, your ears will hear a voice behind you, saying, 'This is the way; walk in it.'",
+      },
+      {
+        ref: "Psalm 119:105",
+        NKJV: "Your word is a lamp to my feet and a light to my path.",
+        ESV: "Your word is a lamp to my feet and a light to my path.",
+        NIV: "Your word is a lamp for my feet, a light on my path.",
+      },
+      {
+        ref: "Proverbs 16:9",
+        NKJV: "A man's heart plans his way, but the Lord directs his steps.",
+        ESV: "The heart of man plans his way, but the Lord establishes his steps.",
+        NIV: "In their hearts humans plan their course, but the Lord establishes their steps.",
+      },
+      {
+        ref: "Isaiah 55:8-9",
+        NKJV: "'For My thoughts are not your thoughts, nor are your ways My ways,' says the Lord. 'For as the heavens are higher than the earth, so are My ways higher than your ways, and My thoughts than your thoughts.'",
+        ESV: "For my thoughts are not your thoughts, neither are your ways my ways, declares the Lord. For as the heavens are higher than the earth, so are my ways higher than your ways and my thoughts than your thoughts.",
+        NIV: "'For my thoughts are not your thoughts, neither are your ways my ways,' declares the Lord. 'As the heavens are higher than the earth, so are my ways higher than your ways and my thoughts than your thoughts.'",
+      },
+      {
+        ref: "Jeremiah 33:3",
+        NKJV: "Call to Me, and I will answer you, and show you great and mighty things, which you do not know.",
+        ESV: "Call to me and I will answer you, and will tell you great and hidden things that you have not known.",
+        NIV: "Call to me and I will answer you and tell you great and unsearchable things you do not know.",
+      },
+      {
+        ref: "John 16:13",
+        NKJV: "However, when He, the Spirit of truth, has come, He will guide you into all truth; for He will not speak on His own authority, but whatever He hears He will speak; and He will tell you things to come.",
+        ESV: "When the Spirit of truth comes, he will guide you into all the truth, for he will not speak on his own authority, but whatever he hears he will speak, and he will declare to you the things that are to come.",
+        NIV: "But when he, the Spirit of truth, comes, he will guide you into all the truth. He will not speak on his own; he will speak only what he hears, and he will tell you what is yet to come.",
+      },
+      {
+        ref: "Mark 9:24",
+        NKJV: "Immediately the father of the child cried out and said with tears, 'Lord, I believe; help my unbelief!'",
+        ESV: "Immediately the father of the child cried out and said, 'I believe; help my unbelief!'",
+        NIV: "Immediately the boy's father exclaimed, 'I do believe; help me overcome my unbelief!'",
+      },
+    ],
+  },
+  {
+    id: "bold",
+    name: "Bold",
+    band: "light",
+    reflections: [
+      "Boldness isn't the absence of fear. It's remembering who goes with you. The God who told Joshua to be strong and courageous goes with you everywhere you go today.",
+      "The early church didn't pray for the danger to disappear. They prayed for boldness, and God filled them. Ask for the same, then open your mouth.",
+      "You can stand with confidence before people because you've already been welcomed before the throne of grace. Grace made you bold. Walk into today like it's true.",
+    ],
+    verses: [
+      {
+        ref: "Joshua 1:9",
+        NKJV: "Have I not commanded you? Be strong and of good courage; do not be afraid, nor be dismayed, for the Lord your God is with you wherever you go.",
+        ESV: "Have I not commanded you? Be strong and courageous. Do not be frightened, and do not be dismayed, for the Lord your God is with you wherever you go.",
+        NIV: "Have I not commanded you? Be strong and courageous. Do not be afraid; do not be discouraged, for the Lord your God will be with you wherever you go.",
+      },
+      {
+        ref: "Proverbs 28:1",
+        NKJV: "The wicked flee when no one pursues, but the righteous are bold as a lion.",
+        ESV: "The wicked flee when no one pursues, but the righteous are bold as a lion.",
+        NIV: "The wicked flee though no one pursues, but the righteous are as bold as a lion.",
+      },
+      {
+        ref: "2 Timothy 1:7",
+        NKJV: "For God has not given us a spirit of fear, but of power and of love and of a sound mind.",
+        ESV: "For God gave us a spirit not of fear but of power and love and self-control.",
+        NIV: "For the Spirit God gave us does not make us timid, but gives us power, love and self-discipline.",
+      },
+      {
+        ref: "Acts 4:31",
+        NKJV: "And when they had prayed, the place where they were assembled together was shaken; and they were all filled with the Holy Spirit, and they spoke the word of God with boldness.",
+        ESV: "And when they had prayed, the place in which they were gathered together was shaken, and they were all filled with the Holy Spirit and continued to speak the word of God with boldness.",
+        NIV: "After they prayed, the place where they were meeting was shaken. And they were all filled with the Holy Spirit and spoke the word of God boldly.",
+      },
+      {
+        ref: "Hebrews 4:16",
+        NKJV: "Let us therefore come boldly to the throne of grace, that we may obtain mercy and find grace to help in time of need.",
+        ESV: "Let us then with confidence draw near to the throne of grace, that we may receive mercy and find grace to help in time of need.",
+        NIV: "Let us then approach God's throne of grace with confidence, so that we may receive mercy and find grace to help us in our time of need.",
+      },
+      {
+        ref: "Ephesians 3:12",
+        NKJV: "in whom we have boldness and access with confidence through faith in Him.",
+        ESV: "in whom we have boldness and access with confidence through our faith in him.",
+        NIV: "In him and through faith in him we may approach God with freedom and confidence.",
+      },
+      {
+        ref: "Psalm 138:3",
+        NKJV: "In the day when I cried out, You answered me, and made me bold with strength in my soul.",
+        ESV: "On the day I called, you answered me; my strength of soul you increased.",
+        NIV: "When I called, you answered me; you greatly emboldened me.",
+      },
+      {
+        ref: "Romans 1:16",
+        NKJV: "For I am not ashamed of the gospel of Christ, for it is the power of God to salvation for everyone who believes, for the Jew first and also for the Greek.",
+        ESV: "For I am not ashamed of the gospel, for it is the power of God for salvation to everyone who believes, to the Jew first and also to the Greek.",
+        NIV: "For I am not ashamed of the gospel, because it is the power of God that brings salvation to everyone who believes: first to the Jew, then to the Gentile.",
+      },
+      {
+        ref: "Psalm 27:1",
+        NKJV: "The Lord is my light and my salvation; whom shall I fear? The Lord is the strength of my life; of whom shall I be afraid?",
+        ESV: "The Lord is my light and my salvation; whom shall I fear? The Lord is the stronghold of my life; of whom shall I be afraid?",
+        NIV: "The Lord is my light and my salvation—whom shall I fear? The Lord is the stronghold of my life—of whom shall I be afraid?",
+      },
+      {
+        ref: "1 Corinthians 16:13",
+        NKJV: "Watch, stand fast in the faith, be brave, be strong.",
+        ESV: "Be watchful, stand firm in the faith, act like men, be strong.",
+        NIV: "Be on your guard; stand firm in the faith; be courageous; be strong.",
+      },
+      {
+        ref: "Philippians 1:20",
+        NKJV: "according to my earnest expectation and hope that in nothing I shall be ashamed, but with all boldness, as always, so now also Christ will be magnified in my body, whether by life or by death.",
+        ESV: "as it is my eager expectation and hope that I will not be at all ashamed, but that with full courage now as always Christ will be honored in my body, whether by life or by death.",
+        NIV: "I eagerly expect and hope that I will in no way be ashamed, but will have sufficient courage so that now as always Christ will be exalted in my body, whether by life or by death.",
       },
     ],
   },
