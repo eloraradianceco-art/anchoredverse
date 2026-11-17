@@ -4,15 +4,22 @@
 // ------------------------------------------------------------
 // 10-17 verses per emotion, three translations each (30 emotions, 394 passages).
 //
-// ⚠️ ACCURACY + LICENSING NOTE:
-// NKJV (Thomas Nelson), ESV (Crossway), and NIV (Biblica) are
-// copyrighted and aggressively enforced. Before ANY public or
-// paid launch:
-//   1. Verify every verse against an authoritative source
-//      (translation wordings here are best-effort and may
-//       contain minor inaccuracies).
-//   2. Secure licensing, OR swap to a public-domain / open
-//      translation (WEB, BSB) for commercial use.
+// ACCURACY (checked 2026-11-17):
+// Every passage was compared word for word with the published NKJV,
+// ESV and NIV (BibleHub side-by-side pages). The text follows the
+// published wording and capitals, including LORD for the divine
+// name and the NKJV's capital at the start of each poetic line.
+// A passage that quotes only part of a verse is labeled a or b
+// ("Joel 2:13a"). Stand-alone quotes may begin with a capital and
+// end with a period where the verse runs on. Records of the check
+// are in checks/verse-check-2026-11-17/.
+// When adding or editing a verse, copy it from the publisher's
+// text and keep those conventions.
+//
+// LICENSING: NKJV (Thomas Nelson), ESV (Crossway) and NIV (Biblica)
+// are copyrighted. Permission requests were sent 2026-11-17. If a
+// publisher declines, swap that translation for a public-domain
+// one (BSB, WEB, KJV).
 //
 // STRUCTURE: to add/edit, just edit this array. This file is
 // also your Supabase seed — the shape maps 1:1 to a table.
@@ -26,6 +33,35 @@ export const BRAND = {
 };
 
 export const TRANSLATIONS = ["NKJV", "ESV", "NIV"];
+
+// Reference labels corrected on 2026-11-17 (a passage that quotes part of a verse is marked a or b).
+// Old label -> new label, so verses people saved before the change keep their place.
+// Keys with "feeling::" apply to that feeling only.
+export const REF_RENAMES = {
+  "Deuteronomy 33:27": "Deuteronomy 33:27a",
+  "Isaiah 61:1-3": "Isaiah 61:1b-3a",
+  "Nehemiah 8:10": "Nehemiah 8:10b",
+  "Isaiah 43:1": "Isaiah 43:1b",
+  "Isaiah 43:4": "Isaiah 43:4a",
+  "Isaiah 53:3": "Isaiah 53:3a",
+  "Jeremiah 1:5": "Jeremiah 1:5a",
+  "Joel 2:13": "Joel 2:13a",
+  "Matthew 17:20": "Matthew 17:20b",
+  "Matthew 18:21-22": "Matthew 18:21b-22",
+  "Luke 23:34": "Luke 23:34a",
+  "John 11:25-26": "John 11:25b-26a",
+  "Romans 5:3-4": "Romans 5:3b-4",
+  "1 Corinthians 14:33": "1 Corinthians 14:33a",
+  "1 Corinthians 15:54-55": "1 Corinthians 15:54b-55",
+  "2 Corinthians 1:3-4": "2 Corinthians 1:3-4a",
+  "Ephesians 1:4-5": "Ephesians 1:4-5a",
+  "Hebrews 6:19": "Hebrews 6:19a",
+  "1 Peter 5:8-9": "1 Peter 5:8-9a",
+  "1 John 3:1": "1 John 3:1a",
+  "grieving::Psalm 30:5": "Psalm 30:5b",
+  "happy::Galatians 5:22-23": "Galatians 5:22-23a",
+  "faith::Galatians 2:20": "Galatians 2:20b"
+};
 
 export const BANDS = [
   { id: "heavy", label: "Heavy", hint: "When the weight is pressing", color: BRAND.navy },
@@ -84,9 +120,9 @@ export const EMOTIONS = [
       },
       {
         ref: "Psalm 55:22",
-        NKJV: "Cast your burden on the Lord, and He shall sustain you; He shall never permit the righteous to be moved.",
-        ESV: "Cast your burden on the Lord, and he will sustain you; he will never permit the righteous to be moved.",
-        NIV: "Cast your cares on the Lord and he will sustain you; he will never let the righteous be shaken.",
+        NKJV: "Cast your burden on the LORD, And He shall sustain you; He shall never permit the righteous to be moved.",
+        ESV: "Cast your burden on the LORD, and he will sustain you; he will never permit the righteous to be moved.",
+        NIV: "Cast your cares on the LORD and he will sustain you; he will never let the righteous be shaken.",
       },
       {
         ref: "Matthew 6:25",
@@ -102,25 +138,25 @@ export const EMOTIONS = [
       },
       {
         ref: "Isaiah 41:10",
-        NKJV: "Fear not, for I am with you; be not dismayed, for I am your God. I will strengthen you, yes, I will help you, I will uphold you with My righteous right hand.",
+        NKJV: "Fear not, for I am with you; Be not dismayed, for I am your God. I will strengthen you, Yes, I will help you, I will uphold you with My righteous right hand.",
         ESV: "Fear not, for I am with you; be not dismayed, for I am your God; I will strengthen you, I will help you, I will uphold you with my righteous right hand.",
         NIV: "So do not fear, for I am with you; do not be dismayed, for I am your God. I will strengthen you and help you; I will uphold you with my righteous right hand.",
       },
       {
         ref: "Psalm 34:4",
-        NKJV: "I sought the Lord, and He heard me, and delivered me from all my fears.",
-        ESV: "I sought the Lord, and he answered me and delivered me from all my fears.",
-        NIV: "I sought the Lord, and he answered me; he delivered me from all my fears.",
+        NKJV: "I sought the LORD, and He heard me, And delivered me from all my fears.",
+        ESV: "I sought the LORD, and he answered me and delivered me from all my fears.",
+        NIV: "I sought the LORD, and he answered me; he delivered me from all my fears.",
       },
       {
         ref: "Proverbs 12:25",
-        NKJV: "Anxiety in the heart of man causes depression, but a good word makes it glad.",
+        NKJV: "Anxiety in the heart of man causes depression, But a good word makes it glad.",
         ESV: "Anxiety in a man's heart weighs him down, but a good word makes him glad.",
         NIV: "Anxiety weighs down the heart, but a kind word cheers it up.",
       },
       {
         ref: "Isaiah 26:3",
-        NKJV: "You will keep him in perfect peace, whose mind is stayed on You, because he trusts in You.",
+        NKJV: "You will keep him in perfect peace, Whose mind is stayed on You, Because he trusts in You.",
         ESV: "You keep him in perfect peace whose mind is stayed on you, because he trusts in you.",
         NIV: "You will keep in perfect peace those whose minds are steadfast, because they trust in you.",
       },
@@ -132,9 +168,9 @@ export const EMOTIONS = [
       },
       {
         ref: "Psalm 121:1-2",
-        NKJV: "I will lift up my eyes to the hills—from whence comes my help? My help comes from the Lord, who made heaven and earth.",
-        ESV: "I lift up my eyes to the hills. From where does my help come? My help comes from the Lord, who made heaven and earth.",
-        NIV: "I lift up my eyes to the mountains—where does my help come from? My help comes from the Lord, the Maker of heaven and earth.",
+        NKJV: "I will lift up my eyes to the hills—From whence comes my help? My help comes from the LORD, Who made heaven and earth.",
+        ESV: "I lift up my eyes to the hills. From where does my help come? My help comes from the LORD, who made heaven and earth.",
+        NIV: "I lift up my eyes to the mountains—where does my help come from? My help comes from the LORD, the Maker of heaven and earth.",
       },
       {
         ref: "2 Thessalonians 3:16",
@@ -144,15 +180,15 @@ export const EMOTIONS = [
       },
       {
         ref: "Psalm 46:1",
-        NKJV: "God is our refuge and strength, a very present help in trouble.",
+        NKJV: "God is our refuge and strength, A very present help in trouble.",
         ESV: "God is our refuge and strength, a very present help in trouble.",
         NIV: "God is our refuge and strength, an ever-present help in trouble.",
       },
       {
         ref: "Deuteronomy 31:6",
-        NKJV: "Be strong and of good courage, do not fear nor be afraid of them; for the Lord your God, He is the One who goes with you. He will not leave you nor forsake you.",
-        ESV: "Be strong and courageous. Do not fear or be in dread of them, for it is the Lord your God who goes with you. He will not leave you or forsake you.",
-        NIV: "Be strong and courageous. Do not be afraid or terrified because of them, for the Lord your God goes with you; he will never leave you nor forsake you.",
+        NKJV: "Be strong and of good courage, do not fear nor be afraid of them; for the LORD your God, He is the One who goes with you. He will not leave you nor forsake you.",
+        ESV: "Be strong and courageous. Do not fear or be in dread of them, for it is the LORD your God who goes with you. He will not leave you or forsake you.",
+        NIV: "Be strong and courageous. Do not be afraid or terrified because of them, for the LORD your God goes with you; he will never leave you nor forsake you.",
       },
       {
         ref: "John 16:33",
@@ -174,31 +210,31 @@ export const EMOTIONS = [
     verses: [
       {
         ref: "Psalm 34:18",
-        NKJV: "The Lord is near to those who have a broken heart, and saves such as have a contrite spirit.",
-        ESV: "The Lord is near to the brokenhearted and saves the crushed in spirit.",
-        NIV: "The Lord is close to the brokenhearted and saves those who are crushed in spirit.",
+        NKJV: "The LORD is near to those who have a broken heart, And saves such as have a contrite spirit.",
+        ESV: "The LORD is near to the brokenhearted and saves the crushed in spirit.",
+        NIV: "The LORD is close to the brokenhearted and saves those who are crushed in spirit.",
       },
       {
         ref: "Psalm 147:3",
-        NKJV: "He heals the brokenhearted and binds up their wounds.",
+        NKJV: "He heals the brokenhearted And binds up their wounds.",
         ESV: "He heals the brokenhearted and binds up their wounds.",
         NIV: "He heals the brokenhearted and binds up their wounds.",
       },
       {
         ref: "Psalm 30:5",
-        NKJV: "For His anger is but for a moment, His favor is for life; weeping may endure for a night, but joy comes in the morning.",
+        NKJV: "For His anger is but for a moment, His favor is for life; Weeping may endure for a night, But joy comes in the morning.",
         ESV: "For his anger is but for a moment, and his favor is for a lifetime. Weeping may tarry for the night, but joy comes with the morning.",
         NIV: "For his anger lasts only a moment, but his favor lasts a lifetime; weeping may stay for the night, but rejoicing comes in the morning.",
       },
       {
         ref: "Matthew 5:4",
-        NKJV: "Blessed are those who mourn, for they shall be comforted.",
+        NKJV: "Blessed are those who mourn, For they shall be comforted.",
         ESV: "Blessed are those who mourn, for they shall be comforted.",
         NIV: "Blessed are those who mourn, for they will be comforted.",
       },
       {
         ref: "Psalm 42:11",
-        NKJV: "Why are you cast down, O my soul? And why are you disquieted within me? Hope in God; for I shall yet praise Him, the help of my countenance and my God.",
+        NKJV: "Why are you cast down, O my soul? And why are you disquieted within me? Hope in God; For I shall yet praise Him, The help of my countenance and my God.",
         ESV: "Why are you cast down, O my soul, and why are you in turmoil within me? Hope in God; for I shall again praise him, my salvation and my God.",
         NIV: "Why, my soul, are you downcast? Why so disturbed within me? Put your hope in God, for I will yet praise him, my Savior and my God.",
       },
@@ -210,33 +246,33 @@ export const EMOTIONS = [
       },
       {
         ref: "Psalm 73:26",
-        NKJV: "My flesh and my heart fail; but God is the strength of my heart and my portion forever.",
+        NKJV: "My flesh and my heart fail; But God is the strength of my heart and my portion forever.",
         ESV: "My flesh and my heart may fail, but God is the strength of my heart and my portion forever.",
         NIV: "My flesh and my heart may fail, but God is the strength of my heart and my portion forever.",
       },
       {
-        ref: "2 Corinthians 1:3-4",
+        ref: "2 Corinthians 1:3-4a",
         NKJV: "Blessed be the God and Father of our Lord Jesus Christ, the Father of mercies and God of all comfort, who comforts us in all our tribulation.",
         ESV: "Blessed be the God and Father of our Lord Jesus Christ, the Father of mercies and God of all comfort, who comforts us in all our affliction.",
         NIV: "Praise be to the God and Father of our Lord Jesus Christ, the Father of compassion and the God of all comfort, who comforts us in all our troubles.",
       },
       {
         ref: "Psalm 56:8",
-        NKJV: "You number my wanderings; put my tears into Your bottle; are they not in Your book?",
+        NKJV: "You number my wanderings; Put my tears into Your bottle; Are they not in Your book?",
         ESV: "You have kept count of my tossings; put my tears in your bottle. Are they not in your book?",
         NIV: "Record my misery; list my tears on your scroll—are they not in your record?",
       },
       {
-        ref: "Isaiah 53:3",
-        NKJV: "He is despised and rejected by men, a Man of sorrows and acquainted with grief.",
+        ref: "Isaiah 53:3a",
+        NKJV: "He is despised and rejected by men, A Man of sorrows and acquainted with grief.",
         ESV: "He was despised and rejected by men, a man of sorrows and acquainted with grief.",
         NIV: "He was despised and rejected by mankind, a man of suffering, and familiar with pain.",
       },
       {
         ref: "Psalm 31:9",
-        NKJV: "Have mercy on me, O Lord, for I am in trouble; my eye wastes away with grief, yes, my soul and my body!",
-        ESV: "Be gracious to me, O Lord, for I am in distress; my eye is wasted from grief; my soul and my body also.",
-        NIV: "Be merciful to me, Lord, for I am in distress; my eyes grow weak with sorrow, my soul and body with grief.",
+        NKJV: "Have mercy on me, O LORD, for I am in trouble; My eye wastes away with grief, Yes, my soul and my body!",
+        ESV: "Be gracious to me, O LORD, for I am in distress; my eye is wasted from grief; my soul and my body also.",
+        NIV: "Be merciful to me, LORD, for I am in distress; my eyes grow weak with sorrow, my soul and body with grief.",
       },
       {
         ref: "John 14:1",
@@ -246,13 +282,13 @@ export const EMOTIONS = [
       },
       {
         ref: "Psalm 23:4",
-        NKJV: "Yea, though I walk through the valley of the shadow of death, I will fear no evil; for You are with me; Your rod and Your staff, they comfort me.",
+        NKJV: "Yea, though I walk through the valley of the shadow of death, I will fear no evil; For You are with me; Your rod and Your staff, they comfort me.",
         ESV: "Even though I walk through the valley of the shadow of death, I will fear no evil, for you are with me; your rod and your staff, they comfort me.",
         NIV: "Even though I walk through the darkest valley, I will fear no evil, for you are with me; your rod and your staff, they comfort me.",
       },
       {
         ref: "Isaiah 43:2",
-        NKJV: "When you pass through the waters, I will be with you; and through the rivers, they shall not overflow you. When you walk through the fire, you shall not be burned, nor shall the flame scorch you.",
+        NKJV: "When you pass through the waters, I will be with you; And through the rivers, they shall not overflow you. When you walk through the fire, you shall not be burned, Nor shall the flame scorch you.",
         ESV: "When you pass through the waters, I will be with you; and through the rivers, they shall not overwhelm you; when you walk through fire you shall not be burned, and the flame shall not consume you.",
         NIV: "When you pass through the waters, I will be with you; and when you pass through the rivers, they will not sweep over you. When you walk through the fire, you will not be burned; the flames will not set you ablaze.",
       },
@@ -264,9 +300,9 @@ export const EMOTIONS = [
       },
       {
         ref: "Lamentations 3:22-23",
-        NKJV: "Through the Lord's mercies we are not consumed, because His compassions fail not. They are new every morning; great is Your faithfulness.",
-        ESV: "The steadfast love of the Lord never ceases; his mercies never come to an end; they are new every morning; great is your faithfulness.",
-        NIV: "Because of the Lord's great love we are not consumed, for his compassions never fail. They are new every morning; great is your faithfulness.",
+        NKJV: "Through the LORD's mercies we are not consumed, Because His compassions fail not. They are new every morning; Great is Your faithfulness.",
+        ESV: "The steadfast love of the LORD never ceases; his mercies never come to an end; they are new every morning; great is your faithfulness.",
+        NIV: "Because of the LORD's great love we are not consumed, for his compassions never fail. They are new every morning; great is your faithfulness.",
       },
     ],
   },
@@ -288,15 +324,15 @@ export const EMOTIONS = [
       },
       {
         ref: "Psalm 61:2",
-        NKJV: "From the end of the earth I will cry to You, when my heart is overwhelmed; lead me to the rock that is higher than I.",
+        NKJV: "From the end of the earth I will cry to You, When my heart is overwhelmed; Lead me to the rock that is higher than I.",
         ESV: "From the end of the earth I call to you when my heart is faint. Lead me to the rock that is higher than I.",
         NIV: "From the ends of the earth I call to you, I call as my heart grows faint; lead me to the rock that is higher than I.",
       },
       {
         ref: "Psalm 55:22",
-        NKJV: "Cast your burden on the Lord, and He shall sustain you; He shall never permit the righteous to be moved.",
-        ESV: "Cast your burden on the Lord, and he will sustain you; he will never permit the righteous to be moved.",
-        NIV: "Cast your cares on the Lord and he will sustain you; he will never let the righteous be shaken.",
+        NKJV: "Cast your burden on the LORD, And He shall sustain you; He shall never permit the righteous to be moved.",
+        ESV: "Cast your burden on the LORD, and he will sustain you; he will never permit the righteous to be moved.",
+        NIV: "Cast your cares on the LORD and he will sustain you; he will never let the righteous be shaken.",
       },
       {
         ref: "2 Corinthians 12:9",
@@ -306,43 +342,43 @@ export const EMOTIONS = [
       },
       {
         ref: "Psalm 42:7",
-        NKJV: "Deep calls unto deep at the noise of Your waterfalls; all Your waves and billows have gone over me.",
+        NKJV: "Deep calls unto deep at the noise of Your waterfalls; All Your waves and billows have gone over me.",
         ESV: "Deep calls to deep at the roar of your waterfalls; all your breakers and your waves have gone over me.",
         NIV: "Deep calls to deep in the roar of your waterfalls; all your waves and breakers have swept over me.",
       },
       {
         ref: "Isaiah 40:31",
-        NKJV: "But those who wait on the Lord shall renew their strength; they shall mount up with wings like eagles, they shall run and not be weary, they shall walk and not faint.",
-        ESV: "But they who wait for the Lord shall renew their strength; they shall mount up with wings like eagles; they shall run and not be weary; they shall walk and not faint.",
-        NIV: "But those who hope in the Lord will renew their strength. They will soar on wings like eagles; they will run and not grow weary, they will walk and not be faint.",
+        NKJV: "But those who wait on the LORD Shall renew their strength; They shall mount up with wings like eagles, They shall run and not be weary, They shall walk and not faint.",
+        ESV: "But they who wait for the LORD shall renew their strength; they shall mount up with wings like eagles; they shall run and not be weary; they shall walk and not faint.",
+        NIV: "But those who hope in the LORD will renew their strength. They will soar on wings like eagles; they will run and not grow weary, they will walk and not be faint.",
       },
       {
         ref: "Psalm 18:6",
-        NKJV: "In my distress I called upon the Lord, and cried out to my God; He heard my voice from His temple, and my cry came before Him, even to His ears.",
-        ESV: "In my distress I called upon the Lord; to my God I cried for help. From his temple he heard my voice, and my cry to him reached his ears.",
-        NIV: "In my distress I called to the Lord; I cried to my God for help. From his temple he heard my voice; my cry came before him, into his ears.",
+        NKJV: "In my distress I called upon the LORD, And cried out to my God; He heard my voice from His temple, And my cry came before Him, even to His ears.",
+        ESV: "In my distress I called upon the LORD; to my God I cried for help. From his temple he heard my voice, and my cry to him reached his ears.",
+        NIV: "In my distress I called to the LORD; I cried to my God for help. From his temple he heard my voice; my cry came before him, into his ears.",
       },
       {
         ref: "Exodus 14:14",
-        NKJV: "The Lord will fight for you, and you shall hold your peace.",
-        ESV: "The Lord will fight for you, and you have only to be silent.",
-        NIV: "The Lord will fight for you; you need only to be still.",
+        NKJV: "The LORD will fight for you, and you shall hold your peace.",
+        ESV: "The LORD will fight for you, and you have only to be silent.",
+        NIV: "The LORD will fight for you; you need only to be still.",
       },
       {
         ref: "Psalm 46:1-2",
-        NKJV: "God is our refuge and strength, a very present help in trouble. Therefore we will not fear, even though the earth be removed, and though the mountains be carried into the midst of the sea.",
+        NKJV: "God is our refuge and strength, A very present help in trouble. Therefore we will not fear, Even though the earth be removed, And though the mountains be carried into the midst of the sea.",
         ESV: "God is our refuge and strength, a very present help in trouble. Therefore we will not fear though the earth gives way, though the mountains be moved into the heart of the sea.",
         NIV: "God is our refuge and strength, an ever-present help in trouble. Therefore we will not fear, though the earth give way and the mountains fall into the heart of the sea.",
       },
       {
-        ref: "Deuteronomy 33:27",
-        NKJV: "The eternal God is your refuge, and underneath are the everlasting arms.",
+        ref: "Deuteronomy 33:27a",
+        NKJV: "The eternal God is your refuge, And underneath are the everlasting arms.",
         ESV: "The eternal God is your dwelling place, and underneath are the everlasting arms.",
         NIV: "The eternal God is your refuge, and underneath are the everlasting arms.",
       },
       {
         ref: "Psalm 142:3",
-        NKJV: "When my spirit was overwhelmed within me, then You knew my path. In the way in which I walk they have secretly set a snare for me.",
+        NKJV: "When my spirit was overwhelmed within me, Then You knew my path. In the way in which I walk They have secretly set a snare for me.",
         ESV: "When my spirit faints within me, you know my way! In the path where I walk they have hidden a trap for me.",
         NIV: "When my spirit grows faint within me, it is you who watch over my way. In the path where I walk people have hidden a snare for me.",
       },
@@ -354,9 +390,9 @@ export const EMOTIONS = [
       },
       {
         ref: "Psalm 34:17",
-        NKJV: "The righteous cry out, and the Lord hears, and delivers them out of all their troubles.",
-        ESV: "When the righteous cry for help, the Lord hears and delivers them out of all their troubles.",
-        NIV: "The righteous cry out, and the Lord hears them; he delivers them from all their troubles.",
+        NKJV: "The righteous cry out, and the LORD hears, And delivers them out of all their troubles.",
+        ESV: "When the righteous cry for help, the LORD hears and delivers them out of all their troubles.",
+        NIV: "The righteous cry out, and the LORD hears them; he delivers them from all their troubles.",
       },
       {
         ref: "John 14:27",
@@ -366,9 +402,9 @@ export const EMOTIONS = [
       },
       {
         ref: "Psalm 121:1-2",
-        NKJV: "I will lift up my eyes to the hills—from whence comes my help? My help comes from the Lord, who made heaven and earth.",
-        ESV: "I lift up my eyes to the hills. From where does my help come? My help comes from the Lord, who made heaven and earth.",
-        NIV: "I lift up my eyes to the mountains—where does my help come from? My help comes from the Lord, the Maker of heaven and earth.",
+        NKJV: "I will lift up my eyes to the hills—From whence comes my help? My help comes from the LORD, Who made heaven and earth.",
+        ESV: "I lift up my eyes to the hills. From where does my help come? My help comes from the LORD, who made heaven and earth.",
+        NIV: "I lift up my eyes to the mountains—where does my help come from? My help comes from the LORD, the Maker of heaven and earth.",
       },
       {
         ref: "Philippians 4:13",
@@ -390,7 +426,7 @@ export const EMOTIONS = [
     verses: [
       {
         ref: "Isaiah 41:10",
-        NKJV: "Fear not, for I am with you; be not dismayed, for I am your God. I will strengthen you, yes, I will help you, I will uphold you with My righteous right hand.",
+        NKJV: "Fear not, for I am with you; Be not dismayed, for I am your God. I will strengthen you, Yes, I will help you, I will uphold you with My righteous right hand.",
         ESV: "Fear not, for I am with you; be not dismayed, for I am your God; I will strengthen you, I will help you, I will uphold you with my righteous right hand.",
         NIV: "So do not fear, for I am with you; do not be dismayed, for I am your God. I will strengthen you and help you; I will uphold you with my righteous right hand.",
       },
@@ -402,9 +438,9 @@ export const EMOTIONS = [
       },
       {
         ref: "Psalm 27:1",
-        NKJV: "The Lord is my light and my salvation; whom shall I fear? The Lord is the strength of my life; of whom shall I be afraid?",
-        ESV: "The Lord is my light and my salvation; whom shall I fear? The Lord is the stronghold of my life; of whom shall I be afraid?",
-        NIV: "The Lord is my light and my salvation—whom shall I fear? The Lord is the stronghold of my life—of whom shall I be afraid?",
+        NKJV: "The LORD is my light and my salvation; Whom shall I fear? The LORD is the strength of my life; Of whom shall I be afraid?",
+        ESV: "The LORD is my light and my salvation; whom shall I fear? The LORD is the stronghold of my life; of whom shall I be afraid?",
+        NIV: "The LORD is my light and my salvation—whom shall I fear? The LORD is the stronghold of my life—of whom shall I be afraid?",
       },
       {
         ref: "2 Timothy 1:7",
@@ -414,33 +450,33 @@ export const EMOTIONS = [
       },
       {
         ref: "Joshua 1:9",
-        NKJV: "Have I not commanded you? Be strong and of good courage; do not be afraid, nor be dismayed, for the Lord your God is with you wherever you go.",
-        ESV: "Have I not commanded you? Be strong and courageous. Do not be frightened, and do not be dismayed, for the Lord your God is with you wherever you go.",
-        NIV: "Have I not commanded you? Be strong and courageous. Do not be afraid; do not be discouraged, for the Lord your God will be with you wherever you go.",
+        NKJV: "Have I not commanded you? Be strong and of good courage; do not be afraid, nor be dismayed, for the LORD your God is with you wherever you go.",
+        ESV: "Have I not commanded you? Be strong and courageous. Do not be frightened, and do not be dismayed, for the LORD your God is with you wherever you go.",
+        NIV: "Have I not commanded you? Be strong and courageous. Do not be afraid; do not be discouraged, for the LORD your God will be with you wherever you go.",
       },
       {
         ref: "Psalm 23:4",
-        NKJV: "Yea, though I walk through the valley of the shadow of death, I will fear no evil; for You are with me; Your rod and Your staff, they comfort me.",
+        NKJV: "Yea, though I walk through the valley of the shadow of death, I will fear no evil; For You are with me; Your rod and Your staff, they comfort me.",
         ESV: "Even though I walk through the valley of the shadow of death, I will fear no evil, for you are with me; your rod and your staff, they comfort me.",
         NIV: "Even though I walk through the darkest valley, I will fear no evil, for you are with me; your rod and your staff, they comfort me.",
       },
       {
-        ref: "Isaiah 43:1",
-        NKJV: "Fear not, for I have redeemed you; I have called you by your name; you are Mine.",
+        ref: "Isaiah 43:1b",
+        NKJV: "Fear not, for I have redeemed you; I have called you by your name; You are Mine.",
         ESV: "Fear not, for I have redeemed you; I have called you by name, you are mine.",
         NIV: "Do not fear, for I have redeemed you; I have summoned you by name; you are mine.",
       },
       {
         ref: "Psalm 34:4",
-        NKJV: "I sought the Lord, and He heard me, and delivered me from all my fears.",
-        ESV: "I sought the Lord, and he answered me and delivered me from all my fears.",
-        NIV: "I sought the Lord, and he answered me; he delivered me from all my fears.",
+        NKJV: "I sought the LORD, and He heard me, And delivered me from all my fears.",
+        ESV: "I sought the LORD, and he answered me and delivered me from all my fears.",
+        NIV: "I sought the LORD, and he answered me; he delivered me from all my fears.",
       },
       {
         ref: "Psalm 118:6",
-        NKJV: "The Lord is on my side; I will not fear. What can man do to me?",
-        ESV: "The Lord is on my side; I will not fear. What can man do to me?",
-        NIV: "The Lord is with me; I will not be afraid. What can mere mortals do to me?",
+        NKJV: "The LORD is on my side; I will not fear. What can man do to me?",
+        ESV: "The LORD is on my side; I will not fear. What can man do to me?",
+        NIV: "The LORD is with me; I will not be afraid. What can mere mortals do to me?",
       },
       {
         ref: "1 John 4:18",
@@ -450,21 +486,21 @@ export const EMOTIONS = [
       },
       {
         ref: "Deuteronomy 31:6",
-        NKJV: "Be strong and of good courage, do not fear nor be afraid of them; for the Lord your God, He is the One who goes with you. He will not leave you nor forsake you.",
-        ESV: "Be strong and courageous. Do not fear or be in dread of them, for it is the Lord your God who goes with you. He will not leave you or forsake you.",
-        NIV: "Be strong and courageous. Do not be afraid or terrified because of them, for the Lord your God goes with you; he will never leave you nor forsake you.",
+        NKJV: "Be strong and of good courage, do not fear nor be afraid of them; for the LORD your God, He is the One who goes with you. He will not leave you nor forsake you.",
+        ESV: "Be strong and courageous. Do not fear or be in dread of them, for it is the LORD your God who goes with you. He will not leave you or forsake you.",
+        NIV: "Be strong and courageous. Do not be afraid or terrified because of them, for the LORD your God goes with you; he will never leave you nor forsake you.",
       },
       {
         ref: "Psalm 91:1-2",
-        NKJV: "He who dwells in the secret place of the Most High shall abide under the shadow of the Almighty. I will say of the Lord, 'He is my refuge and my fortress; my God, in Him I will trust.'",
-        ESV: "He who dwells in the shelter of the Most High will abide in the shadow of the Almighty. I will say to the Lord, 'My refuge and my fortress, my God, in whom I trust.'",
-        NIV: "Whoever dwells in the shelter of the Most High will rest in the shadow of the Almighty. I will say of the Lord, 'He is my refuge and my fortress, my God, in whom I trust.'",
+        NKJV: "He who dwells in the secret place of the Most High Shall abide under the shadow of the Almighty. I will say of the LORD, 'He is my refuge and my fortress; My God, in Him I will trust.'",
+        ESV: "He who dwells in the shelter of the Most High will abide in the shadow of the Almighty. I will say to the LORD, 'My refuge and my fortress, my God, in whom I trust.'",
+        NIV: "Whoever dwells in the shelter of the Most High will rest in the shadow of the Almighty. I will say of the LORD, 'He is my refuge and my fortress, my God, in whom I trust.'",
       },
       {
         ref: "Isaiah 41:13",
-        NKJV: "For I, the Lord your God, will hold your right hand, saying to you, 'Fear not, I will help you.'",
-        ESV: "For I, the Lord your God, hold your right hand; it is I who say to you, 'Fear not, I am the one who helps you.'",
-        NIV: "For I am the Lord your God who takes hold of your right hand and says to you, Do not fear; I will help you.",
+        NKJV: "For I, the LORD your God, will hold your right hand, Saying to you, 'Fear not, I will help you.'",
+        ESV: "For I, the LORD your God, hold your right hand; it is I who say to you, 'Fear not, I am the one who helps you.'",
+        NIV: "For I am the LORD your God who takes hold of your right hand and says to you, Do not fear; I will help you.",
       },
       {
         ref: "Matthew 10:28",
@@ -474,15 +510,15 @@ export const EMOTIONS = [
       },
       {
         ref: "Psalm 46:1-2",
-        NKJV: "God is our refuge and strength, a very present help in trouble. Therefore we will not fear, even though the earth be removed, and though the mountains be carried into the midst of the sea.",
+        NKJV: "God is our refuge and strength, A very present help in trouble. Therefore we will not fear, Even though the earth be removed, And though the mountains be carried into the midst of the sea.",
         ESV: "God is our refuge and strength, a very present help in trouble. Therefore we will not fear though the earth gives way, though the mountains be moved into the heart of the sea.",
         NIV: "God is our refuge and strength, an ever-present help in trouble. Therefore we will not fear, though the earth give way and the mountains fall into the heart of the sea.",
       },
       {
         ref: "Proverbs 29:25",
-        NKJV: "The fear of man brings a snare, but whoever trusts in the Lord shall be safe.",
-        ESV: "The fear of man lays a snare, but whoever trusts in the Lord is safe.",
-        NIV: "Fear of man will prove to be a snare, but whoever trusts in the Lord is kept safe.",
+        NKJV: "The fear of man brings a snare, But whoever trusts in the LORD shall be safe.",
+        ESV: "The fear of man lays a snare, but whoever trusts in the LORD is safe.",
+        NIV: "Fear of man will prove to be a snare, but whoever trusts in the LORD is kept safe.",
       },
     ],
   },
@@ -498,13 +534,13 @@ export const EMOTIONS = [
     verses: [
       {
         ref: "Deuteronomy 31:8",
-        NKJV: "And the Lord, He is the one who goes before you. He will be with you, He will not leave you nor forsake you; do not fear nor be dismayed.",
-        ESV: "It is the Lord who goes before you. He will be with you; he will not leave you or forsake you. Do not fear or be dismayed.",
-        NIV: "The Lord himself goes before you and will be with you; he will never leave you nor forsake you. Do not be afraid; do not be discouraged.",
+        NKJV: "And the LORD, He is the One who goes before you. He will be with you, He will not leave you nor forsake you; do not fear nor be dismayed.",
+        ESV: "It is the LORD who goes before you. He will be with you; he will not leave you or forsake you. Do not fear or be dismayed.",
+        NIV: "The LORD himself goes before you and will be with you; he will never leave you nor forsake you. Do not be afraid; do not be discouraged.",
       },
       {
         ref: "Psalm 68:6",
-        NKJV: "God sets the solitary in families; He brings out those who are bound into prosperity; but the rebellious dwell in a dry land.",
+        NKJV: "God sets the solitary in families; He brings out those who are bound into prosperity; But the rebellious dwell in a dry land.",
         ESV: "God settles the solitary in a home; he leads out the prisoners to prosperity, but the rebellious dwell in a parched land.",
         NIV: "God sets the lonely in families, he leads out the prisoners with singing; but the rebellious live in a sun-scorched land.",
       },
@@ -516,33 +552,33 @@ export const EMOTIONS = [
       },
       {
         ref: "Psalm 25:16",
-        NKJV: "Turn Yourself to me, and have mercy on me, for I am desolate and afflicted.",
+        NKJV: "Turn Yourself to me, and have mercy on me, For I am desolate and afflicted.",
         ESV: "Turn to me and be gracious to me, for I am lonely and afflicted.",
         NIV: "Turn to me and be gracious to me, for I am lonely and afflicted.",
       },
       {
         ref: "Isaiah 41:10",
-        NKJV: "Fear not, for I am with you; be not dismayed, for I am your God. I will strengthen you, yes, I will help you, I will uphold you with My righteous right hand.",
+        NKJV: "Fear not, for I am with you; Be not dismayed, for I am your God. I will strengthen you, Yes, I will help you, I will uphold you with My righteous right hand.",
         ESV: "Fear not, for I am with you; be not dismayed, for I am your God; I will strengthen you, I will help you, I will uphold you with my righteous right hand.",
         NIV: "So do not fear, for I am with you; do not be dismayed, for I am your God. I will strengthen you and help you; I will uphold you with my righteous right hand.",
       },
       {
         ref: "Matthew 28:20",
-        NKJV: "Teaching them to observe all things that I have commanded you; and lo, I am with you always, even to the end of the age.",
+        NKJV: "Teaching them to observe all things that I have commanded you; and lo, I am with you always, even to the end of the age. Amen.",
         ESV: "Teaching them to observe all that I have commanded you. And behold, I am with you always, to the end of the age.",
         NIV: "And teaching them to obey everything I have commanded you. And surely I am with you always, to the very end of the age.",
       },
       {
         ref: "Psalm 139:7-10",
-        NKJV: "Where can I go from Your Spirit? Or where can I flee from Your presence? If I ascend into heaven, You are there; if I make my bed in hell, behold, You are there. If I take the wings of the morning, and dwell in the uttermost parts of the sea, even there Your hand shall lead me.",
-        ESV: "Where shall I go from your Spirit? Or where shall I flee from your presence? If I ascend to heaven, you are there! If I make my bed in Sheol, you are there! If I take the wings of the morning and dwell in the uttermost parts of the sea, even there your hand shall lead me.",
-        NIV: "Where can I go from your Spirit? Where can I flee from your presence? If I go up to the heavens, you are there; if I make my bed in the depths, you are there. If I rise on the wings of the dawn, if I settle on the far side of the sea, even there your hand will guide me.",
+        NKJV: "Where can I go from Your Spirit? Or where can I flee from Your presence? If I ascend into heaven, You are there; If I make my bed in hell, behold, You are there. If I take the wings of the morning, And dwell in the uttermost parts of the sea, even there Your hand shall lead me, And Your right hand shall hold me.",
+        ESV: "Where shall I go from your Spirit? Or where shall I flee from your presence? If I ascend to heaven, you are there! If I make my bed in Sheol, you are there! If I take the wings of the morning and dwell in the uttermost parts of the sea, even there your hand shall lead me, and your right hand shall hold me.",
+        NIV: "Where can I go from your Spirit? Where can I flee from your presence? If I go up to the heavens, you are there; if I make my bed in the depths, you are there. If I rise on the wings of the dawn, if I settle on the far side of the sea, even there your hand will guide me, your right hand will hold me fast.",
       },
       {
         ref: "Psalm 27:10",
-        NKJV: "When my father and my mother forsake me, then the Lord will take care of me.",
-        ESV: "For my father and my mother have forsaken me, but the Lord will take me in.",
-        NIV: "Though my father and mother forsake me, the Lord will receive me.",
+        NKJV: "When my father and my mother forsake me, Then the LORD will take care of me.",
+        ESV: "For my father and my mother have forsaken me, but the LORD will take me in.",
+        NIV: "Though my father and mother forsake me, the LORD will receive me.",
       },
       {
         ref: "John 14:18",
@@ -552,13 +588,13 @@ export const EMOTIONS = [
       },
       {
         ref: "Psalm 34:18",
-        NKJV: "The Lord is near to those who have a broken heart, and saves such as have a contrite spirit.",
-        ESV: "The Lord is near to the brokenhearted and saves the crushed in spirit.",
-        NIV: "The Lord is close to the brokenhearted and saves those who are crushed in spirit.",
+        NKJV: "The LORD is near to those who have a broken heart, And saves such as have a contrite spirit.",
+        ESV: "The LORD is near to the brokenhearted and saves the crushed in spirit.",
+        NIV: "The LORD is close to the brokenhearted and saves those who are crushed in spirit.",
       },
       {
         ref: "Isaiah 43:2",
-        NKJV: "When you pass through the waters, I will be with you; and through the rivers, they shall not overflow you. When you walk through the fire, you shall not be burned, nor shall the flame scorch you.",
+        NKJV: "When you pass through the waters, I will be with you; And through the rivers, they shall not overflow you. When you walk through the fire, you shall not be burned, Nor shall the flame scorch you.",
         ESV: "When you pass through the waters, I will be with you; and through the rivers, they shall not overwhelm you; when you walk through fire you shall not be burned, and the flame shall not consume you.",
         NIV: "When you pass through the waters, I will be with you; and when you pass through the rivers, they will not sweep over you. When you walk through the fire, you will not be burned; the flames will not set you ablaze.",
       },
@@ -570,9 +606,9 @@ export const EMOTIONS = [
       },
       {
         ref: "Zephaniah 3:17",
-        NKJV: "The Lord your God in your midst, the Mighty One, will save; He will rejoice over you with gladness, He will quiet you with His love, He will rejoice over you with singing.",
-        ESV: "The Lord your God is in your midst, a mighty one who will save; he will rejoice over you with gladness; he will quiet you by his love; he will exult over you with loud singing.",
-        NIV: "The Lord your God is with you, the Mighty Warrior who saves. He will take great delight in you; in his love he will no longer rebuke you, but will rejoice over you with singing.",
+        NKJV: "The LORD your God in your midst, The Mighty One, will save; He will rejoice over you with gladness, He will quiet you with His love, He will rejoice over you with singing.",
+        ESV: "The LORD your God is in your midst, a mighty one who will save; he will rejoice over you with gladness; he will quiet you by his love; he will exult over you with loud singing.",
+        NIV: "The LORD your God is with you, the Mighty Warrior who saves. He will take great delight in you; in his love he will no longer rebuke you, but will rejoice over you with singing.",
       },
       {
         ref: "1 Peter 5:7",
@@ -606,7 +642,7 @@ export const EMOTIONS = [
       },
       {
         ref: "Matthew 5:4",
-        NKJV: "Blessed are those who mourn, for they shall be comforted.",
+        NKJV: "Blessed are those who mourn, For they shall be comforted.",
         ESV: "Blessed are those who mourn, for they shall be comforted.",
         NIV: "Blessed are those who mourn, for they will be comforted.",
       },
@@ -618,43 +654,43 @@ export const EMOTIONS = [
       },
       {
         ref: "Psalm 34:18",
-        NKJV: "The Lord is near to those who have a broken heart, and saves such as have a contrite spirit.",
-        ESV: "The Lord is near to the brokenhearted and saves the crushed in spirit.",
-        NIV: "The Lord is close to the brokenhearted and saves those who are crushed in spirit.",
+        NKJV: "The LORD is near to those who have a broken heart, And saves such as have a contrite spirit.",
+        ESV: "The LORD is near to the brokenhearted and saves the crushed in spirit.",
+        NIV: "The LORD is close to the brokenhearted and saves those who are crushed in spirit.",
       },
       {
-        ref: "John 11:25-26",
+        ref: "John 11:25b-26a",
         NKJV: "I am the resurrection and the life. He who believes in Me, though he may die, he shall live. And whoever lives and believes in Me shall never die.",
         ESV: "I am the resurrection and the life. Whoever believes in me, though he die, yet shall he live, and everyone who lives and believes in me shall never die.",
         NIV: "I am the resurrection and the life. The one who believes in me will live, even though they die; and whoever lives by believing in me will never die.",
       },
       {
         ref: "Psalm 147:3",
-        NKJV: "He heals the brokenhearted and binds up their wounds.",
+        NKJV: "He heals the brokenhearted And binds up their wounds.",
         ESV: "He heals the brokenhearted and binds up their wounds.",
         NIV: "He heals the brokenhearted and binds up their wounds.",
       },
       {
-        ref: "2 Corinthians 1:3-4",
+        ref: "2 Corinthians 1:3-4a",
         NKJV: "Blessed be the God and Father of our Lord Jesus Christ, the Father of mercies and God of all comfort, who comforts us in all our tribulation.",
         ESV: "Blessed be the God and Father of our Lord Jesus Christ, the Father of mercies and God of all comfort, who comforts us in all our affliction.",
         NIV: "Praise be to the God and Father of our Lord Jesus Christ, the Father of compassion and the God of all comfort, who comforts us in all our troubles.",
       },
       {
-        ref: "Psalm 30:5",
-        NKJV: "Weeping may endure for a night, but joy comes in the morning.",
+        ref: "Psalm 30:5b",
+        NKJV: "Weeping may endure for a night, But joy comes in the morning.",
         ESV: "Weeping may tarry for the night, but joy comes with the morning.",
         NIV: "Weeping may stay for the night, but rejoicing comes in the morning.",
       },
       {
-        ref: "Isaiah 61:1-3",
-        NKJV: "He has sent Me to heal the brokenhearted... to comfort all who mourn... to give them beauty for ashes, the oil of joy for mourning, the garment of praise for the spirit of heaviness.",
+        ref: "Isaiah 61:1b-3a",
+        NKJV: "He has sent Me to heal the brokenhearted... To comfort all who mourn... To give them beauty for ashes, The oil of joy for mourning, The garment of praise for the spirit of heaviness.",
         ESV: "He has sent me to bind up the brokenhearted... to comfort all who mourn... to give them a beautiful headdress instead of ashes, the oil of gladness instead of mourning, the garment of praise instead of a faint spirit.",
         NIV: "He has sent me to bind up the brokenhearted... to comfort all who mourn... to bestow on them a crown of beauty instead of ashes, the oil of joy instead of mourning, and a garment of praise instead of a spirit of despair.",
       },
       {
         ref: "Psalm 23:4",
-        NKJV: "Yea, though I walk through the valley of the shadow of death, I will fear no evil; for You are with me; Your rod and Your staff, they comfort me.",
+        NKJV: "Yea, though I walk through the valley of the shadow of death, I will fear no evil; For You are with me; Your rod and Your staff, they comfort me.",
         ESV: "Even though I walk through the valley of the shadow of death, I will fear no evil, for you are with me; your rod and your staff, they comfort me.",
         NIV: "Even though I walk through the darkest valley, I will fear no evil, for you are with me; your rod and your staff, they comfort me.",
       },
@@ -666,9 +702,9 @@ export const EMOTIONS = [
       },
       {
         ref: "Psalm 116:15",
-        NKJV: "Precious in the sight of the Lord is the death of His saints.",
-        ESV: "Precious in the sight of the Lord is the death of his saints.",
-        NIV: "Precious in the sight of the Lord is the death of his faithful servants.",
+        NKJV: "Precious in the sight of the LORD Is the death of His saints.",
+        ESV: "Precious in the sight of the LORD is the death of his saints.",
+        NIV: "Precious in the sight of the LORD is the death of his faithful servants.",
       },
       {
         ref: "Romans 8:18",
@@ -678,12 +714,12 @@ export const EMOTIONS = [
       },
       {
         ref: "Psalm 56:8",
-        NKJV: "You number my wanderings; put my tears into Your bottle; are they not in Your book?",
+        NKJV: "You number my wanderings; Put my tears into Your bottle; Are they not in Your book?",
         ESV: "You have kept count of my tossings; put my tears in your bottle. Are they not in your book?",
         NIV: "Record my misery; list my tears on your scroll—are they not in your record?",
       },
       {
-        ref: "1 Corinthians 15:54-55",
+        ref: "1 Corinthians 15:54b-55",
         NKJV: "Death is swallowed up in victory. O Death, where is your sting? O Hades, where is your victory?",
         ESV: "Death is swallowed up in victory. O death, where is your victory? O death, where is your sting?",
         NIV: "Death has been swallowed up in victory. Where, O death, is your victory? Where, O death, is your sting?",
@@ -702,7 +738,7 @@ export const EMOTIONS = [
     verses: [
       {
         ref: "Psalm 139:14",
-        NKJV: "I will praise You, for I am fearfully and wonderfully made; marvelous are Your works, and that my soul knows very well.",
+        NKJV: "I will praise You, for I am fearfully and wonderfully made; Marvelous are Your works, And that my soul knows very well.",
         ESV: "I praise you, for I am fearfully and wonderfully made. Wonderful are your works; my soul knows it very well.",
         NIV: "I praise you because I am fearfully and wonderfully made; your works are wonderful, I know that full well.",
       },
@@ -713,8 +749,8 @@ export const EMOTIONS = [
         NIV: "For we are God's handiwork, created in Christ Jesus to do good works, which God prepared in advance for us to do.",
       },
       {
-        ref: "Jeremiah 1:5",
-        NKJV: "Before I formed you in the womb I knew you; before you were born I sanctified you.",
+        ref: "Jeremiah 1:5a",
+        NKJV: "Before I formed you in the womb I knew you; Before you were born I sanctified you.",
         ESV: "Before I formed you in the womb I knew you, and before you were born I consecrated you.",
         NIV: "Before I formed you in the womb I knew you, before you were born I set you apart.",
       },
@@ -738,9 +774,9 @@ export const EMOTIONS = [
       },
       {
         ref: "Zephaniah 3:17",
-        NKJV: "The Lord your God in your midst, the Mighty One, will save; He will rejoice over you with gladness, He will quiet you with His love, He will rejoice over you with singing.",
-        ESV: "The Lord your God is in your midst, a mighty one who will save; he will rejoice over you with gladness; he will quiet you by his love; he will exult over you with loud singing.",
-        NIV: "The Lord your God is with you, the Mighty Warrior who saves. He will take great delight in you; in his love he will no longer rebuke you, but will rejoice over you with singing.",
+        NKJV: "The LORD your God in your midst, The Mighty One, will save; He will rejoice over you with gladness, He will quiet you with His love, He will rejoice over you with singing.",
+        ESV: "The LORD your God is in your midst, a mighty one who will save; he will rejoice over you with gladness; he will quiet you by his love; he will exult over you with loud singing.",
+        NIV: "The LORD your God is with you, the Mighty Warrior who saves. He will take great delight in you; in his love he will no longer rebuke you, but will rejoice over you with singing.",
       },
       {
         ref: "Romans 8:1",
@@ -755,14 +791,14 @@ export const EMOTIONS = [
         NIV: "And in Christ you have been brought to fullness. He is the head over every power and authority.",
       },
       {
-        ref: "1 John 3:1",
+        ref: "1 John 3:1a",
         NKJV: "Behold what manner of love the Father has bestowed on us, that we should be called children of God!",
         ESV: "See what kind of love the Father has given to us, that we should be called children of God; and so we are.",
         NIV: "See what great love the Father has lavished on us, that we should be called children of God! And that is what we are!",
       },
       {
-        ref: "Isaiah 43:4",
-        NKJV: "Since you were precious in My sight, you have been honored, and I have loved you.",
+        ref: "Isaiah 43:4a",
+        NKJV: "Since you were precious in My sight, You have been honored, And I have loved you.",
         ESV: "Because you are precious in my eyes, and honored, and I love you.",
         NIV: "Since you are precious and honored in my sight, and because I love you.",
       },
@@ -774,7 +810,7 @@ export const EMOTIONS = [
       },
       {
         ref: "Psalm 34:5",
-        NKJV: "They looked to Him and were radiant, and their faces were not ashamed.",
+        NKJV: "They looked to Him and were radiant, And their faces were not ashamed.",
         ESV: "Those who look to him are radiant, and their faces shall never be ashamed.",
         NIV: "Those who look to him are radiant; their faces are never covered with shame.",
       },
@@ -785,8 +821,8 @@ export const EMOTIONS = [
         NIV: "Therefore, if anyone is in Christ, the new creation has come: The old has gone, the new is here!",
       },
       {
-        ref: "Ephesians 1:4-5",
-        NKJV: "He chose us in Him before the foundation of the world, that we should be holy and without blame before Him in love, having predestined us to adoption as sons by Jesus Christ to Himself.",
+        ref: "Ephesians 1:4-5a",
+        NKJV: "Just as He chose us in Him before the foundation of the world, that we should be holy and without blame before Him in love, having predestined us to adoption as sons by Jesus Christ to Himself.",
         ESV: "Even as he chose us in him before the foundation of the world, that we should be holy and blameless before him. In love he predestined us for adoption to himself as sons through Jesus Christ.",
         NIV: "For he chose us in him before the creation of the world to be holy and blameless in his sight. In love he predestined us for adoption to sonship through Jesus Christ.",
       },
@@ -816,31 +852,31 @@ export const EMOTIONS = [
       },
       {
         ref: "Isaiah 42:3",
-        NKJV: "A bruised reed He will not break, and smoking flax He will not quench; He will bring forth justice for truth.",
+        NKJV: "A bruised reed He will not break, And smoking flax He will not quench; He will bring forth justice for truth.",
         ESV: "A bruised reed he will not break, and a faintly burning wick he will not quench; he will faithfully bring forth justice.",
         NIV: "A bruised reed he will not break, and a smoldering wick he will not snuff out. In faithfulness he will bring forth justice.",
       },
       {
         ref: "Micah 7:8",
-        NKJV: "Do not rejoice over me, my enemy; when I fall, I will arise; when I sit in darkness, the Lord will be a light to me.",
-        ESV: "Rejoice not over me, O my enemy; when I fall, I shall rise; when I sit in darkness, the Lord will be a light to me.",
-        NIV: "Do not gloat over me, my enemy! Though I have fallen, I will rise. Though I sit in darkness, the Lord will be my light.",
+        NKJV: "Do not rejoice over me, my enemy; When I fall, I will arise; When I sit in darkness, The LORD will be a light to me.",
+        ESV: "Rejoice not over me, O my enemy; when I fall, I shall rise; when I sit in darkness, the LORD will be a light to me.",
+        NIV: "Do not gloat over me, my enemy! Though I have fallen, I will rise. Though I sit in darkness, the LORD will be my light.",
       },
       {
         ref: "Psalm 27:13",
-        NKJV: "I would have lost heart, unless I had believed that I would see the goodness of the Lord in the land of the living.",
-        ESV: "I believe that I shall look upon the goodness of the Lord in the land of the living!",
-        NIV: "I remain confident of this: I will see the goodness of the Lord in the land of the living.",
+        NKJV: "I would have lost heart, unless I had believed That I would see the goodness of the LORD In the land of the living.",
+        ESV: "I believe that I shall look upon the goodness of the LORD in the land of the living!",
+        NIV: "I remain confident of this: I will see the goodness of the LORD in the land of the living.",
       },
       {
         ref: "Psalm 31:24",
-        NKJV: "Be of good courage, and He shall strengthen your heart, all you who hope in the Lord.",
-        ESV: "Be strong, and let your heart take courage, all you who wait for the Lord!",
-        NIV: "Be strong and take heart, all you who hope in the Lord.",
+        NKJV: "Be of good courage, And He shall strengthen your heart, All you who hope in the LORD.",
+        ESV: "Be strong, and let your heart take courage, all you who wait for the LORD!",
+        NIV: "Be strong and take heart, all you who hope in the LORD.",
       },
       {
         ref: "Proverbs 24:16",
-        NKJV: "For a righteous man may fall seven times and rise again, but the wicked shall fall by calamity.",
+        NKJV: "For a righteous man may fall seven times And rise again, But the wicked shall fall by calamity.",
         ESV: "For the righteous falls seven times and rises again, but the wicked stumble in times of calamity.",
         NIV: "For though the righteous fall seven times, they rise again, but the wicked stumble when calamity strikes.",
       },
@@ -852,13 +888,13 @@ export const EMOTIONS = [
       },
       {
         ref: "1 Samuel 30:6",
-        NKJV: "Now David was greatly distressed, for the people spoke of stoning him, because the soul of all the people was grieved, every man for his sons and his daughters. But David strengthened himself in the Lord his God.",
-        ESV: "And David was greatly distressed, for the people spoke of stoning him, because all the people were bitter in soul, each for his sons and daughters. But David strengthened himself in the Lord his God.",
-        NIV: "David was greatly distressed because the men were talking of stoning him; each one was bitter in spirit because of his sons and daughters. But David found strength in the Lord his God.",
+        NKJV: "Now David was greatly distressed, for the people spoke of stoning him, because the soul of all the people was grieved, every man for his sons and his daughters. But David strengthened himself in the LORD his God.",
+        ESV: "And David was greatly distressed, for the people spoke of stoning him, because all the people were bitter in soul, each for his sons and daughters. But David strengthened himself in the LORD his God.",
+        NIV: "David was greatly distressed because the men were talking of stoning him; each one was bitter in spirit because of his sons and daughters. But David found strength in the LORD his God.",
       },
       {
         ref: "Psalm 40:2",
-        NKJV: "He also brought me up out of a horrible pit, out of the miry clay, and set my feet upon a rock, and established my steps.",
+        NKJV: "He also brought me up out of a horrible pit, Out of the miry clay, And set my feet upon a rock, And established my steps.",
         ESV: "He drew me up from the pit of destruction, out of the miry bog, and set my feet upon a rock, making my steps secure.",
         NIV: "He lifted me out of the slimy pit, out of the mud and mire; he set my feet on a rock and gave me a firm place to stand.",
       },
@@ -876,13 +912,13 @@ export const EMOTIONS = [
     verses: [
       {
         ref: "Isaiah 40:29",
-        NKJV: "He gives power to the weak, and to those who have no might He increases strength.",
+        NKJV: "He gives power to the weak, And to those who have no might He increases strength.",
         ESV: "He gives power to the faint, and to him who has no might he increases strength.",
         NIV: "He gives strength to the weary and increases the power of the weak.",
       },
       {
         ref: "Psalm 23:2-3",
-        NKJV: "He makes me to lie down in green pastures; He leads me beside the still waters. He restores my soul; He leads me in the paths of righteousness for His name's sake.",
+        NKJV: "He makes me to lie down in green pastures; He leads me beside the still waters. He restores my soul; He leads me in the paths of righteousness For His name's sake.",
         ESV: "He makes me lie down in green pastures. He leads me beside still waters. He restores my soul. He leads me in paths of righteousness for his name's sake.",
         NIV: "He makes me lie down in green pastures, he leads me beside quiet waters, he refreshes my soul. He guides me along the right paths for his name's sake.",
       },
@@ -894,7 +930,7 @@ export const EMOTIONS = [
       },
       {
         ref: "Psalm 127:2",
-        NKJV: "It is vain for you to rise up early, to sit up late, to eat the bread of sorrows; for so He gives His beloved sleep.",
+        NKJV: "It is vain for you to rise up early, To sit up late, To eat the bread of sorrows; For so He gives His beloved sleep.",
         ESV: "It is in vain that you rise up early and go late to rest, eating the bread of anxious toil; for he gives to his beloved sleep.",
         NIV: "In vain you rise early and stay up late, toiling for food to eat—for he grants sleep to those he loves.",
       },
@@ -908,13 +944,13 @@ export const EMOTIONS = [
         ref: "Exodus 33:14",
         NKJV: "And He said, 'My Presence will go with you, and I will give you rest.'",
         ESV: "And he said, 'My presence will go with you, and I will give you rest.'",
-        NIV: "The Lord replied, 'My Presence will go with you, and I will give you rest.'",
+        NIV: "The LORD replied, 'My Presence will go with you, and I will give you rest.'",
       },
       {
         ref: "Psalm 116:7",
-        NKJV: "Return to your rest, O my soul, for the Lord has dealt bountifully with you.",
-        ESV: "Return, O my soul, to your rest; for the Lord has dealt bountifully with you.",
-        NIV: "Return to your rest, my soul, for the Lord has been good to you.",
+        NKJV: "Return to your rest, O my soul, For the LORD has dealt bountifully with you.",
+        ESV: "Return, O my soul, to your rest; for the LORD has dealt bountifully with you.",
+        NIV: "Return to your rest, my soul, for the LORD has been good to you.",
       },
       {
         ref: "Hebrews 4:9",
@@ -948,7 +984,7 @@ export const EMOTIONS = [
     verses: [
       {
         ref: "Isaiah 54:4",
-        NKJV: "Do not fear, for you will not be ashamed; neither be disgraced, for you will not be put to shame; for you will forget the shame of your youth, and will not remember the reproach of your widowhood anymore.",
+        NKJV: "Do not fear, for you will not be ashamed; Neither be disgraced, for you will not be put to shame; For you will forget the shame of your youth, And will not remember the reproach of your widowhood anymore.",
         ESV: "Fear not, for you will not be ashamed; be not confounded, for you will not be disgraced; for you will forget the shame of your youth, and the reproach of your widowhood you will remember no more.",
         NIV: "Do not be afraid; you will not be put to shame. Do not fear disgrace; you will not be humiliated. You will forget the shame of your youth and remember no more the reproach of your widowhood.",
       },
@@ -960,7 +996,7 @@ export const EMOTIONS = [
       },
       {
         ref: "Isaiah 61:7",
-        NKJV: "Instead of your shame you shall have double honor, and instead of confusion they shall rejoice in their portion. Therefore in their land they shall possess double; everlasting joy shall be theirs.",
+        NKJV: "Instead of your shame you shall have double honor, And instead of confusion they shall rejoice in their portion. Therefore in their land they shall possess double; Everlasting joy shall be theirs.",
         ESV: "Instead of your shame there shall be a double portion; instead of dishonor they shall rejoice in their lot; therefore in their land they shall possess a double portion; they shall have everlasting joy.",
         NIV: "Instead of your shame you will receive a double portion, and instead of disgrace you will rejoice in your inheritance. And so you will inherit a double portion in your land, and everlasting joy will be yours.",
       },
@@ -972,15 +1008,15 @@ export const EMOTIONS = [
       },
       {
         ref: "Psalm 25:3",
-        NKJV: "Indeed, let no one who waits on You be ashamed; let those be ashamed who deal treacherously without cause.",
+        NKJV: "Indeed, let no one who waits on You be ashamed; Let those be ashamed who deal treacherously without cause.",
         ESV: "Indeed, none who wait for you shall be put to shame; they shall be ashamed who are wantonly treacherous.",
         NIV: "No one who hopes in you will ever be put to shame, but shame will come on those who are treacherous without cause.",
       },
       {
         ref: "Psalm 3:3",
-        NKJV: "But You, O Lord, are a shield for me, my glory and the One who lifts up my head.",
-        ESV: "But you, O Lord, are a shield about me, my glory, and the lifter of my head.",
-        NIV: "But you, Lord, are a shield around me, my glory, the One who lifts my head high.",
+        NKJV: "But You, O LORD, are a shield for me, My glory and the One who lifts up my head.",
+        ESV: "But you, O LORD, are a shield about me, my glory, and the lifter of my head.",
+        NIV: "But you, LORD, are a shield around me, my glory, the One who lifts my head high.",
       },
       {
         ref: "John 8:11",
@@ -990,9 +1026,9 @@ export const EMOTIONS = [
       },
       {
         ref: "Isaiah 50:7",
-        NKJV: "For the Lord God will help Me; therefore I will not be disgraced; therefore I have set My face like a flint, and I know that I will not be ashamed.",
-        ESV: "But the Lord God helps me; therefore I have not been disgraced; therefore I have set my face like a flint, and I know that I shall not be put to shame.",
-        NIV: "Because the Sovereign Lord helps me, I will not be disgraced. Therefore have I set my face like flint, and I know I will not be put to shame.",
+        NKJV: "For the Lord GOD will help Me; Therefore I will not be disgraced; Therefore I have set My face like a flint, And I know that I will not be ashamed.",
+        ESV: "But the Lord GOD helps me; therefore I have not been disgraced; therefore I have set my face like a flint, and I know that I shall not be put to shame.",
+        NIV: "Because the Sovereign LORD helps me, I will not be disgraced. Therefore have I set my face like flint, and I know I will not be put to shame.",
       },
       {
         ref: "1 John 3:20",
@@ -1020,7 +1056,7 @@ export const EMOTIONS = [
     verses: [
       {
         ref: "Proverbs 15:1",
-        NKJV: "A soft answer turns away wrath, but a harsh word stirs up anger.",
+        NKJV: "A soft answer turns away wrath, But a harsh word stirs up anger.",
         ESV: "A soft answer turns away wrath, but a harsh word stirs up anger.",
         NIV: "A gentle answer turns away wrath, but a harsh word stirs up anger.",
       },
@@ -1032,7 +1068,7 @@ export const EMOTIONS = [
       },
       {
         ref: "Proverbs 16:32",
-        NKJV: "He who is slow to anger is better than the mighty, and he who rules his spirit than he who takes a city.",
+        NKJV: "He who is slow to anger is better than the mighty, And he who rules his spirit than he who takes a city.",
         ESV: "Whoever is slow to anger is better than the mighty, and he who rules his spirit than he who takes a city.",
         NIV: "Better a patient person than a warrior, one with self-control than one who takes a city.",
       },
@@ -1044,25 +1080,25 @@ export const EMOTIONS = [
       },
       {
         ref: "Proverbs 14:29",
-        NKJV: "He who is slow to wrath has great understanding, but he who is impulsive exalts folly.",
+        NKJV: "He who is slow to wrath has great understanding, But he who is impulsive exalts folly.",
         ESV: "Whoever is slow to anger has great understanding, but he who has a hasty temper exalts folly.",
         NIV: "Whoever is patient has great understanding, but one who is quick-tempered displays folly.",
       },
       {
         ref: "Proverbs 19:11",
-        NKJV: "The discretion of a man makes him slow to anger, and his glory is to overlook a transgression.",
+        NKJV: "The discretion of a man makes him slow to anger, And his glory is to overlook a transgression.",
         ESV: "Good sense makes one slow to anger, and it is his glory to overlook an offense.",
         NIV: "A person's wisdom yields patience; it is to one's glory to overlook an offense.",
       },
       {
         ref: "Psalm 37:8",
-        NKJV: "Cease from anger, and forsake wrath; do not fret—it only causes harm.",
+        NKJV: "Cease from anger, and forsake wrath; Do not fret—it only causes harm.",
         ESV: "Refrain from anger, and forsake wrath! Fret not yourself; it tends only to evil.",
         NIV: "Refrain from anger and turn from wrath; do not fret—it leads only to evil.",
       },
       {
         ref: "Ecclesiastes 7:9",
-        NKJV: "Do not hasten in your spirit to be angry, for anger rests in the bosom of fools.",
+        NKJV: "Do not hasten in your spirit to be angry, For anger rests in the bosom of fools.",
         ESV: "Be not quick in your spirit to become angry, for anger lodges in the heart of fools.",
         NIV: "Do not be quickly provoked in your spirit, for anger resides in the lap of fools.",
       },
@@ -1074,15 +1110,15 @@ export const EMOTIONS = [
       },
       {
         ref: "Proverbs 29:11",
-        NKJV: "A fool vents all his feelings, but a wise man holds them back.",
+        NKJV: "A fool vents all his feelings, But a wise man holds them back.",
         ESV: "A fool gives full vent to his spirit, but a wise man quietly holds it back.",
         NIV: "Fools give full vent to their rage, but the wise bring calm in the end.",
       },
       {
         ref: "Psalm 103:8",
-        NKJV: "The Lord is merciful and gracious, slow to anger, and abounding in mercy.",
-        ESV: "The Lord is merciful and gracious, slow to anger and abounding in steadfast love.",
-        NIV: "The Lord is compassionate and gracious, slow to anger, abounding in love.",
+        NKJV: "The LORD is merciful and gracious, Slow to anger, and abounding in mercy.",
+        ESV: "The LORD is merciful and gracious, slow to anger and abounding in steadfast love.",
+        NIV: "The LORD is compassionate and gracious, slow to anger, abounding in love.",
       },
       {
         ref: "Romans 12:19",
@@ -1098,13 +1134,13 @@ export const EMOTIONS = [
       },
       {
         ref: "Proverbs 15:18",
-        NKJV: "A wrathful man stirs up strife, but he who is slow to anger allays contention.",
+        NKJV: "A wrathful man stirs up strife, But he who is slow to anger allays contention.",
         ESV: "A hot-tempered man stirs up strife, but he who is slow to anger quiets contention.",
         NIV: "A hot-tempered person stirs up conflict, but the one who is patient calms a quarrel.",
       },
       {
         ref: "Proverbs 25:28",
-        NKJV: "Whoever has no rule over his own spirit is like a city broken down, without walls.",
+        NKJV: "Whoever has no rule over his own spirit Is like a city broken down, without walls.",
         ESV: "A man without self-control is like a city broken into and left without walls.",
         NIV: "Like a city whose walls are broken through is a person who lacks self-control.",
       },
@@ -1128,9 +1164,9 @@ export const EMOTIONS = [
       },
       {
         ref: "Isaiah 40:31",
-        NKJV: "But those who wait on the Lord shall renew their strength; they shall mount up with wings like eagles, they shall run and not be weary, they shall walk and not faint.",
-        ESV: "But they who wait for the Lord shall renew their strength; they shall mount up with wings like eagles; they shall run and not be weary; they shall walk and not faint.",
-        NIV: "But those who hope in the Lord will renew their strength. They will soar on wings like eagles; they will run and not grow weary, they will walk and not be faint.",
+        NKJV: "But those who wait on the LORD Shall renew their strength; They shall mount up with wings like eagles, They shall run and not be weary, They shall walk and not faint.",
+        ESV: "But they who wait for the LORD shall renew their strength; they shall mount up with wings like eagles; they shall run and not be weary; they shall walk and not faint.",
+        NIV: "But those who hope in the LORD will renew their strength. They will soar on wings like eagles; they will run and not grow weary, they will walk and not be faint.",
       },
       {
         ref: "Romans 8:28",
@@ -1140,9 +1176,9 @@ export const EMOTIONS = [
       },
       {
         ref: "Proverbs 3:5-6",
-        NKJV: "Trust in the Lord with all your heart, and lean not on your own understanding; in all your ways acknowledge Him, and He shall direct your paths.",
-        ESV: "Trust in the Lord with all your heart, and do not lean on your own understanding. In all your ways acknowledge him, and he will make straight your paths.",
-        NIV: "Trust in the Lord with all your heart and lean not on your own understanding; in all your ways submit to him, and he will make your paths straight.",
+        NKJV: "Trust in the LORD with all your heart, And lean not on your own understanding; In all your ways acknowledge Him, And He shall direct your paths.",
+        ESV: "Trust in the LORD with all your heart, and do not lean on your own understanding. In all your ways acknowledge him, and he will make straight your paths.",
+        NIV: "Trust in the LORD with all your heart and lean not on your own understanding; in all your ways submit to him, and he will make your paths straight.",
       },
       {
         ref: "James 1:2-4",
@@ -1152,9 +1188,9 @@ export const EMOTIONS = [
       },
       {
         ref: "Psalm 37:7",
-        NKJV: "Rest in the Lord, and wait patiently for Him; do not fret because of him who prospers in his way, because of the man who brings wicked schemes to pass.",
-        ESV: "Be still before the Lord and wait patiently for him; fret not yourself over the one who prospers in his way, over the man who carries out evil devices!",
-        NIV: "Be still before the Lord and wait patiently for him; do not fret when people succeed in their ways, when they carry out their wicked schemes.",
+        NKJV: "Rest in the LORD, and wait patiently for Him; Do not fret because of him who prospers in his way, Because of the man who brings wicked schemes to pass.",
+        ESV: "Be still before the LORD and wait patiently for him; fret not yourself over the one who prospers in his way, over the man who carries out evil devices!",
+        NIV: "Be still before the LORD and wait patiently for him; do not fret when people succeed in their ways, when they carry out their wicked schemes.",
       },
       {
         ref: "Philippians 4:13",
@@ -1170,18 +1206,18 @@ export const EMOTIONS = [
       },
       {
         ref: "Habakkuk 2:3",
-        NKJV: "For the vision is yet for an appointed time; but at the end it will speak, and it will not lie. Though it tarries, wait for it; because it will surely come, it will not tarry.",
+        NKJV: "For the vision is yet for an appointed time; But at the end it will speak, and it will not lie. Though it tarries, wait for it; Because it will surely come, It will not tarry.",
         ESV: "For still the vision awaits its appointed time; it hastens to the end—it will not lie. If it seems slow, wait for it; it will surely come; it will not delay.",
         NIV: "For the revelation awaits an appointed time; it speaks of the end and will not prove false. Though it linger, wait for it; it will certainly come and will not delay.",
       },
       {
         ref: "Psalm 27:14",
-        NKJV: "Wait on the Lord; be of good courage, and He shall strengthen your heart; wait, I say, on the Lord!",
-        ESV: "Wait for the Lord; be strong, and let your heart take courage; wait for the Lord!",
-        NIV: "Wait for the Lord; be strong and take heart and wait for the Lord.",
+        NKJV: "Wait on the LORD; Be of good courage, And He shall strengthen your heart; Wait, I say, on the LORD!",
+        ESV: "Wait for the LORD; be strong, and let your heart take courage; wait for the LORD!",
+        NIV: "Wait for the LORD; be strong and take heart and wait for the LORD.",
       },
       {
-        ref: "Romans 5:3-4",
+        ref: "Romans 5:3b-4",
         NKJV: "We also glory in tribulations, knowing that tribulation produces perseverance; and perseverance, character; and character, hope.",
         ESV: "We rejoice in our sufferings, knowing that suffering produces endurance, and endurance produces character, and character produces hope.",
         NIV: "We also glory in our sufferings, because we know that suffering produces perseverance; perseverance, character; and character, hope.",
@@ -1194,13 +1230,13 @@ export const EMOTIONS = [
       },
       {
         ref: "Lamentations 3:25-26",
-        NKJV: "The Lord is good to those who wait for Him, to the soul who seeks Him. It is good that one should hope and wait quietly for the salvation of the Lord.",
-        ESV: "The Lord is good to those who wait for him, to the soul who seeks him. It is good that one should wait quietly for the salvation of the Lord.",
-        NIV: "The Lord is good to those whose hope is in him, to the one who seeks him; it is good to wait quietly for the salvation of the Lord.",
+        NKJV: "The LORD is good to those who wait for Him, To the soul who seeks Him. It is good that one should hope and wait quietly For the salvation of the LORD.",
+        ESV: "The LORD is good to those who wait for him, to the soul who seeks him. It is good that one should wait quietly for the salvation of the LORD.",
+        NIV: "The LORD is good to those whose hope is in him, to the one who seeks him; it is good to wait quietly for the salvation of the LORD.",
       },
       {
         ref: "Isaiah 41:10",
-        NKJV: "Fear not, for I am with you; be not dismayed, for I am your God. I will strengthen you, yes, I will help you, I will uphold you with My righteous right hand.",
+        NKJV: "Fear not, for I am with you; Be not dismayed, for I am your God. I will strengthen you, Yes, I will help you, I will uphold you with My righteous right hand.",
         ESV: "Fear not, for I am with you; be not dismayed, for I am your God; I will strengthen you, I will help you, I will uphold you with my righteous right hand.",
         NIV: "So do not fear, for I am with you; do not be dismayed, for I am your God. I will strengthen you and help you; I will uphold you with my righteous right hand.",
       },
@@ -1224,13 +1260,13 @@ export const EMOTIONS = [
     verses: [
       {
         ref: "Proverbs 12:16",
-        NKJV: "A fool's wrath is known at once, but a prudent man covers shame.",
+        NKJV: "A fool's wrath is known at once, But a prudent man covers shame.",
         ESV: "The vexation of a fool is known at once, but the prudent ignores an insult.",
         NIV: "Fools show their annoyance at once, but the prudent overlook an insult.",
       },
       {
         ref: "Proverbs 17:14",
-        NKJV: "The beginning of strife is like releasing water; therefore stop contention before a quarrel starts.",
+        NKJV: "The beginning of strife is like releasing water; Therefore stop contention before a quarrel starts.",
         ESV: "The beginning of strife is like letting out water, so quit before the quarrel breaks out.",
         NIV: "Starting a quarrel is like breaching a dam; so drop the matter before a dispute breaks out.",
       },
@@ -1248,19 +1284,19 @@ export const EMOTIONS = [
       },
       {
         ref: "Proverbs 20:3",
-        NKJV: "It is honorable for a man to stop striving, since any fool can start a quarrel.",
+        NKJV: "It is honorable for a man to stop striving, Since any fool can start a quarrel.",
         ESV: "It is an honor for a man to keep aloof from strife, but every fool will be quarreling.",
         NIV: "It is to one's honor to avoid strife, but every fool is quick to quarrel.",
       },
       {
         ref: "Psalm 141:3",
-        NKJV: "Set a guard, O Lord, over my mouth; keep watch over the door of my lips.",
-        ESV: "Set a guard, O Lord, over my mouth; keep watch over the door of my lips!",
-        NIV: "Set a guard over my mouth, Lord; keep watch over the door of my lips.",
+        NKJV: "Set a guard, O LORD, over my mouth; Keep watch over the door of my lips.",
+        ESV: "Set a guard, O LORD, over my mouth; keep watch over the door of my lips!",
+        NIV: "Set a guard over my mouth, LORD; keep watch over the door of my lips.",
       },
       {
         ref: "Proverbs 21:23",
-        NKJV: "Whoever guards his mouth and tongue keeps his soul from troubles.",
+        NKJV: "Whoever guards his mouth and tongue Keeps his soul from troubles.",
         ESV: "Whoever keeps his mouth and his tongue keeps himself out of trouble.",
         NIV: "Those who guard their mouths and their tongues keep themselves from calamity.",
       },
@@ -1308,9 +1344,9 @@ export const EMOTIONS = [
       },
       {
         ref: "Psalm 40:1",
-        NKJV: "I waited patiently for the Lord; and He inclined to me, and heard my cry.",
-        ESV: "I waited patiently for the Lord; he inclined to me and heard my cry.",
-        NIV: "I waited patiently for the Lord; he turned to me and heard my cry.",
+        NKJV: "I waited patiently for the LORD; And He inclined to me, And heard my cry.",
+        ESV: "I waited patiently for the LORD; he inclined to me and heard my cry.",
+        NIV: "I waited patiently for the LORD; he turned to me and heard my cry.",
       },
       {
         ref: "Hebrews 10:36",
@@ -1320,9 +1356,9 @@ export const EMOTIONS = [
       },
       {
         ref: "Isaiah 30:18",
-        NKJV: "Therefore the Lord will wait, that He may be gracious to you; and therefore He will be exalted, that He may have mercy on you. For the Lord is a God of justice; blessed are all those who wait for Him.",
-        ESV: "Therefore the Lord waits to be gracious to you, and therefore he exalts himself to show mercy to you. For the Lord is a God of justice; blessed are all those who wait for him.",
-        NIV: "Yet the Lord longs to be gracious to you; therefore he will rise up to show you compassion. For the Lord is a God of justice. Blessed are all who wait for him!",
+        NKJV: "Therefore the LORD will wait, that He may be gracious to you; And therefore He will be exalted, that He may have mercy on you. For the LORD is a God of justice; Blessed are all those who wait for Him.",
+        ESV: "Therefore the LORD waits to be gracious to you, and therefore he exalts himself to show mercy to you. For the LORD is a God of justice; blessed are all those who wait for him.",
+        NIV: "Yet the LORD longs to be gracious to you; therefore he will rise up to show you compassion. For the LORD is a God of justice. Blessed are all who wait for him!",
       },
       {
         ref: "James 5:7",
@@ -1332,25 +1368,25 @@ export const EMOTIONS = [
       },
       {
         ref: "Psalm 130:5",
-        NKJV: "I wait for the Lord, my soul waits, and in His word I do hope.",
-        ESV: "I wait for the Lord, my soul waits, and in his word I hope.",
-        NIV: "I wait for the Lord, my whole being waits, and in his word I put my hope.",
+        NKJV: "I wait for the LORD, my soul waits, And in His word I do hope.",
+        ESV: "I wait for the LORD, my soul waits, and in his word I hope.",
+        NIV: "I wait for the LORD, my whole being waits, and in his word I put my hope.",
       },
       {
         ref: "Ecclesiastes 7:8",
-        NKJV: "The end of a thing is better than its beginning; the patient in spirit is better than the proud in spirit.",
+        NKJV: "The end of a thing is better than its beginning; The patient in spirit is better than the proud in spirit.",
         ESV: "Better is the end of a thing than its beginning, and the patient in spirit is better than the proud in spirit.",
         NIV: "The end of a matter is better than its beginning, and patience is better than pride.",
       },
       {
         ref: "Micah 7:7",
-        NKJV: "Therefore I will look to the Lord; I will wait for the God of my salvation; my God will hear me.",
-        ESV: "But as for me, I will look to the Lord; I will wait for the God of my salvation; my God will hear me.",
-        NIV: "But as for me, I watch in hope for the Lord, I wait for God my Savior; my God will hear me.",
+        NKJV: "Therefore I will look to the LORD; I will wait for the God of my salvation; My God will hear me.",
+        ESV: "But as for me, I will look to the LORD; I will wait for the God of my salvation; my God will hear me.",
+        NIV: "But as for me, I watch in hope for the LORD, I wait for God my Savior; my God will hear me.",
       },
       {
         ref: "Psalm 31:15",
-        NKJV: "My times are in Your hand; deliver me from the hand of my enemies, and from those who persecute me.",
+        NKJV: "My times are in Your hand; Deliver me from the hand of my enemies, And from those who persecute me.",
         ESV: "My times are in your hand; rescue me from the hand of my enemies and from my persecutors!",
         NIV: "My times are in your hands; deliver me from the hands of my enemies, from those who pursue me.",
       },
@@ -1368,7 +1404,7 @@ export const EMOTIONS = [
     verses: [
       {
         ref: "Proverbs 14:30",
-        NKJV: "A sound heart is life to the body, but envy is rottenness to the bones.",
+        NKJV: "A sound heart is life to the body, But envy is rottenness to the bones.",
         ESV: "A tranquil heart gives life to the flesh, but envy makes the bones rot.",
         NIV: "A heart at peace gives life to the body, but envy rots the bones.",
       },
@@ -1386,15 +1422,15 @@ export const EMOTIONS = [
       },
       {
         ref: "Psalm 37:1",
-        NKJV: "Do not fret because of evildoers, nor be envious of the workers of iniquity.",
+        NKJV: "Do not fret because of evildoers, Nor be envious of the workers of iniquity.",
         ESV: "Fret not yourself because of evildoers; be not envious of wrongdoers!",
         NIV: "Do not fret because of those who are evil or be envious of those who do wrong.",
       },
       {
         ref: "Proverbs 23:17",
-        NKJV: "Do not let your heart envy sinners, but be zealous for the fear of the Lord all the day.",
-        ESV: "Let not your heart envy sinners, but continue in the fear of the Lord all the day.",
-        NIV: "Do not let your heart envy sinners, but always be zealous for the fear of the Lord.",
+        NKJV: "Do not let your heart envy sinners, But be zealous for the fear of the LORD all the day.",
+        ESV: "Let not your heart envy sinners, but continue in the fear of the LORD all the day.",
+        NIV: "Do not let your heart envy sinners, but always be zealous for the fear of the LORD.",
       },
       {
         ref: "Galatians 6:4",
@@ -1422,9 +1458,9 @@ export const EMOTIONS = [
       },
       {
         ref: "Psalm 37:4",
-        NKJV: "Delight yourself also in the Lord, and He shall give you the desires of your heart.",
-        ESV: "Delight yourself in the Lord, and he will give you the desires of your heart.",
-        NIV: "Take delight in the Lord, and he will give you the desires of your heart.",
+        NKJV: "Delight yourself also in the LORD, And He shall give you the desires of your heart.",
+        ESV: "Delight yourself in the LORD, and he will give you the desires of your heart.",
+        NIV: "Take delight in the LORD, and he will give you the desires of your heart.",
       },
     ],
   },
@@ -1469,14 +1505,14 @@ export const EMOTIONS = [
         NIV: "For we do not have a high priest who is unable to empathize with our weaknesses, but we have one who has been tempted in every way, just as we are—yet he did not sin. Let us then approach God's throne of grace with confidence, so that we may receive mercy and find grace to help us in our time of need.",
       },
       {
-        ref: "1 Peter 5:8-9",
+        ref: "1 Peter 5:8-9a",
         NKJV: "Be sober, be vigilant; because your adversary the devil walks about like a roaring lion, seeking whom he may devour. Resist him, steadfast in the faith.",
         ESV: "Be sober-minded; be watchful. Your adversary the devil prowls around like a roaring lion, seeking someone to devour. Resist him, firm in your faith.",
         NIV: "Be alert and of sober mind. Your enemy the devil prowls around like a roaring lion looking for someone to devour. Resist him, standing firm in the faith.",
       },
       {
         ref: "Psalm 119:11",
-        NKJV: "Your word I have hidden in my heart, that I might not sin against You.",
+        NKJV: "Your word I have hidden in my heart, That I might not sin against You.",
         ESV: "I have stored up your word in my heart, that I might not sin against you.",
         NIV: "I have hidden your word in my heart that I might not sin against you.",
       },
@@ -1500,7 +1536,7 @@ export const EMOTIONS = [
       },
       {
         ref: "Proverbs 4:14-15",
-        NKJV: "Do not enter the path of the wicked, and do not walk in the way of evil. Avoid it, do not travel on it; turn away from it and pass on.",
+        NKJV: "Do not enter the path of the wicked, And do not walk in the way of evil. Avoid it, do not travel on it; Turn away from it and pass on.",
         ESV: "Do not enter the path of the wicked, and do not walk in the way of the evil. Avoid it; do not go on it; turn away from it and pass on.",
         NIV: "Do not set foot on the path of the wicked or walk in the way of evildoers. Avoid it, do not travel on it; turn from it and go on your way.",
       },
@@ -1518,9 +1554,9 @@ export const EMOTIONS = [
       },
       {
         ref: "Psalm 1:1-2",
-        NKJV: "Blessed is the man who walks not in the counsel of the ungodly, nor stands in the path of sinners, nor sits in the seat of the scornful; but his delight is in the law of the Lord, and in His law he meditates day and night.",
-        ESV: "Blessed is the man who walks not in the counsel of the wicked, nor stands in the way of sinners, nor sits in the seat of scoffers; but his delight is in the law of the Lord, and on his law he meditates day and night.",
-        NIV: "Blessed is the one who does not walk in step with the wicked or stand in the way that sinners take or sit in the company of mockers, but whose delight is in the law of the Lord, and who meditates on his law day and night.",
+        NKJV: "Blessed is the man Who walks not in the counsel of the ungodly, Nor stands in the path of sinners, Nor sits in the seat of the scornful; But his delight is in the law of the LORD, And in His law he meditates day and night.",
+        ESV: "Blessed is the man who walks not in the counsel of the wicked, nor stands in the way of sinners, nor sits in the seat of scoffers; but his delight is in the law of the LORD, and on his law he meditates day and night.",
+        NIV: "Blessed is the one who does not walk in step with the wicked or stand in the way that sinners take or sit in the company of mockers, but whose delight is in the law of the LORD, and who meditates on his law day and night.",
       },
     ],
   },
@@ -1542,15 +1578,15 @@ export const EMOTIONS = [
       },
       {
         ref: "Psalm 51:10",
-        NKJV: "Create in me a clean heart, O God, and renew a steadfast spirit within me.",
+        NKJV: "Create in me a clean heart, O God, And renew a steadfast spirit within me.",
         ESV: "Create in me a clean heart, O God, and renew a right spirit within me.",
         NIV: "Create in me a pure heart, O God, and renew a steadfast spirit within me.",
       },
       {
         ref: "Psalm 32:5",
-        NKJV: "I acknowledged my sin to You, and my iniquity I have not hidden. I said, 'I will confess my transgressions to the Lord,' and You forgave the iniquity of my sin.",
-        ESV: "I acknowledged my sin to you, and I did not cover my iniquity; I said, 'I will confess my transgressions to the Lord,' and you forgave the iniquity of my sin.",
-        NIV: "Then I acknowledged my sin to you and did not cover up my iniquity. I said, 'I will confess my transgressions to the Lord.' And you forgave the guilt of my sin.",
+        NKJV: "I acknowledged my sin to You, And my iniquity I have not hidden. I said, 'I will confess my transgressions to the LORD,' And You forgave the iniquity of my sin. Selah",
+        ESV: "I acknowledged my sin to you, and I did not cover my iniquity; I said, 'I will confess my transgressions to the LORD,' and you forgave the iniquity of my sin. Selah",
+        NIV: "Then I acknowledged my sin to you and did not cover up my iniquity. I said, 'I will confess my transgressions to the LORD.' And you forgave the guilt of my sin.",
       },
       {
         ref: "2 Chronicles 7:14",
@@ -1560,13 +1596,13 @@ export const EMOTIONS = [
       },
       {
         ref: "Isaiah 1:18",
-        NKJV: "Come now, and let us reason together, says the Lord, though your sins are like scarlet, they shall be as white as snow; though they are red like crimson, they shall be as wool.",
-        ESV: "Come now, let us reason together, says the Lord: though your sins are like scarlet, they shall be as white as snow; though they are red like crimson, they shall become like wool.",
-        NIV: "Come now, let us settle the matter, says the Lord. Though your sins are like scarlet, they shall be as white as snow; though they are red as crimson, they shall be like wool.",
+        NKJV: "Come now, and let us reason together, Says the LORD, Though your sins are like scarlet, They shall be as white as snow; Though they are red like crimson, They shall be as wool.",
+        ESV: "Come now, let us reason together, says the LORD: though your sins are like scarlet, they shall be as white as snow; though they are red like crimson, they shall become like wool.",
+        NIV: "Come now, let us settle the matter, says the LORD. Though your sins are like scarlet, they shall be as white as snow; though they are red as crimson, they shall be like wool.",
       },
       {
         ref: "Psalm 103:12",
-        NKJV: "As far as the east is from the west, so far has He removed our transgressions from us.",
+        NKJV: "As far as the east is from the west, So far has He removed our transgressions from us.",
         ESV: "As far as the east is from the west, so far does he remove our transgressions from us.",
         NIV: "As far as the east is from the west, so far has he removed our transgressions from us.",
       },
@@ -1577,20 +1613,20 @@ export const EMOTIONS = [
         NIV: "Repent, then, and turn to God, so that your sins may be wiped out, that times of refreshing may come from the Lord.",
       },
       {
-        ref: "Joel 2:13",
-        NKJV: "So rend your heart, and not your garments; return to the Lord your God, for He is gracious and merciful, slow to anger, and of great kindness.",
-        ESV: "And rend your hearts and not your garments. Return to the Lord your God, for he is gracious and merciful, slow to anger, and abounding in steadfast love.",
-        NIV: "Rend your heart and not your garments. Return to the Lord your God, for he is gracious and compassionate, slow to anger and abounding in love.",
+        ref: "Joel 2:13a",
+        NKJV: "So rend your heart, and not your garments; Return to the LORD your God, For He is gracious and merciful, Slow to anger, and of great kindness.",
+        ESV: "And rend your hearts and not your garments. Return to the LORD your God, for he is gracious and merciful, slow to anger, and abounding in steadfast love.",
+        NIV: "Rend your heart and not your garments. Return to the LORD your God, for he is gracious and compassionate, slow to anger and abounding in love.",
       },
       {
         ref: "Psalm 34:18",
-        NKJV: "The Lord is near to those who have a broken heart, and saves such as have a contrite spirit.",
-        ESV: "The Lord is near to the brokenhearted and saves the crushed in spirit.",
-        NIV: "The Lord is close to the brokenhearted and saves those who are crushed in spirit.",
+        NKJV: "The LORD is near to those who have a broken heart, And saves such as have a contrite spirit.",
+        ESV: "The LORD is near to the brokenhearted and saves the crushed in spirit.",
+        NIV: "The LORD is close to the brokenhearted and saves those who are crushed in spirit.",
       },
       {
         ref: "Psalm 51:17",
-        NKJV: "The sacrifices of God are a broken spirit, a broken and a contrite heart—these, O God, You will not despise.",
+        NKJV: "The sacrifices of God are a broken spirit, A broken and a contrite heart—These, O God, You will not despise.",
         ESV: "The sacrifices of God are a broken spirit; a broken and contrite heart, O God, you will not despise.",
         NIV: "My sacrifice, O God, is a broken spirit; a broken and contrite heart you, God, will not despise.",
       },
@@ -1608,7 +1644,7 @@ export const EMOTIONS = [
       },
       {
         ref: "Proverbs 28:13",
-        NKJV: "He who covers his sins will not prosper, but whoever confesses and forsakes them will have mercy.",
+        NKJV: "He who covers his sins will not prosper, But whoever confesses and forsakes them will have mercy.",
         ESV: "Whoever conceals his transgressions will not prosper, but he who confesses and forsakes them will obtain mercy.",
         NIV: "Whoever conceals their sins does not prosper, but the one who confesses and renounces them finds mercy.",
       },
@@ -1620,9 +1656,9 @@ export const EMOTIONS = [
       },
       {
         ref: "Lamentations 3:40",
-        NKJV: "Let us search out and examine our ways, and turn back to the Lord.",
-        ESV: "Let us test and examine our ways, and return to the Lord!",
-        NIV: "Let us examine our ways and test them, and let us return to the Lord.",
+        NKJV: "Let us search out and examine our ways, And turn back to the LORD.",
+        ESV: "Let us test and examine our ways, and return to the LORD!",
+        NIV: "Let us examine our ways and test them, and let us return to the LORD.",
       },
     ],
   },
@@ -1638,9 +1674,9 @@ export const EMOTIONS = [
     verses: [
       {
         ref: "Psalm 118:24",
-        NKJV: "This is the day the Lord has made; we will rejoice and be glad in it.",
-        ESV: "This is the day that the Lord has made; let us rejoice and be glad in it.",
-        NIV: "The Lord has done it this very day; let us rejoice today and be glad.",
+        NKJV: "This is the day the LORD has made; We will rejoice and be glad in it.",
+        ESV: "This is the day that the LORD has made; let us rejoice and be glad in it.",
+        NIV: "The LORD has done it this very day; let us rejoice today and be glad.",
       },
       {
         ref: "Philippians 4:4",
@@ -1650,15 +1686,15 @@ export const EMOTIONS = [
       },
       {
         ref: "Psalm 16:11",
-        NKJV: "You will show me the path of life; in Your presence is fullness of joy; at Your right hand are pleasures forevermore.",
+        NKJV: "You will show me the path of life; In Your presence is fullness of joy; At Your right hand are pleasures forevermore.",
         ESV: "You make known to me the path of life; in your presence there is fullness of joy; at your right hand are pleasures forevermore.",
         NIV: "You make known to me the path of life; you will fill me with joy in your presence, with eternal pleasures at your right hand.",
       },
       {
-        ref: "Nehemiah 8:10",
-        NKJV: "Do not sorrow, for the joy of the Lord is your strength.",
-        ESV: "Do not be grieved, for the joy of the Lord is your strength.",
-        NIV: "Do not grieve, for the joy of the Lord is your strength.",
+        ref: "Nehemiah 8:10b",
+        NKJV: "Do not sorrow, for the joy of the LORD is your strength.",
+        ESV: "And do not be grieved, for the joy of the LORD is your strength.",
+        NIV: "Do not grieve, for the joy of the LORD is your strength.",
       },
       {
         ref: "John 15:11",
@@ -1668,15 +1704,15 @@ export const EMOTIONS = [
       },
       {
         ref: "Proverbs 17:22",
-        NKJV: "A merry heart does good, like medicine, but a broken spirit dries the bones.",
+        NKJV: "A merry heart does good, like medicine, But a broken spirit dries the bones.",
         ESV: "A joyful heart is good medicine, but a crushed spirit dries up the bones.",
         NIV: "A cheerful heart is good medicine, but a crushed spirit dries up the bones.",
       },
       {
         ref: "Psalm 126:3",
-        NKJV: "The Lord has done great things for us, and we are glad.",
-        ESV: "The Lord has done great things for us; we are glad.",
-        NIV: "The Lord has done great things for us, and we are filled with joy.",
+        NKJV: "The LORD has done great things for us, And we are glad.",
+        ESV: "The LORD has done great things for us; we are glad.",
+        NIV: "The LORD has done great things for us, and we are filled with joy.",
       },
       {
         ref: "Romans 15:13",
@@ -1686,15 +1722,15 @@ export const EMOTIONS = [
       },
       {
         ref: "Psalm 28:7",
-        NKJV: "The Lord is my strength and my shield; my heart trusted in Him, and I am helped; therefore my heart greatly rejoices, and with my song I will praise Him.",
-        ESV: "The Lord is my strength and my shield; in him my heart trusts, and I am helped; my heart exults, and with my song I give thanks to him.",
-        NIV: "The Lord is my strength and my shield; my heart trusts in him, and he helps me. My heart leaps for joy, and with my song I praise him.",
+        NKJV: "The LORD is my strength and my shield; My heart trusted in Him, and I am helped; Therefore my heart greatly rejoices, And with my song I will praise Him.",
+        ESV: "The LORD is my strength and my shield; in him my heart trusts, and I am helped; my heart exults, and with my song I give thanks to him.",
+        NIV: "The LORD is my strength and my shield; my heart trusts in him, and he helps me. My heart leaps for joy, and with my song I praise him.",
       },
       {
         ref: "Isaiah 12:2",
-        NKJV: "Behold, God is my salvation, I will trust and not be afraid; for Yah, the Lord, is my strength and song; He also has become my salvation.",
-        ESV: "Behold, God is my salvation; I will trust, and will not be afraid; for the Lord God is my strength and my song, and he has become my salvation.",
-        NIV: "Surely God is my salvation; I will trust and not be afraid. The Lord, the Lord himself, is my strength and my defense; he has become my salvation.",
+        NKJV: "Behold, God is my salvation, I will trust and not be afraid; For YAH, the LORD, is my strength and song; He also has become my salvation.",
+        ESV: "Behold, God is my salvation; I will trust, and will not be afraid; for the LORD GOD is my strength and my song, and he has become my salvation.",
+        NIV: "Surely God is my salvation; I will trust and not be afraid. The LORD, the LORD himself, is my strength and my defense; he has become my salvation.",
       },
       {
         ref: "Psalm 30:11",
@@ -1710,18 +1746,18 @@ export const EMOTIONS = [
       },
       {
         ref: "Habakkuk 3:17-18",
-        NKJV: "Though the fig tree may not blossom, nor fruit be on the vines... yet I will rejoice in the Lord, I will joy in the God of my salvation.",
-        ESV: "Though the fig tree should not blossom, nor fruit be on the vines... yet I will rejoice in the Lord; I will take joy in the God of my salvation.",
-        NIV: "Though the fig tree does not bud and there are no grapes on the vines... yet I will rejoice in the Lord, I will be joyful in God my Savior.",
+        NKJV: "Though the fig tree may not blossom, Nor fruit be on the vines... Yet I will rejoice in the LORD, I will joy in the God of my salvation.",
+        ESV: "Though the fig tree should not blossom, nor fruit be on the vines... yet I will rejoice in the LORD; I will take joy in the God of my salvation.",
+        NIV: "Though the fig tree does not bud and there are no grapes on the vines... yet I will rejoice in the LORD, I will be joyful in God my Savior.",
       },
       {
         ref: "Psalm 144:15",
-        NKJV: "Happy are the people whose God is the Lord!",
-        ESV: "Blessed are the people whose God is the Lord!",
-        NIV: "Blessed is the people of whom this is true; blessed is the people whose God is the Lord.",
+        NKJV: "Happy are the people who are in such a state; Happy are the people whose God is the LORD!",
+        ESV: "Blessed are the people to whom such blessings fall! Blessed are the people whose God is the LORD!",
+        NIV: "Blessed is the people of whom this is true; blessed is the people whose God is the LORD.",
       },
       {
-        ref: "Galatians 5:22-23",
+        ref: "Galatians 5:22-23a",
         NKJV: "But the fruit of the Spirit is love, joy, peace, longsuffering, kindness, goodness, faithfulness, gentleness, self-control.",
         ESV: "But the fruit of the Spirit is love, joy, peace, patience, kindness, goodness, faithfulness, gentleness, self-control.",
         NIV: "But the fruit of the Spirit is love, joy, peace, forbearance, kindness, goodness, faithfulness, gentleness and self-control.",
@@ -1746,7 +1782,7 @@ export const EMOTIONS = [
       },
       {
         ref: "Psalm 100:4",
-        NKJV: "Enter into His gates with thanksgiving, and into His courts with praise. Be thankful to Him, and bless His name.",
+        NKJV: "Enter into His gates with thanksgiving, And into His courts with praise. Be thankful to Him, and bless His name.",
         ESV: "Enter his gates with thanksgiving, and his courts with praise! Give thanks to him; bless his name!",
         NIV: "Enter his gates with thanksgiving and his courts with praise; give thanks to him and praise his name.",
       },
@@ -1758,9 +1794,9 @@ export const EMOTIONS = [
       },
       {
         ref: "Psalm 107:1",
-        NKJV: "Oh, give thanks to the Lord, for He is good! For His mercy endures forever.",
-        ESV: "Oh give thanks to the Lord, for he is good, for his steadfast love endures forever!",
-        NIV: "Give thanks to the Lord, for he is good; his love endures forever.",
+        NKJV: "Oh, give thanks to the LORD, for He is good! For His mercy endures forever.",
+        ESV: "Oh give thanks to the LORD, for he is good, for his steadfast love endures forever!",
+        NIV: "Give thanks to the LORD, for he is good; his love endures forever.",
       },
       {
         ref: "Colossians 3:17",
@@ -1776,15 +1812,15 @@ export const EMOTIONS = [
       },
       {
         ref: "Psalm 9:1",
-        NKJV: "I will praise You, O Lord, with my whole heart; I will tell of all Your marvelous works.",
-        ESV: "I will give thanks to the Lord with my whole heart; I will recount all of your wonderful deeds.",
-        NIV: "I will give thanks to you, Lord, with all my heart; I will tell of all your wonderful deeds.",
+        NKJV: "I will praise You, O LORD, with my whole heart; I will tell of all Your marvelous works.",
+        ESV: "I will give thanks to the LORD with my whole heart; I will recount all of your wonderful deeds.",
+        NIV: "I will give thanks to you, LORD, with all my heart; I will tell of all your wonderful deeds.",
       },
       {
         ref: "1 Chronicles 16:34",
-        NKJV: "Oh, give thanks to the Lord, for He is good! For His mercy endures forever.",
-        ESV: "Oh give thanks to the Lord, for he is good; for his steadfast love endures forever!",
-        NIV: "Give thanks to the Lord, for he is good; his love endures forever.",
+        NKJV: "Oh, give thanks to the LORD, for He is good! For His mercy endures forever.",
+        ESV: "Oh give thanks to the LORD, for he is good; for his steadfast love endures forever!",
+        NIV: "Give thanks to the LORD, for he is good; his love endures forever.",
       },
       {
         ref: "Ephesians 5:20",
@@ -1794,7 +1830,7 @@ export const EMOTIONS = [
       },
       {
         ref: "Psalm 95:2",
-        NKJV: "Let us come before His presence with thanksgiving; let us shout joyfully to Him with psalms.",
+        NKJV: "Let us come before His presence with thanksgiving; Let us shout joyfully to Him with psalms.",
         ESV: "Let us come into his presence with thanksgiving; let us make a joyful noise to him with songs of praise!",
         NIV: "Let us come before him with thanksgiving and extol him with music and song.",
       },
@@ -1818,9 +1854,9 @@ export const EMOTIONS = [
       },
       {
         ref: "Psalm 136:1",
-        NKJV: "Oh, give thanks to the Lord, for He is good! For His mercy endures forever.",
-        ESV: "Give thanks to the Lord, for he is good, for his steadfast love endures forever.",
-        NIV: "Give thanks to the Lord, for he is good. His love endures forever.",
+        NKJV: "Oh, give thanks to the LORD, for He is good! For His mercy endures forever.",
+        ESV: "Give thanks to the LORD, for he is good, for his steadfast love endures forever.",
+        NIV: "Give thanks to the LORD, for he is good. His love endures forever.",
       },
       {
         ref: "Philippians 4:6",
@@ -1848,12 +1884,12 @@ export const EMOTIONS = [
       },
       {
         ref: "Jeremiah 29:11",
-        NKJV: "For I know the thoughts that I think toward you, says the Lord, thoughts of peace and not of evil, to give you a future and a hope.",
-        ESV: "For I know the plans I have for you, declares the Lord, plans for welfare and not for evil, to give you a future and a hope.",
-        NIV: "For I know the plans I have for you, declares the Lord, plans to prosper you and not to harm you, plans to give you hope and a future.",
+        NKJV: "For I know the thoughts that I think toward you, says the LORD, thoughts of peace and not of evil, to give you a future and a hope.",
+        ESV: "For I know the plans I have for you, declares the LORD, plans for welfare and not for evil, to give you a future and a hope.",
+        NIV: "For I know the plans I have for you, declares the LORD, plans to prosper you and not to harm you, plans to give you hope and a future.",
       },
       {
-        ref: "Hebrews 6:19",
+        ref: "Hebrews 6:19a",
         NKJV: "This hope we have as an anchor of the soul, both sure and steadfast.",
         ESV: "We have this as a sure and steadfast anchor of the soul.",
         NIV: "We have this hope as an anchor for the soul, firm and secure.",
@@ -1866,9 +1902,9 @@ export const EMOTIONS = [
       },
       {
         ref: "Isaiah 40:31",
-        NKJV: "But those who wait on the Lord shall renew their strength; they shall mount up with wings like eagles, they shall run and not be weary, they shall walk and not faint.",
-        ESV: "But they who wait for the Lord shall renew their strength; they shall mount up with wings like eagles; they shall run and not be weary; they shall walk and not faint.",
-        NIV: "But those who hope in the Lord will renew their strength. They will soar on wings like eagles; they will run and not grow weary, they will walk and not be faint.",
+        NKJV: "But those who wait on the LORD Shall renew their strength; They shall mount up with wings like eagles, They shall run and not be weary, They shall walk and not faint.",
+        ESV: "But they who wait for the LORD shall renew their strength; they shall mount up with wings like eagles; they shall run and not be weary; they shall walk and not faint.",
+        NIV: "But those who hope in the LORD will renew their strength. They will soar on wings like eagles; they will run and not grow weary, they will walk and not be faint.",
       },
       {
         ref: "Psalm 39:7",
@@ -1878,9 +1914,9 @@ export const EMOTIONS = [
       },
       {
         ref: "Lamentations 3:21-22",
-        NKJV: "This I recall to my mind, therefore I have hope. Through the Lord's mercies we are not consumed, because His compassions fail not.",
-        ESV: "But this I call to mind, and therefore I have hope: The steadfast love of the Lord never ceases; his mercies never come to an end.",
-        NIV: "Yet this I call to mind and therefore I have hope: Because of the Lord's great love we are not consumed, for his compassions never fail.",
+        NKJV: "This I recall to my mind, Therefore I have hope. Through the LORD's mercies we are not consumed, Because His compassions fail not.",
+        ESV: "But this I call to mind, and therefore I have hope: The steadfast love of the LORD never ceases; his mercies never come to an end.",
+        NIV: "Yet this I call to mind and therefore I have hope: Because of the LORD's great love we are not consumed, for his compassions never fail.",
       },
       {
         ref: "Romans 8:24-25",
@@ -1890,7 +1926,7 @@ export const EMOTIONS = [
       },
       {
         ref: "Psalm 42:11",
-        NKJV: "Why are you cast down, O my soul? And why are you disquieted within me? Hope in God; for I shall yet praise Him, the help of my countenance and my God.",
+        NKJV: "Why are you cast down, O my soul? And why are you disquieted within me? Hope in God; For I shall yet praise Him, The help of my countenance and my God.",
         ESV: "Why are you cast down, O my soul, and why are you in turmoil within me? Hope in God; for I shall again praise him, my salvation and my God.",
         NIV: "Why, my soul, are you downcast? Why so disturbed within me? Put your hope in God, for I will yet praise him, my Savior and my God.",
       },
@@ -1908,13 +1944,13 @@ export const EMOTIONS = [
       },
       {
         ref: "Psalm 71:14",
-        NKJV: "But I will hope continually, and will praise You yet more and more.",
+        NKJV: "But I will hope continually, And will praise You yet more and more.",
         ESV: "But I will hope continually and will praise you yet more and more.",
         NIV: "As for me, I will always have hope; I will praise you more and more.",
       },
       {
         ref: "Proverbs 23:18",
-        NKJV: "For surely there is a hereafter, and your hope will not be cut off.",
+        NKJV: "For surely there is a hereafter, And your hope will not be cut off.",
         ESV: "Surely there is a future, and your hope will not be cut off.",
         NIV: "There is surely a future hope for you, and your hope will not be cut off.",
       },
@@ -1944,7 +1980,7 @@ export const EMOTIONS = [
     verses: [
       {
         ref: "Isaiah 26:3",
-        NKJV: "You will keep him in perfect peace, whose mind is stayed on You, because he trusts in You.",
+        NKJV: "You will keep him in perfect peace, Whose mind is stayed on You, Because he trusts in You.",
         ESV: "You keep him in perfect peace whose mind is stayed on you, because he trusts in you.",
         NIV: "You will keep in perfect peace those whose minds are steadfast, because they trust in you.",
       },
@@ -1968,9 +2004,9 @@ export const EMOTIONS = [
       },
       {
         ref: "Psalm 4:8",
-        NKJV: "I will both lie down in peace, and sleep; for You alone, O Lord, make me dwell in safety.",
-        ESV: "In peace I will both lie down and sleep; for you alone, O Lord, make me dwell in safety.",
-        NIV: "In peace I will lie down and sleep, for you alone, Lord, make me dwell in safety.",
+        NKJV: "I will both lie down in peace, and sleep; For You alone, O LORD, make me dwell in safety.",
+        ESV: "In peace I will both lie down and sleep; for you alone, O LORD, make me dwell in safety.",
+        NIV: "In peace I will lie down and sleep, for you alone, LORD, make me dwell in safety.",
       },
       {
         ref: "John 16:33",
@@ -1986,19 +2022,19 @@ export const EMOTIONS = [
       },
       {
         ref: "Numbers 6:24-26",
-        NKJV: "The Lord bless you and keep you; the Lord make His face shine upon you, and be gracious to you; the Lord lift up His countenance upon you, and give you peace.",
-        ESV: "The Lord bless you and keep you; the Lord make his face to shine upon you and be gracious to you; the Lord lift up his countenance upon you and give you peace.",
-        NIV: "The Lord bless you and keep you; the Lord make his face shine on you and be gracious to you; the Lord turn his face toward you and give you peace.",
+        NKJV: "The LORD bless you and keep you; The LORD make His face shine upon you, And be gracious to you; The LORD lift up His countenance upon you, And give you peace.",
+        ESV: "The LORD bless you and keep you; the LORD make his face to shine upon you and be gracious to you; the LORD lift up his countenance upon you and give you peace.",
+        NIV: "The LORD bless you and keep you; the LORD make his face shine on you and be gracious to you; the LORD turn his face toward you and give you peace.",
       },
       {
         ref: "Psalm 29:11",
-        NKJV: "The Lord will give strength to His people; the Lord will bless His people with peace.",
-        ESV: "May the Lord give strength to his people! May the Lord bless his people with peace!",
-        NIV: "The Lord gives strength to his people; the Lord blesses his people with peace.",
+        NKJV: "The LORD will give strength to His people; The LORD will bless His people with peace.",
+        ESV: "May the LORD give strength to his people! May the LORD bless his people with peace!",
+        NIV: "The LORD gives strength to his people; the LORD blesses his people with peace.",
       },
       {
         ref: "Isaiah 32:17",
-        NKJV: "The work of righteousness will be peace, and the effect of righteousness, quietness and assurance forever.",
+        NKJV: "The work of righteousness will be peace, And the effect of righteousness, quietness and assurance forever.",
         ESV: "And the effect of righteousness will be peace, and the result of righteousness, quietness and trust forever.",
         NIV: "The fruit of that righteousness will be peace; its effect will be quietness and confidence forever.",
       },
@@ -2010,15 +2046,15 @@ export const EMOTIONS = [
       },
       {
         ref: "Psalm 119:165",
-        NKJV: "Great peace have those who love Your law, and nothing causes them to stumble.",
+        NKJV: "Great peace have those who love Your law, And nothing causes them to stumble.",
         ESV: "Great peace have those who love your law; nothing can make them stumble.",
         NIV: "Great peace have those who love your law, and nothing can make them stumble.",
       },
       {
         ref: "Isaiah 54:10",
-        NKJV: "For the mountains shall depart and the hills be removed, but My kindness shall not depart from you, nor shall My covenant of peace be removed, says the Lord, who has mercy on you.",
-        ESV: "For the mountains may depart and the hills be removed, but my steadfast love shall not depart from you, and my covenant of peace shall not be removed, says the Lord, who has compassion on you.",
-        NIV: "Though the mountains be shaken and the hills be removed, yet my unfailing love for you will not be shaken nor my covenant of peace be removed, says the Lord, who has compassion on you.",
+        NKJV: "For the mountains shall depart And the hills be removed, But My kindness shall not depart from you, Nor shall My covenant of peace be removed, Says the LORD, who has mercy on you.",
+        ESV: "For the mountains may depart and the hills be removed, but my steadfast love shall not depart from you, and my covenant of peace shall not be removed, says the LORD, who has compassion on you.",
+        NIV: "Though the mountains be shaken and the hills be removed, yet my unfailing love for you will not be shaken nor my covenant of peace be removed, says the LORD, who has compassion on you.",
       },
       {
         ref: "2 Thessalonians 3:16",
@@ -2028,7 +2064,7 @@ export const EMOTIONS = [
       },
       {
         ref: "Matthew 5:9",
-        NKJV: "Blessed are the peacemakers, for they shall be called sons of God.",
+        NKJV: "Blessed are the peacemakers, For they shall be called sons of God.",
         ESV: "Blessed are the peacemakers, for they shall be called sons of God.",
         NIV: "Blessed are the peacemakers, for they will be called children of God.",
       },
@@ -2070,37 +2106,37 @@ export const EMOTIONS = [
       },
       {
         ref: "Psalm 23:1",
-        NKJV: "The Lord is my shepherd; I shall not want.",
-        ESV: "The Lord is my shepherd; I shall not want.",
-        NIV: "The Lord is my shepherd, I lack nothing.",
+        NKJV: "The LORD is my shepherd; I shall not want.",
+        ESV: "The LORD is my shepherd; I shall not want.",
+        NIV: "The LORD is my shepherd, I lack nothing.",
       },
       {
         ref: "Psalm 16:6",
-        NKJV: "The lines have fallen to me in pleasant places; yes, I have a good inheritance.",
+        NKJV: "The lines have fallen to me in pleasant places; Yes, I have a good inheritance.",
         ESV: "The lines have fallen for me in pleasant places; indeed, I have a beautiful inheritance.",
         NIV: "The boundary lines have fallen for me in pleasant places; surely I have a delightful inheritance.",
       },
       {
         ref: "Proverbs 15:16",
-        NKJV: "Better is a little with the fear of the Lord, than great treasure with trouble.",
-        ESV: "Better is a little with the fear of the Lord than great treasure and trouble with it.",
-        NIV: "Better a little with the fear of the Lord than great wealth with turmoil.",
+        NKJV: "Better is a little with the fear of the LORD, Than great treasure with trouble.",
+        ESV: "Better is a little with the fear of the LORD than great treasure and trouble with it.",
+        NIV: "Better a little with the fear of the LORD than great wealth with turmoil.",
       },
       {
         ref: "Ecclesiastes 4:6",
-        NKJV: "Better a handful with quietness than both hands full, together with toil and grasping for the wind.",
+        NKJV: "Better a handful with quietness Than both hands full, together with toil and grasping for the wind.",
         ESV: "Better is a handful of quietness than two hands full of toil and a striving after wind.",
         NIV: "Better one handful with tranquillity than two handfuls with toil and chasing after the wind.",
       },
       {
         ref: "Psalm 131:2",
-        NKJV: "Surely I have calmed and quieted my soul, like a weaned child with his mother; like a weaned child is my soul within me.",
+        NKJV: "Surely I have calmed and quieted my soul, Like a weaned child with his mother; Like a weaned child is my soul within me.",
         ESV: "But I have calmed and quieted my soul, like a weaned child with its mother; like a weaned child is my soul within me.",
         NIV: "But I have calmed and quieted myself, I am like a weaned child with its mother; like a weaned child I am content.",
       },
       {
         ref: "Psalm 90:14",
-        NKJV: "Oh, satisfy us early with Your mercy, that we may rejoice and be glad all our days!",
+        NKJV: "Oh, satisfy us early with Your mercy, That we may rejoice and be glad all our days!",
         ESV: "Satisfy us in the morning with your steadfast love, that we may rejoice and be glad all our days.",
         NIV: "Satisfy us in the morning with your unfailing love, that we may sing for joy and be glad all our days.",
       },
@@ -2130,9 +2166,9 @@ export const EMOTIONS = [
       },
       {
         ref: "Proverbs 3:5-6",
-        NKJV: "Trust in the Lord with all your heart, and lean not on your own understanding; in all your ways acknowledge Him, and He shall direct your paths.",
-        ESV: "Trust in the Lord with all your heart, and do not lean on your own understanding. In all your ways acknowledge him, and he will make straight your paths.",
-        NIV: "Trust in the Lord with all your heart and lean not on your own understanding; in all your ways submit to him, and he will make your paths straight.",
+        NKJV: "Trust in the LORD with all your heart, And lean not on your own understanding; In all your ways acknowledge Him, And He shall direct your paths.",
+        ESV: "Trust in the LORD with all your heart, and do not lean on your own understanding. In all your ways acknowledge him, and he will make straight your paths.",
+        NIV: "Trust in the LORD with all your heart and lean not on your own understanding; in all your ways submit to him, and he will make your paths straight.",
       },
       {
         ref: "Hebrews 11:6",
@@ -2147,7 +2183,7 @@ export const EMOTIONS = [
         NIV: "Consequently, faith comes from hearing the message, and the message is heard through the word about Christ.",
       },
       {
-        ref: "Matthew 17:20",
+        ref: "Matthew 17:20b",
         NKJV: "If you have faith as a mustard seed, you will say to this mountain, 'Move from here to there,' and it will move; and nothing will be impossible for you.",
         ESV: "If you have faith like a grain of mustard seed, you will say to this mountain, 'Move from here to there,' and it will move, and nothing will be impossible for you.",
         NIV: "If you have faith as small as a mustard seed, you can say to this mountain, 'Move from here to there,' and it will move. Nothing will be impossible for you.",
@@ -2177,14 +2213,14 @@ export const EMOTIONS = [
         NIV: "For everyone born of God overcomes the world. This is the victory that has overcome the world, even our faith.",
       },
       {
-        ref: "Galatians 2:20",
-        NKJV: "The life which I now live in the flesh I live by faith in the Son of God, who loved me and gave Himself for me.",
+        ref: "Galatians 2:20b",
+        NKJV: "And the life which I now live in the flesh I live by faith in the Son of God, who loved me and gave Himself for me.",
         ESV: "And the life I now live in the flesh I live by faith in the Son of God, who loved me and gave himself for me.",
         NIV: "The life I now live in the body, I live by faith in the Son of God, who loved me and gave himself for me.",
       },
       {
         ref: "Habakkuk 2:4",
-        NKJV: "Behold the proud, his soul is not upright in him; but the just shall live by his faith.",
+        NKJV: "Behold the proud, His soul is not upright in him; But the just shall live by his faith.",
         ESV: "Behold, his soul is puffed up; it is not upright within him, but the righteous shall live by his faith.",
         NIV: "See, the enemy is puffed up; his desires are not upright—but the righteous person will live by his faithfulness.",
       },
@@ -2249,7 +2285,7 @@ export const EMOTIONS = [
         NIV: "Do not judge, and you will not be judged. Do not condemn, and you will not be condemned. Forgive, and you will be forgiven.",
       },
       {
-        ref: "Matthew 18:21-22",
+        ref: "Matthew 18:21b-22",
         NKJV: "Lord, how often shall my brother sin against me, and I forgive him? Up to seven times? Jesus said to him, 'I do not say to you, up to seven times, but up to seventy times seven.'",
         ESV: "Lord, how often will my brother sin against me, and I forgive him? As many as seven times? Jesus said to him, 'I do not say to you seven times, but seventy-seven times.'",
         NIV: "Lord, how many times shall I forgive my brother or sister who sins against me? Up to seven times? Jesus answered, 'I tell you, not seven times, but seventy-seven times.'",
@@ -2262,7 +2298,7 @@ export const EMOTIONS = [
       },
       {
         ref: "Psalm 103:12",
-        NKJV: "As far as the east is from the west, so far has He removed our transgressions from us.",
+        NKJV: "As far as the east is from the west, So far has He removed our transgressions from us.",
         ESV: "As far as the east is from the west, so far does he remove our transgressions from us.",
         NIV: "As far as the east is from the west, so far has he removed our transgressions from us.",
       },
@@ -2274,13 +2310,13 @@ export const EMOTIONS = [
       },
       {
         ref: "Micah 7:18-19",
-        NKJV: "Who is a God like You, pardoning iniquity... He will again have compassion on us, and will subdue our iniquities. You will cast all our sins into the depths of the sea.",
+        NKJV: "Who is a God like You, Pardoning iniquity... He will again have compassion on us, And will subdue our iniquities. You will cast all our sins Into the depths of the sea.",
         ESV: "Who is a God like you, pardoning iniquity... He will again have compassion on us; he will tread our iniquities underfoot. You will cast all our sins into the depths of the sea.",
         NIV: "Who is a God like you, who pardons sin... You will again have compassion on us; you will tread our sins underfoot and hurl all our iniquities into the depths of the sea.",
       },
       {
         ref: "Proverbs 10:12",
-        NKJV: "Hatred stirs up strife, but love covers all sins.",
+        NKJV: "Hatred stirs up strife, But love covers all sins.",
         ESV: "Hatred stirs up strife, but love covers all offenses.",
         NIV: "Hatred stirs up conflict, but love covers over all wrongs.",
       },
@@ -2291,7 +2327,7 @@ export const EMOTIONS = [
         NIV: "Do not be overcome by evil, but overcome evil with good.",
       },
       {
-        ref: "Luke 23:34",
+        ref: "Luke 23:34a",
         NKJV: "Then Jesus said, 'Father, forgive them, for they do not know what they do.'",
         ESV: "And Jesus said, 'Father, forgive them, for they know not what they do.'",
         NIV: "Jesus said, 'Father, forgive them, for they do not know what they are doing.'",
@@ -2304,7 +2340,7 @@ export const EMOTIONS = [
       },
       {
         ref: "Psalm 86:5",
-        NKJV: "For You, Lord, are good, and ready to forgive, and abundant in mercy to all those who call upon You.",
+        NKJV: "For You, Lord, are good, and ready to forgive, And abundant in mercy to all those who call upon You.",
         ESV: "For you, O Lord, are good and forgiving, abounding in steadfast love to all who call upon you.",
         NIV: "You, Lord, are forgiving and good, abounding in love to all who call to you.",
       },
@@ -2328,9 +2364,9 @@ export const EMOTIONS = [
       },
       {
         ref: "Jeremiah 31:3",
-        NKJV: "The Lord has appeared of old to me, saying: 'Yes, I have loved you with an everlasting love; therefore with lovingkindness I have drawn you.'",
-        ESV: "The Lord appeared to him from far away. I have loved you with an everlasting love; therefore I have continued my faithfulness to you.",
-        NIV: "The Lord appeared to us in the past, saying: 'I have loved you with an everlasting love; I have drawn you with unfailing kindness.'",
+        NKJV: "The LORD has appeared of old to me, saying: 'Yes, I have loved you with an everlasting love; Therefore with lovingkindness I have drawn you.'",
+        ESV: "The LORD appeared to him from far away. I have loved you with an everlasting love; therefore I have continued my faithfulness to you.",
+        NIV: "The LORD appeared to us in the past, saying: 'I have loved you with an everlasting love; I have drawn you with unfailing kindness.'",
       },
       {
         ref: "Romans 5:8",
@@ -2352,9 +2388,9 @@ export const EMOTIONS = [
       },
       {
         ref: "Psalm 103:13",
-        NKJV: "As a father pities his children, so the Lord pities those who fear Him.",
-        ESV: "As a father shows compassion to his children, so the Lord shows compassion to those who fear him.",
-        NIV: "As a father has compassion on his children, so the Lord has compassion on those who fear him.",
+        NKJV: "As a father pities his children, So the LORD pities those who fear Him.",
+        ESV: "As a father shows compassion to his children, so the LORD shows compassion to those who fear him.",
+        NIV: "As a father has compassion on his children, so the LORD has compassion on those who fear him.",
       },
       {
         ref: "John 15:9",
@@ -2364,13 +2400,13 @@ export const EMOTIONS = [
       },
       {
         ref: "Isaiah 49:16",
-        NKJV: "See, I have inscribed you on the palms of My hands; your walls are continually before Me.",
+        NKJV: "See, I have inscribed you on the palms of My hands; Your walls are continually before Me.",
         ESV: "Behold, I have engraved you on the palms of my hands; your walls are continually before me.",
         NIV: "See, I have engraved you on the palms of my hands; your walls are ever before me.",
       },
       {
         ref: "Psalm 63:3",
-        NKJV: "Because Your lovingkindness is better than life, my lips shall praise You.",
+        NKJV: "Because Your lovingkindness is better than life, My lips shall praise You.",
         ESV: "Because your steadfast love is better than life, my lips will praise you.",
         NIV: "Because your love is better than life, my lips will glorify you.",
       },
@@ -2397,25 +2433,25 @@ export const EMOTIONS = [
     verses: [
       {
         ref: "Psalm 147:3",
-        NKJV: "He heals the brokenhearted and binds up their wounds.",
+        NKJV: "He heals the brokenhearted And binds up their wounds.",
         ESV: "He heals the brokenhearted and binds up their wounds.",
         NIV: "He heals the brokenhearted and binds up their wounds.",
       },
       {
         ref: "Psalm 34:18",
-        NKJV: "The Lord is near to those who have a broken heart, and saves such as have a contrite spirit.",
-        ESV: "The Lord is near to the brokenhearted and saves the crushed in spirit.",
-        NIV: "The Lord is close to the brokenhearted and saves those who are crushed in spirit.",
+        NKJV: "The LORD is near to those who have a broken heart, And saves such as have a contrite spirit.",
+        ESV: "The LORD is near to the brokenhearted and saves the crushed in spirit.",
+        NIV: "The LORD is close to the brokenhearted and saves those who are crushed in spirit.",
       },
       {
         ref: "Psalm 56:8",
-        NKJV: "You number my wanderings; put my tears into Your bottle; are they not in Your book?",
+        NKJV: "You number my wanderings; Put my tears into Your bottle; Are they not in Your book?",
         ESV: "You have kept count of my tossings; put my tears in your bottle. Are they not in your book?",
         NIV: "Record my misery; list my tears on your scroll—are they not in your record?",
       },
       {
         ref: "Psalm 31:7",
-        NKJV: "I will be glad and rejoice in Your mercy, for You have considered my trouble; You have known my soul in adversities.",
+        NKJV: "I will be glad and rejoice in Your mercy, For You have considered my trouble; You have known my soul in adversities.",
         ESV: "I will rejoice and be glad in your steadfast love, because you have seen my affliction; you have known the distress of my soul.",
         NIV: "I will be glad and rejoice in your love, for you saw my affliction and knew the anguish of my soul.",
       },
@@ -2441,10 +2477,10 @@ export const EMOTIONS = [
         ref: "Genesis 50:20",
         NKJV: "But as for you, you meant evil against me; but God meant it for good, in order to bring it about as it is this day, to save many people alive.",
         ESV: "As for you, you meant evil against me, but God meant it for good, to bring it about that many people should be kept alive, as they are today.",
-        NIV: "You intended to harm me, but God intended it for good, to accomplish what is now being done, the saving of many lives.",
+        NIV: "You intended to harm me, but God intended it for good to accomplish what is now being done, the saving of many lives.",
       },
       {
-        ref: "2 Corinthians 1:3-4",
+        ref: "2 Corinthians 1:3-4a",
         NKJV: "Blessed be the God and Father of our Lord Jesus Christ, the Father of mercies and God of all comfort, who comforts us in all our tribulation.",
         ESV: "Blessed be the God and Father of our Lord Jesus Christ, the Father of mercies and God of all comfort, who comforts us in all our affliction.",
         NIV: "Praise be to the God and Father of our Lord Jesus Christ, the Father of compassion and the God of all comfort, who comforts us in all our troubles.",
@@ -2474,16 +2510,16 @@ export const EMOTIONS = [
     ],
     verses: [
       {
-        ref: "Isaiah 53:3",
-        NKJV: "He is despised and rejected by men, a Man of sorrows and acquainted with grief.",
+        ref: "Isaiah 53:3a",
+        NKJV: "He is despised and rejected by men, A Man of sorrows and acquainted with grief.",
         ESV: "He was despised and rejected by men, a man of sorrows and acquainted with grief.",
         NIV: "He was despised and rejected by mankind, a man of suffering, and familiar with pain.",
       },
       {
         ref: "Psalm 27:10",
-        NKJV: "When my father and my mother forsake me, then the Lord will take care of me.",
-        ESV: "For my father and my mother have forsaken me, but the Lord will take me in.",
-        NIV: "Though my father and mother forsake me, the Lord will receive me.",
+        NKJV: "When my father and my mother forsake me, Then the LORD will take care of me.",
+        ESV: "For my father and my mother have forsaken me, but the LORD will take me in.",
+        NIV: "Though my father and mother forsake me, the LORD will receive me.",
       },
       {
         ref: "John 6:37",
@@ -2493,19 +2529,19 @@ export const EMOTIONS = [
       },
       {
         ref: "Psalm 118:22",
-        NKJV: "The stone which the builders rejected has become the chief cornerstone.",
+        NKJV: "The stone which the builders rejected Has become the chief cornerstone.",
         ESV: "The stone that the builders rejected has become the cornerstone.",
         NIV: "The stone the builders rejected has become the cornerstone.",
       },
       {
         ref: "Isaiah 41:9",
-        NKJV: "You whom I have taken from the ends of the earth, and called from its farthest regions, and said to you, 'You are My servant, I have chosen you and have not cast you away.'",
+        NKJV: "You whom I have taken from the ends of the earth, And called from its farthest regions, And said to you, 'You are My servant, I have chosen you and have not cast you away.'",
         ESV: "You whom I took from the ends of the earth, and called from its farthest corners, saying to you, 'You are my servant, I have chosen you and not cast you off.'",
         NIV: "I took you from the ends of the earth, from its farthest corners I called you. I said, 'You are my servant'; I have chosen you and have not rejected you.",
       },
       {
         ref: "Isaiah 49:15-16",
-        NKJV: "Can a woman forget her nursing child, and not have compassion on the son of her womb? Surely they may forget, yet I will not forget you. See, I have inscribed you on the palms of My hands; your walls are continually before Me.",
+        NKJV: "Can a woman forget her nursing child, And not have compassion on the son of her womb? Surely they may forget, Yet I will not forget you. See, I have inscribed you on the palms of My hands; Your walls are continually before Me.",
         ESV: "Can a woman forget her nursing child, that she should have no compassion on the son of her womb? Even these may forget, yet I will not forget you. Behold, I have engraved you on the palms of my hands; your walls are continually before me.",
         NIV: "Can a mother forget the baby at her breast and have no compassion on the child she has borne? Though she may forget, I will not forget you! See, I have engraved you on the palms of my hands; your walls are ever before me.",
       },
@@ -2517,9 +2553,9 @@ export const EMOTIONS = [
       },
       {
         ref: "Psalm 94:14",
-        NKJV: "For the Lord will not cast off His people, nor will He forsake His inheritance.",
-        ESV: "For the Lord will not forsake his people; he will not abandon his heritage.",
-        NIV: "For the Lord will not reject his people; he will never forsake his inheritance.",
+        NKJV: "For the LORD will not cast off His people, Nor will He forsake His inheritance.",
+        ESV: "For the LORD will not forsake his people; he will not abandon his heritage.",
+        NIV: "For the LORD will not reject his people; he will never forsake his inheritance.",
       },
       {
         ref: "John 15:18",
@@ -2529,9 +2565,9 @@ export const EMOTIONS = [
       },
       {
         ref: "Deuteronomy 31:8",
-        NKJV: "And the Lord, He is the one who goes before you. He will be with you, He will not leave you nor forsake you; do not fear nor be dismayed.",
-        ESV: "It is the Lord who goes before you. He will be with you; he will not leave you or forsake you. Do not fear or be dismayed.",
-        NIV: "The Lord himself goes before you and will be with you; he will never leave you nor forsake you. Do not be afraid; do not be discouraged.",
+        NKJV: "And the LORD, He is the One who goes before you. He will be with you, He will not leave you nor forsake you; do not fear nor be dismayed.",
+        ESV: "It is the LORD who goes before you. He will be with you; he will not leave you or forsake you. Do not fear or be dismayed.",
+        NIV: "The LORD himself goes before you and will be with you; he will never leave you nor forsake you. Do not be afraid; do not be discouraged.",
       },
       {
         ref: "1 Peter 2:9",
@@ -2559,7 +2595,7 @@ export const EMOTIONS = [
       },
       {
         ref: "Psalm 127:2",
-        NKJV: "It is vain for you to rise up early, to sit up late, to eat the bread of sorrows; for so He gives His beloved sleep.",
+        NKJV: "It is vain for you to rise up early, To sit up late, To eat the bread of sorrows; For so He gives His beloved sleep.",
         ESV: "It is in vain that you rise up early and go late to rest, eating the bread of anxious toil; for he gives to his beloved sleep.",
         NIV: "In vain you rise early and stay up late, toiling for food to eat—for he grants sleep to those he loves.",
       },
@@ -2577,15 +2613,15 @@ export const EMOTIONS = [
       },
       {
         ref: "Ecclesiastes 4:6",
-        NKJV: "Better a handful with quietness than both hands full, together with toil and grasping for the wind.",
+        NKJV: "Better a handful with quietness Than both hands full, together with toil and grasping for the wind.",
         ESV: "Better is a handful of quietness than two hands full of toil and a striving after wind.",
         NIV: "Better one handful with tranquillity than two handfuls with toil and chasing after the wind.",
       },
       {
         ref: "Psalm 118:5",
-        NKJV: "I called on the Lord in distress; the Lord answered me and set me in a broad place.",
-        ESV: "Out of my distress I called on the Lord; the Lord answered me and set me free.",
-        NIV: "When hard pressed, I cried to the Lord; he brought me into a spacious place.",
+        NKJV: "I called on the LORD in distress; The LORD answered me and set me in a broad place.",
+        ESV: "Out of my distress I called on the LORD; the LORD answered me and set me free.",
+        NIV: "When hard pressed, I cried to the LORD; he brought me into a spacious place.",
       },
       {
         ref: "Psalm 46:10",
@@ -2595,9 +2631,9 @@ export const EMOTIONS = [
       },
       {
         ref: "Exodus 14:14",
-        NKJV: "The Lord will fight for you, and you shall hold your peace.",
-        ESV: "The Lord will fight for you, and you have only to be silent.",
-        NIV: "The Lord will fight for you; you need only to be still.",
+        NKJV: "The LORD will fight for you, and you shall hold your peace.",
+        ESV: "The LORD will fight for you, and you have only to be silent.",
+        NIV: "The LORD will fight for you; you need only to be still.",
       },
       {
         ref: "2 Corinthians 4:8-9",
@@ -2613,7 +2649,7 @@ export const EMOTIONS = [
       },
       {
         ref: "Psalm 62:1-2",
-        NKJV: "Truly my soul silently waits for God; from Him comes my salvation. He only is my rock and my salvation; He is my defense; I shall not be greatly moved.",
+        NKJV: "Truly my soul silently waits for God; From Him comes my salvation. He only is my rock and my salvation; He is my defense; I shall not be greatly moved.",
         ESV: "For God alone my soul waits in silence; from him comes my salvation. He alone is my rock and my salvation, my fortress; I shall not be greatly shaken.",
         NIV: "Truly my soul finds rest in God; my salvation comes from him. Truly he is my rock and my salvation; he is my fortress, I will never be shaken.",
       },
@@ -2637,12 +2673,12 @@ export const EMOTIONS = [
       },
       {
         ref: "Proverbs 3:5-6",
-        NKJV: "Trust in the Lord with all your heart, and lean not on your own understanding; in all your ways acknowledge Him, and He shall direct your paths.",
-        ESV: "Trust in the Lord with all your heart, and do not lean on your own understanding. In all your ways acknowledge him, and he will make straight your paths.",
-        NIV: "Trust in the Lord with all your heart and lean not on your own understanding; in all your ways submit to him, and he will make your paths straight.",
+        NKJV: "Trust in the LORD with all your heart, And lean not on your own understanding; In all your ways acknowledge Him, And He shall direct your paths.",
+        ESV: "Trust in the LORD with all your heart, and do not lean on your own understanding. In all your ways acknowledge him, and he will make straight your paths.",
+        NIV: "Trust in the LORD with all your heart and lean not on your own understanding; in all your ways submit to him, and he will make your paths straight.",
       },
       {
-        ref: "1 Corinthians 14:33",
+        ref: "1 Corinthians 14:33a",
         NKJV: "For God is not the author of confusion but of peace.",
         ESV: "For God is not a God of confusion but of peace.",
         NIV: "For God is not a God of disorder but of peace.",
@@ -2655,27 +2691,27 @@ export const EMOTIONS = [
       },
       {
         ref: "Isaiah 30:21",
-        NKJV: "Your ears shall hear a word behind you, saying, 'This is the way, walk in it,' whenever you turn to the right hand or whenever you turn to the left.",
+        NKJV: "Your ears shall hear a word behind you, saying, 'This is the way, walk in it,' Whenever you turn to the right hand Or whenever you turn to the left.",
         ESV: "And your ears shall hear a word behind you, saying, 'This is the way, walk in it,' when you turn to the right or when you turn to the left.",
         NIV: "Whether you turn to the right or to the left, your ears will hear a voice behind you, saying, 'This is the way; walk in it.'",
       },
       {
         ref: "Psalm 119:105",
-        NKJV: "Your word is a lamp to my feet and a light to my path.",
+        NKJV: "Your word is a lamp to my feet And a light to my path.",
         ESV: "Your word is a lamp to my feet and a light to my path.",
         NIV: "Your word is a lamp for my feet, a light on my path.",
       },
       {
         ref: "Proverbs 16:9",
-        NKJV: "A man's heart plans his way, but the Lord directs his steps.",
-        ESV: "The heart of man plans his way, but the Lord establishes his steps.",
-        NIV: "In their hearts humans plan their course, but the Lord establishes their steps.",
+        NKJV: "A man's heart plans his way, But the LORD directs his steps.",
+        ESV: "The heart of man plans his way, but the LORD establishes his steps.",
+        NIV: "In their hearts humans plan their course, but the LORD establishes their steps.",
       },
       {
         ref: "Isaiah 55:8-9",
-        NKJV: "'For My thoughts are not your thoughts, nor are your ways My ways,' says the Lord. 'For as the heavens are higher than the earth, so are My ways higher than your ways, and My thoughts than your thoughts.'",
-        ESV: "For my thoughts are not your thoughts, neither are your ways my ways, declares the Lord. For as the heavens are higher than the earth, so are my ways higher than your ways and my thoughts than your thoughts.",
-        NIV: "'For my thoughts are not your thoughts, neither are your ways my ways,' declares the Lord. 'As the heavens are higher than the earth, so are my ways higher than your ways and my thoughts than your thoughts.'",
+        NKJV: "'For My thoughts are not your thoughts, Nor are your ways My ways,' says the LORD. 'For as the heavens are higher than the earth, So are My ways higher than your ways, And My thoughts than your thoughts.'",
+        ESV: "For my thoughts are not your thoughts, neither are your ways my ways, declares the LORD. For as the heavens are higher than the earth, so are my ways higher than your ways and my thoughts than your thoughts.",
+        NIV: "'For my thoughts are not your thoughts, neither are your ways my ways,' declares the LORD. 'As the heavens are higher than the earth, so are my ways higher than your ways and my thoughts than your thoughts.'",
       },
       {
         ref: "Jeremiah 33:3",
@@ -2709,13 +2745,13 @@ export const EMOTIONS = [
     verses: [
       {
         ref: "Joshua 1:9",
-        NKJV: "Have I not commanded you? Be strong and of good courage; do not be afraid, nor be dismayed, for the Lord your God is with you wherever you go.",
-        ESV: "Have I not commanded you? Be strong and courageous. Do not be frightened, and do not be dismayed, for the Lord your God is with you wherever you go.",
-        NIV: "Have I not commanded you? Be strong and courageous. Do not be afraid; do not be discouraged, for the Lord your God will be with you wherever you go.",
+        NKJV: "Have I not commanded you? Be strong and of good courage; do not be afraid, nor be dismayed, for the LORD your God is with you wherever you go.",
+        ESV: "Have I not commanded you? Be strong and courageous. Do not be frightened, and do not be dismayed, for the LORD your God is with you wherever you go.",
+        NIV: "Have I not commanded you? Be strong and courageous. Do not be afraid; do not be discouraged, for the LORD your God will be with you wherever you go.",
       },
       {
         ref: "Proverbs 28:1",
-        NKJV: "The wicked flee when no one pursues, but the righteous are bold as a lion.",
+        NKJV: "The wicked flee when no one pursues, But the righteous are bold as a lion.",
         ESV: "The wicked flee when no one pursues, but the righteous are bold as a lion.",
         NIV: "The wicked flee though no one pursues, but the righteous are as bold as a lion.",
       },
@@ -2745,7 +2781,7 @@ export const EMOTIONS = [
       },
       {
         ref: "Psalm 138:3",
-        NKJV: "In the day when I cried out, You answered me, and made me bold with strength in my soul.",
+        NKJV: "In the day when I cried out, You answered me, And made me bold with strength in my soul.",
         ESV: "On the day I called, you answered me; my strength of soul you increased.",
         NIV: "When I called, you answered me; you greatly emboldened me.",
       },
@@ -2757,9 +2793,9 @@ export const EMOTIONS = [
       },
       {
         ref: "Psalm 27:1",
-        NKJV: "The Lord is my light and my salvation; whom shall I fear? The Lord is the strength of my life; of whom shall I be afraid?",
-        ESV: "The Lord is my light and my salvation; whom shall I fear? The Lord is the stronghold of my life; of whom shall I be afraid?",
-        NIV: "The Lord is my light and my salvation—whom shall I fear? The Lord is the stronghold of my life—of whom shall I be afraid?",
+        NKJV: "The LORD is my light and my salvation; Whom shall I fear? The LORD is the strength of my life; Of whom shall I be afraid?",
+        ESV: "The LORD is my light and my salvation; whom shall I fear? The LORD is the stronghold of my life; of whom shall I be afraid?",
+        NIV: "The LORD is my light and my salvation—whom shall I fear? The LORD is the stronghold of my life—of whom shall I be afraid?",
       },
       {
         ref: "1 Corinthians 16:13",

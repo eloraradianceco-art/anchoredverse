@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useRef, useEffect } from "react";
-import { TRANSLATIONS, CORES, EMOTIONS } from "./verses";
+import { TRANSLATIONS, CORES, EMOTIONS, REF_RENAMES } from "./verses";
 import FeelingsWheel from "./FeelingsWheel";
 import { NOTICES } from "./ScriptureCredits";
 import "./fonts.css";
@@ -83,6 +83,22 @@ function reflectionBaseIndex(emotion) {
   return (dayOfYear + off) % arr.length;
 }
 
+// ── Saved anchors ────────────────────────────────────────────────
+// A saved verse stores its own copy of the label and wording. When a label is corrected (REF_RENAMES) or a
+// verse's wording is corrected in verses.js, bring the saved copy up to date so it stays saved and reads the same.
+function refreshSaved(list) {
+  return list.map((f) => {
+    if (!f || !f.emotionId || !f.ref) return f;
+    const e = EMOTIONS.find((x) => x.id === f.emotionId);
+    if (!e) return f;
+    const ref = REF_RENAMES[`${f.emotionId}::${f.ref}`] || REF_RENAMES[f.ref] || f.ref;
+    const v = e.verses.find((x) => x.ref === ref);
+    if (!v) return f;
+    const text = TRANSLATIONS.includes(f.translation) && v[f.translation] ? v[f.translation] : f.text;
+    return { ...f, ref, key: `${f.emotionId}::${ref}`, text };
+  });
+}
+
 // ── Shuffle-bag verse rotation (persisted) ───────────────────────
 // Each emotion gets a shuffled order of verse indices with no repeats until
 // every verse has been seen, then it reshuffles (avoiding an immediate repeat).
@@ -113,7 +129,7 @@ export default function AnchoredVerse() {
   const bagsRef = useRef(avLoadBags());
   // Saved anchors stay on this device between visits.
   const [favorites, setFavorites] = useState(() => {
-    try { const v = JSON.parse(localStorage.getItem("av_favorites")); return Array.isArray(v) ? v : []; } catch { return []; }
+    try { const v = JSON.parse(localStorage.getItem("av_favorites")); return Array.isArray(v) ? refreshSaved(v) : []; } catch { return []; }
   });
   useEffect(() => { try { localStorage.setItem("av_favorites", JSON.stringify(favorites)); } catch {} }, [favorites]);
   // Home: Feelings Wheel (default) or a plain list; the focused core is kept while reading verses.
