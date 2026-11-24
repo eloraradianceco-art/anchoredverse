@@ -207,6 +207,10 @@ html, body { margin: 0; background: var(--harbor); }
 .av-ref { font-size: 16px; font-weight: 600; font-style: normal; letter-spacing: 0.01em; color: var(--gold); }
 .av-ref span { margin-left: 10px; font-size: 14px; font-weight: 500; color: var(--mist); }
 
+.av-tab-one { cursor: pointer; }
+.av-tab-one::after { display: none; }
+.av-elsewhere { display: inline-block; margin-top: 10px; padding: 6px 0; font-size: 14px; color: var(--mist); text-decoration: underline; text-underline-offset: 3px; }
+.av-elsewhere:hover { color: var(--parch); }
 .av-reflect {
   margin-top: 34px; padding: 2px 0 2px 18px; border-left: 1.5px solid var(--tone-soft);
   animation: avSettle 0.9s 0.7s ease both; user-select: none;

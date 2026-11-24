@@ -83,6 +83,9 @@ function reflectionBaseIndex(emotion) {
   return (dayOfYear + off) % arr.length;
 }
 
+// The same passage on esv.org (an outside site): "1 Peter 5:8-9a" -> https://www.esv.org/1+Peter+5:8-9/
+const esvUrl = (ref) => `https://www.esv.org/${encodeURIComponent(String(ref).replace(/(\d)[ab]\b/g, "$1")).replace(/%20/g, "+").replace(/%3A/g, ":")}/`;
+
 // ── Saved anchors ────────────────────────────────────────────────
 // A saved verse stores its own copy of the label and wording. When a label is corrected (REF_RENAMES) or a
 // verse's wording is corrected in verses.js, bring the saved copy up to date so it stays saved and reads the same.
@@ -94,8 +97,9 @@ function refreshSaved(list) {
     const ref = REF_RENAMES[`${f.emotionId}::${f.ref}`] || REF_RENAMES[f.ref] || f.ref;
     const v = e.verses.find((x) => x.ref === ref);
     if (!v) return f;
-    const text = TRANSLATIONS.includes(f.translation) && v[f.translation] ? v[f.translation] : f.text;
-    return { ...f, ref, key: `${f.emotionId}::${ref}`, text };
+    // One translation since 2026-11-24 (the BSB): a verse saved earlier from another translation now reads in the BSB.
+    const tr = TRANSLATIONS.includes(f.translation) && v[f.translation] ? f.translation : TRANSLATIONS[0];
+    return { ...f, ref, key: `${f.emotionId}::${ref}`, text: v[tr] || f.text, translation: v[tr] ? tr : f.translation };
   });
 }
 
@@ -120,7 +124,7 @@ function avShuffle(n, avoidFirst = -1) {
 }
 
 export default function AnchoredVerse() {
-  const [translation, setTranslation] = useState("ESV");
+  const [translation, setTranslation] = useState(TRANSLATIONS[0]);
   const [activeEmotion, setActiveEmotion] = useState(null);
   const [verseIndex, setVerseIndex] = useState(0);
   const [bagPos, setBagPos] = useState(0);
@@ -437,11 +441,15 @@ export default function AnchoredVerse() {
           ) : (
             <div className="av-brand"><AnchorMark size={26} />Anchored Verse</div>
           )}
-          <div className="av-tabs" role="group" aria-label="Bible translation">
-            {TRANSLATIONS.map((t) => (
-              <button key={t} className="av-tab" onClick={() => setTranslation(t)} aria-pressed={translation === t}>{t}</button>
-            ))}
-          </div>
+          {TRANSLATIONS.length > 1 ? (
+            <div className="av-tabs" role="group" aria-label="Bible translation">
+              {TRANSLATIONS.map((t) => (
+                <button key={t} className="av-tab" onClick={() => setTranslation(t)} aria-pressed={translation === t}>{t}</button>
+              ))}
+            </div>
+          ) : (
+            <button className="av-tab av-tab-one" onClick={() => setCreditsOpen(true)} aria-label="Berean Standard Bible. Scripture credits.">{TRANSLATIONS[0]}</button>
+          )}
         </header>
 
         {/* Emotion picker */}
@@ -550,6 +558,8 @@ export default function AnchoredVerse() {
                   onClick={() => openShareCard({ text: verse[translation], ref: verse.ref, translation, emotionName: emotion.name, reflection: currentReflection })}
                 />
               </div>
+              {/* An outside link, not our text: the same passage on the ESV publisher's own site. */}
+              <a className="av-elsewhere" href={esvUrl(verse.ref)} target="_blank" rel="noopener noreferrer">Read this passage in the ESV <span aria-hidden="true">↗</span></a>
 
               <div
                 className="av-reflect"
@@ -628,8 +638,8 @@ export default function AnchoredVerse() {
               <button onClick={() => setCreditsOpen(false)} aria-label="Close" className="av-icon-btn bare"><CloseGlyph /></button>
             </div>
             <div style={{ overflowY: "auto" }}>
-              <p className="av-sheet-sub">Each verse shows the translation it is quoted from.</p>
-              {["ESV", "NIV", "NKJV"].map((k) => (
+              <p className="av-sheet-sub">Every verse is quoted from the Berean Standard Bible.</p>
+              {["BSB"].map((k) => (
                 <p key={k} style={{ fontSize: 14, lineHeight: 1.55, color: "rgba(234, 228, 211, 0.8)", margin: "0 0 14px" }}>{NOTICES[k]}</p>
               ))}
               <button className="av-pill main" onClick={() => setCreditsOpen(false)} style={{ width: "100%", marginTop: 8 }}>Close</button>
