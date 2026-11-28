@@ -2,6 +2,8 @@ import React, { useState, useMemo, useRef, useEffect } from "react";
 import { TRANSLATIONS, CORES, EMOTIONS, REF_RENAMES } from "./verses";
 import FeelingsWheel from "./FeelingsWheel";
 import { NOTICES } from "./ScriptureCredits";
+import { isNative, nativeShareImage, nativeShareText } from "./native";
+import { reminders, formatTime, DEFAULT_TIME } from "./nativeReminders";
 import "./fonts.css";
 import "./anchored.css";
 
@@ -61,6 +63,8 @@ function ShareIconBtn({ onClick, label = "Share verse" }) {
 }
 
 const APP_URL = "https://verse.eloraradiance.com";
+// True inside the App Store app (a test can stand in for the phone with window.__AV_TEST_NATIVE__).
+const IN_APP = isNative || (typeof window !== "undefined" && !!window.__AV_TEST_NATIVE__);
 
 // Rotate each emotion's reflections by day-of-year (with a per-emotion phase offset)
 // so returning users see a fresh anchor instead of the same line every visit.
@@ -123,6 +127,23 @@ function avShuffle(n, avoidFirst = -1) {
   return a;
 }
 
+// ── Check-ins (added 2026-11-28) ─────────────────────────────────
+// Each feeling someone opens is noted with the day and the verse that met them, so they can look back.
+// Kept on this device only (like saved anchors); nothing is sent anywhere. One entry per feeling per day.
+const AV_CHECKINS_KEY = "av_checkins";
+const AV_CHECKINS_MAX = 500;
+const dayKey = (d = new Date()) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+const dayFromKey = (k) => { const [y, m, d] = String(k).split("-").map(Number); return new Date(y, (m || 1) - 1, d || 1); };
+const dayLabel = (k) => {
+  if (k === dayKey()) return "Today";
+  const y = new Date(); y.setDate(y.getDate() - 1);
+  if (k === dayKey(y)) return "Yesterday";
+  return dayFromKey(k).toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" });
+};
+function loadCheckins() {
+  try { const v = JSON.parse(localStorage.getItem(AV_CHECKINS_KEY)); return Array.isArray(v) ? v.filter((x) => x && x.d && x.e) : []; } catch { return []; }
+}
+
 export default function AnchoredVerse() {
   const [translation, setTranslation] = useState(TRANSLATIONS[0]);
   const [activeEmotion, setActiveEmotion] = useState(null);
@@ -136,6 +157,29 @@ export default function AnchoredVerse() {
     try { const v = JSON.parse(localStorage.getItem("av_favorites")); return Array.isArray(v) ? refreshSaved(v) : []; } catch { return []; }
   });
   useEffect(() => { try { localStorage.setItem("av_favorites", JSON.stringify(favorites)); } catch {} }, [favorites]);
+  // Check-ins: newest first.
+  const [checkins, setCheckins] = useState(loadCheckins);
+  useEffect(() => { try { localStorage.setItem(AV_CHECKINS_KEY, JSON.stringify(checkins)); } catch {} }, [checkins]);
+  const [historyOpen, setHistoryOpen] = useState(false);
+  // Daily reminder (App Store app only): null until the phone has answered.
+  const [reminder, setReminder] = useState(null);
+  const [reminderOpen, setReminderOpen] = useState(false);
+  const [reminderBusy, setReminderBusy] = useState(false);
+  const [reminderNote, setReminderNote] = useState("");
+  useEffect(() => { if (IN_APP) reminders.getState().then(setReminder).catch(() => setReminder({ enabled: false, time: DEFAULT_TIME, denied: false })); }, []);
+  const saveReminder = async (next) => {
+    setReminderBusy(true); setReminderNote("");
+    try { setReminder(await reminders.save(next)); }
+    catch (e) {
+      setReminder((r) => ({ ...(r || { time: DEFAULT_TIME }), enabled: false, denied: true }));
+    }
+    setReminderBusy(false);
+  };
+  const testReminder = async () => {
+    try { await reminders.test(); setReminderNote("Sent. It arrives in a few seconds. Close the app to see it on your Lock Screen."); }
+    catch { setReminderNote("The test could not be sent."); }
+  };
+  const [clearArmed, setClearArmed] = useState(false);
   // Home: Feelings Wheel (default) or a plain list; the focused core is kept while reading verses.
   const [homeView, setHomeView] = useState(() => { try { return localStorage.getItem("av_view") === "list" ? "list" : "wheel"; } catch { return "wheel"; } });
   const chooseView = (v) => { setHomeView(v); try { localStorage.setItem("av_view", v); } catch {} };
@@ -152,6 +196,7 @@ export default function AnchoredVerse() {
   const [a2hsOpen, setA2hsOpen] = useState(false);
   const [creditsOpen, setCreditsOpen] = useState(false);
   React.useEffect(() => {
+    if (IN_APP) return;   // the App Store app is already on the Home Screen
     try {
       const standalone = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
       if (!standalone && !localStorage.getItem("av_a2hs_seen")) {
@@ -204,6 +249,7 @@ export default function AnchoredVerse() {
     setVerseIndex(idx);
     setBagPos(pos);
     setBagLen(len);
+    return idx;
   };
 
   const openEmotion = (id) => {
@@ -211,8 +257,27 @@ export default function AnchoredVerse() {
     if (CORE_OF[id]) setFocusCore(CORE_OF[id].id);
     setActiveEmotion(id);
     window.scrollTo(0, 0);
-    applyPick(id, e ? e.verses.length : 0, "open");
+    const idx = applyPick(id, e ? e.verses.length : 0, "open");
+    if (e && e.verses[idx]) {
+      const entry = { d: dayKey(), e: id, ref: e.verses[idx].ref };
+      setCheckins((prev) => [entry, ...prev.filter((c) => !(c.d === entry.d && c.e === id))].slice(0, AV_CHECKINS_MAX));
+    }
   };
+  // Back to a past check-in: the same feeling and the verse it showed (no new check-in is written).
+  const openCheckin = (c) => {
+    const e = EMOTIONS.find((x) => x.id === c.e);
+    if (!e) return;
+    const ref = REF_RENAMES[`${c.e}::${c.ref}`] || REF_RENAMES[c.ref] || c.ref;
+    const i = e.verses.findIndex((v) => v.ref === ref);
+    if (CORE_OF[c.e]) setFocusCore(CORE_OF[c.e].id);
+    setHistoryOpen(false);
+    setActiveEmotion(c.e);
+    window.scrollTo(0, 0);
+    applyPick(c.e, e.verses.length, i >= 0 ? i : "open");
+  };
+  const emotionName = (id) => (EMOTIONS.find((x) => x.id === id) || {}).name || id;
+  // The last seven days, oldest first, each with the feelings opened that day.
+  const week = Array.from({ length: 7 }, (_, i) => { const d = new Date(); d.setDate(d.getDate() - (6 - i)); const k = dayKey(d); return { k, letter: d.toLocaleDateString(undefined, { weekday: "narrow" }), items: checkins.filter((c) => c.d === k) }; });
 
   const nextVerse = () => {
     if (!emotion) return;
@@ -267,9 +332,10 @@ export default function AnchoredVerse() {
         backgroundColor: bg,
       });
 
+      const fileName = `anchored-verse-${(shareCard.ref || "verse").replace(/[^a-z0-9]+/gi, "-").toLowerCase()}.png`;
+      if (isNative) { await nativeShareImage(dataUrl, fileName, "Anchored Verse"); setShareCardBusy(false); return; }
       const res = await fetch(dataUrl);
       const blob = await res.blob();
-      const fileName = `anchored-verse-${(shareCard.ref || "verse").replace(/[^a-z0-9]+/gi, "-").toLowerCase()}.png`;
       const file = new File([blob], fileName, { type: "image/png" });
 
       if (navigator.canShare && navigator.canShare({ files: [file] })) {
@@ -310,6 +376,7 @@ export default function AnchoredVerse() {
       `Anchored Verse: ${emotionName}\n` +
       `${APP_URL}`;
 
+    if (isNative) { await nativeShareText({ title: "Anchored Verse", text: body }); return; }
     if (typeof navigator !== "undefined" && navigator.share) {
       try {
         await navigator.share({ title: "Anchored Verse", text: body });
@@ -328,7 +395,7 @@ export default function AnchoredVerse() {
   };
 
   // ── Escape closes the top-most layer; page doesn't scroll behind a layer ──
-  const layerOpen = !!shareCard || browseOpen || a2hsOpen || creditsOpen;
+  const layerOpen = !!shareCard || browseOpen || a2hsOpen || creditsOpen || historyOpen || reminderOpen;
   useEffect(() => {
     const onKey = (e) => {
       if (e.key !== "Escape") return;
@@ -336,6 +403,8 @@ export default function AnchoredVerse() {
       else if (browseOpen) setBrowseOpen(false);
       else if (a2hsOpen) closeA2hs();
       else if (creditsOpen) setCreditsOpen(false);
+      else if (historyOpen) setHistoryOpen(false);
+      else if (reminderOpen) setReminderOpen(false);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -509,6 +578,16 @@ export default function AnchoredVerse() {
               </div>
             </div>
 
+            {IN_APP && reminder && (
+              <button className="av-remind" onClick={() => { setReminderNote(""); setReminderOpen(true); }}>
+                <span className="av-remind-main">
+                  <span className="av-remind-title">Daily check-in reminder</span>
+                  <span className="av-remind-sub">{reminder.enabled ? `On, every day at ${formatTime(reminder.time)}` : "Off. A gentle nudge to bring your heart to Scripture."}</span>
+                </span>
+                <span className="av-remind-act">{reminder.enabled ? "Change" : "Turn on"}</span>
+              </button>
+            )}
+
             {favorites.length > 0 && (
               <section className="av-saved">
                 <h2>Saved anchors</h2>
@@ -527,14 +606,41 @@ export default function AnchoredVerse() {
               </section>
             )}
 
+            {checkins.length > 0 && (
+              <section className="av-saved av-checkins" aria-labelledby="checkins-title">
+                <h2 id="checkins-title">Your check-ins</h2>
+                <p className="av-checkins-sub">What you brought here, and the verse that met you. Kept on this device only.</p>
+                <div className="av-week" role="img" aria-label={`Check-ins on ${week.filter((w) => w.items.length).length} of the last 7 days`}>
+                  {week.map((w) => (
+                    <div key={w.k} className={`av-day${w.k === dayKey() ? " today" : ""}`}>
+                      <span className="av-day-dots">
+                        {w.items.length ? w.items.slice(0, 3).map((c) => <i key={c.e} style={{ background: toneOf(c.e) }} />) : <i className="none" />}
+                      </span>
+                      <span className="av-day-letter">{w.letter}</span>
+                    </div>
+                  ))}
+                </div>
+                {checkins.slice(0, 4).map((c) => (
+                  <button key={`${c.d}-${c.e}`} className="av-checkin" onClick={() => openCheckin(c)}>
+                    <span className="av-checkin-day">{dayLabel(c.d)}</span>
+                    <span className="av-checkin-feel" style={{ color: toneOf(c.e) }}>{emotionName(c.e)}</span>
+                    <span className="av-checkin-ref">{c.ref}</span>
+                  </button>
+                ))}
+                {checkins.length > 4 && <button className="av-link" style={{ display: "block", margin: "6px auto 0" }} onClick={() => { setClearArmed(false); setHistoryOpen(true); }}>See all {checkins.length} check-ins</button>}
+                {checkins.length <= 4 && <button className="av-link" style={{ display: "block", margin: "6px auto 0" }} onClick={() => { setClearArmed(false); setHistoryOpen(true); }}>Manage check-ins</button>}
+              </section>
+            )}
+
             <footer className="av-colophon">
-              <button className="av-link" onClick={() => setA2hsOpen(true)}>Add to Home Screen</button>
+              {!IN_APP && <button className="av-link" onClick={() => setA2hsOpen(true)}>Add to Home Screen</button>}
               <button className="av-link" onClick={() => setCreditsOpen(true)}>Scripture credits</button>
               <nav className="av-legal" aria-label="Elora Radiance">
                 <a href="https://eloraradiance.com/support.html" target="_blank" rel="noopener noreferrer">Help &amp; Support</a>
                 <a href="https://eloraradiance.com/privacy.html" target="_blank" rel="noopener noreferrer">Privacy</a>
                 <a href="https://eloraradiance.com/terms.html" target="_blank" rel="noopener noreferrer">Terms</a>
-                <a href="https://eloraradiance.com/" target="_blank" rel="noopener noreferrer">More apps</a>
+                {/* The App Store app does not link to the website's storefront. */}
+                {!IN_APP && <a href="https://eloraradiance.com/" target="_blank" rel="noopener noreferrer">More apps</a>}
               </nav>
               <small>© 2026 Elora Radiance Co. LLC</small>
             </footer>
@@ -643,6 +749,65 @@ export default function AnchoredVerse() {
                 <p key={k} style={{ fontSize: 14, lineHeight: 1.55, color: "rgba(234, 228, 211, 0.8)", margin: "0 0 14px" }}>{NOTICES[k]}</p>
               ))}
               <button className="av-pill main" onClick={() => setCreditsOpen(false)} style={{ width: "100%", marginTop: 8 }}>Close</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Daily reminder (App Store app) */}
+      {reminderOpen && reminder && (
+        <div className="av-scrim" onClick={() => setReminderOpen(false)}>
+          <div className="av-sheet" onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true" aria-labelledby="remind-title">
+            <div className="av-sheet-head">
+              <div>
+                <h2 id="remind-title">Daily check-in reminder</h2>
+                <p className="av-sheet-sub">One quiet notification a day. Scheduled on this device; nothing is sent to us.</p>
+              </div>
+              <button onClick={() => setReminderOpen(false)} aria-label="Close" className="av-icon-btn bare"><CloseGlyph /></button>
+            </div>
+            <div style={{ overflowY: "auto" }}>
+              <label className="av-field">
+                <span>Time</span>
+                <input type="time" value={reminder.time || DEFAULT_TIME} disabled={reminderBusy}
+                  onChange={(e) => { const time = e.target.value || DEFAULT_TIME; if (reminder.enabled) saveReminder({ enabled: true, time }); else setReminder({ ...reminder, time }); }} />
+              </label>
+              {reminder.denied && (
+                <p className="av-warn" role="alert">Notifications are turned off for Anchored Verse. Open your iPhone{"’"}s Settings, tap Notifications, choose Anchored Verse and allow them. Then come back and turn the reminder on.</p>
+              )}
+              <button className="av-pill main" disabled={reminderBusy} style={{ width: "100%", marginTop: 18, opacity: reminderBusy ? 0.6 : 1 }}
+                onClick={() => saveReminder({ enabled: !reminder.enabled, time: reminder.time || DEFAULT_TIME })}>
+                {reminderBusy ? "Saving…" : reminder.enabled ? "Turn the reminder off" : `Remind me at ${formatTime(reminder.time || DEFAULT_TIME)}`}
+              </button>
+              {reminder.enabled && <button className="av-link" style={{ display: "block", margin: "10px auto 0" }} onClick={testReminder}>Send a test now</button>}
+              {reminderNote && <p className="av-sheet-sub" role="status" style={{ textAlign: "center", marginTop: 8 }}>{reminderNote}</p>}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Every check-in, newest first */}
+      {historyOpen && (
+        <div className="av-scrim" onClick={() => setHistoryOpen(false)}>
+          <div className="av-sheet" onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true" aria-labelledby="history-title">
+            <div className="av-sheet-head">
+              <div>
+                <h2 id="history-title">Your check-ins</h2>
+                <p className="av-sheet-sub">Kept on this device only. Tap one to return to its verse.</p>
+              </div>
+              <button onClick={() => setHistoryOpen(false)} aria-label="Close" className="av-icon-btn bare"><CloseGlyph /></button>
+            </div>
+            <div className="av-list">
+              {checkins.map((c) => (
+                <button key={`${c.d}-${c.e}`} className="av-checkin" onClick={() => openCheckin(c)}>
+                  <span className="av-checkin-day">{dayLabel(c.d)}</span>
+                  <span className="av-checkin-feel" style={{ color: toneOf(c.e) }}>{emotionName(c.e)}</span>
+                  <span className="av-checkin-ref">{c.ref}</span>
+                </button>
+              ))}
+              <button className="av-link" style={{ display: "block", margin: "14px auto 4px" }}
+                onClick={() => { if (!clearArmed) { setClearArmed(true); return; } setCheckins([]); setClearArmed(false); setHistoryOpen(false); }}>
+                {clearArmed ? "Tap again to erase every check-in" : "Erase my check-ins"}
+              </button>
             </div>
           </div>
         </div>

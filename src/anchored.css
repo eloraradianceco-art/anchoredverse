@@ -168,6 +168,36 @@ html, body { margin: 0; background: var(--harbor); }
 .av-saved-ref { font-size: 15px; font-weight: 600; color: var(--parch); }
 .av-saved-feel { font-family: var(--serif); font-style: italic; font-size: 16px; color: var(--mist); margin-left: 10px; }
 
+/* ── Daily reminder (App Store app) ──────────────────────── */
+.av-remind {
+  display: flex; align-items: center; gap: 14px; width: 100%; margin-top: 34px; padding: 16px 18px; text-align: left;
+  background: rgba(22, 41, 60, 0.6); border: 1px solid var(--line); border-radius: 16px; color: var(--parch);
+}
+.av-remind-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.av-remind-title { font-size: 15.5px; font-weight: 600; }
+.av-remind-sub { font-family: var(--serif); font-style: italic; font-size: 16px; line-height: 1.35; color: var(--mist); }
+.av-remind-act { flex: 0 0 auto; font-size: 14.5px; font-weight: 600; color: var(--gold); }
+.av-field { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 6px; font-size: 16px; color: var(--parch); }
+.av-field input { min-height: 46px; padding: 8px 12px; font: inherit; font-size: 17px; color: var(--parch); background: rgba(13, 27, 41, 0.7); border: 1px solid var(--line); border-radius: 12px; color-scheme: dark; }
+.av-warn { margin: 14px 0 0; padding: 12px 14px; font-size: 15px; line-height: 1.5; color: var(--parch); background: rgba(214, 165, 90, 0.12); border: 1px solid rgba(214, 165, 90, 0.4); border-radius: 12px; }
+
+/* ── Check-ins ───────────────────────────────────────────── */
+.av-checkins-sub { margin: 0 auto 16px; max-width: 320px; text-align: center; font-family: var(--serif); font-style: italic; font-size: 16px; line-height: 1.45; color: var(--mist); }
+.av-week { display: flex; justify-content: space-between; gap: 6px; max-width: 340px; margin: 0 auto 14px; }
+.av-day { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 7px; padding: 10px 0 8px; border-radius: 12px; border: 1px solid var(--line); }
+.av-day.today { border-color: rgba(214, 165, 90, 0.55); }
+.av-day-dots { display: flex; gap: 3px; height: 10px; align-items: center; }
+.av-day-dots i { width: 9px; height: 9px; border-radius: 50%; display: block; }
+.av-day-dots i.none { width: 5px; height: 5px; background: rgba(234, 228, 211, 0.18); }
+.av-day-letter { font-size: 12px; font-weight: 600; letter-spacing: 0.04em; color: var(--mist); }
+.av-checkin {
+  display: flex; align-items: baseline; gap: 10px; width: 100%; min-height: 48px; padding: 10px 2px; text-align: left;
+  background: none; border: 0; border-top: 1px solid var(--line); color: var(--parch);
+}
+.av-checkin-day { flex: 0 0 92px; font-size: 13.5px; color: var(--mist); }
+.av-checkin-feel { flex: 0 0 auto; font-family: var(--serif); font-style: italic; font-size: 18px; }
+.av-checkin-ref { flex: 1; min-width: 0; text-align: right; font-size: 14.5px; font-weight: 600; color: var(--parch); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
 .av-colophon { margin-top: 64px; display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; }
 .av-colophon small { font-family: var(--serif); font-style: italic; font-size: 15px; color: var(--mist); }
 .av-legal { display: flex; flex-wrap: wrap; justify-content: center; gap: 2px 18px; margin: 4px 0 2px; }

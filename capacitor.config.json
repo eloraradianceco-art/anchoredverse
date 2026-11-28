@@ -1,0 +1,19 @@
+{
+  "appId": "com.eloraradiance.anchoredverse",
+  "appName": "Anchored Verse",
+  "webDir": "dist",
+  "backgroundColor": "#0D1B29",
+  "ios": {
+    "backgroundColor": "#0D1B29"
+  },
+  "plugins": {
+    "StatusBar": {
+      "style": "DARK",
+      "overlaysWebView": true,
+      "backgroundColor": "#00000000"
+    },
+    "LocalNotifications": {
+      "iconColor": "#D6A55A"
+    }
+  }
+}
